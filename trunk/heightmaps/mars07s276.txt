@@ -1,0 +1,39 @@
+
+  FILE DATA
+------------------
+Filename = mars07s276.jpg
+Filesize = 571791 (bytes)
+Format   = JPG
+
+  CARTOGRAPHIC DATA
+--------------------
+North Latitude = -5.46
+South Latitude = -9.64
+East Longitude = 279.67
+West Longitude = 274.31
+Center Longitude of Projection = 276.99
+Projection = Simple Cylindrical
+Resolution = 191.044776119402
+Scale      = 0.31026
+
+  IMAGE DATA
+--------------------
+Pixels Per Band = 818176
+Lines    = 799
+Samples  = 1024
+Image Center = 276.99 Lon, -7.55 Lat
+Pixel Bit Type = 8 bit
+Bands    = 3
+Core Base = 0.0
+Core Multiplier = 1.0
+
+  ENHANCEMENTS
+--------------------
+Stretch = NONE
+
+  DATASET DATA
+--------------------
+Dataset name = v21mars_viking_bw
+Number of tiles = 1
+Tiles used :
+      /mag6/cdroms/mdim_v21/mi/mi15s293e.cub
