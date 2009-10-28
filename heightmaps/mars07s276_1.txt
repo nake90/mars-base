@@ -1,0 +1,39 @@
+
+  FILE DATA
+------------------
+Filename = mars07s276_1.jpg
+Filesize = 156909 (bytes)
+Format   = JPG
+
+  CARTOGRAPHIC DATA
+--------------------
+North Latitude = -5.46
+South Latitude = -9.64
+East Longitude = 279.67
+West Longitude = 274.31
+Center Longitude of Projection = 276.99
+Projection = Simple Cylindrical
+Resolution = 191.044776119402
+Scale      = 0.31024
+
+  IMAGE DATA
+--------------------
+Pixels Per Band = 818176
+Lines    = 799
+Samples  = 1024
+Image Center = 276.99 Lon, -7.55 Lat
+Pixel Bit Type = 16 bit - least sig bit first
+Bands    = 3
+Core Base = -4.3110767E+03
+Core Multiplier = 3.6145714E+01
+
+  ENHANCEMENTS
+--------------------
+Stretch = NONE
+
+  DATASET DATA
+--------------------
+Dataset name = mars_mgs_mola_topo
+Number of tiles = 1
+Tiles used :
+      /mag2/cdroms/mola/megt00n270hb.lbl

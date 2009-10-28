@@ -1,0 +1,13 @@
+North	= -5.46
+South	= -9.64
+East	= 279.67
+West	= 274.31
+Scale	= 0.31026
+Lines	= 799
+Samples	= 1024
+zero_h	= 100
+min_h	= -6000
+max_h	= 6000
+ini_x	= -1
+ini_y	= 10
+ini_z	= 96
