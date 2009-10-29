@@ -1,8 +1,8 @@
 #ifndef SHARED_H
 #define SHARED_H
 
-#include <GL/openglut.h>
-#include <IL/ilut.h>
+#include "GL/openglut.h"
+#include "IL/ilut.h"
 
 #include <stdio.h>
 #include <stdarg.h>

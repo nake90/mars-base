@@ -2,8 +2,8 @@
 #define HEIGHTMAP_H
 #include "shared.h"
 #include <stdio.h>
-#include <GL/openglut.h>
-#include <IL/ilut.h>
+#include "GL/openglut.h"
+#include "IL/ilut.h"
 
 typedef struct
 {
