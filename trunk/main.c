@@ -1,10 +1,11 @@
-#include <GL/openglut.h>
-#include <IL/ilut.h>
-
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>
 #include <time.h>
+
+/* Librerías añadidas a las carpetas 'include' y 'lib' del proyecto */
+#include "GL/openglut.h"
+#include "IL/ilut.h"
 
 #include "3dsloader.h"
 #include "shared.h"
