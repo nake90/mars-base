@@ -36,8 +36,8 @@ GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f};
 GLfloat fogRange[2]= {25000.0f, 50000.0f};//{120.0f, 500.0f};
 /*					AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sand={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
-/*					AMBIENT						DIFFUSE						SPECULAR				POSITION			HORA */
-t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{2.0f, 5.0f, 5.0f, 0.0f},{12.0f}};
+/*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
+t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{2.0f, 5.0f, 5.0f, 0.0f},{12.0f},{0,0}};
 
 t_heightmap marte;
 
@@ -150,6 +150,20 @@ void display(void)
 	
 	glCallList(marte.list);
 	
+	/*
+	//glDisable(GL_LIGHTING);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	glBindTexture(GL_TEXTURE_2D, sun.texture[0]);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.1f, -1.1f, 1.0f);// Bottom Left
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.1f, -1.1f, 1.0f);// Bottom Right
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.1f, 1.1f, 1.0f);// Top Right
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.1f, 1.1f, 1.0f);// Top Left
+	glEnd();
+	glBlendFunc(GL_ONE,GL_ZERO);
+	glDisable(GL_BLEND);
+	
 	/* - Display Casillas - FIXME!!!!!*/
    	if (show_grid)
 	{
@@ -229,8 +243,8 @@ void display(void)
     hud_printf (0, 0, "TEST de casillas isométricas");
     hud_printf (0, 1, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
     hud_printf (0, 2, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
-    hud_printf (0, 3, "WASD+QE -> Girar cámara");
-    hud_printf (0, 4, "C/V -> Ver/Ocultar casilla de 1m;  B/N -> Presión");
+    hud_printf (0, 3, "Flechas para moverse, shift para ir muy rápido");
+    hud_printf (0, 4, "WASD+QE -> Girar cámara");
 
 	glutSwapBuffers();
 }
@@ -353,7 +367,7 @@ static void
 idle(void)
 {
     update++;
-    if (update>9999)//ATM_UPDATE)
+    if (update>9999)//ATM_UPDATE) NO USAR!!!!
     {
 		update=0;
 		add_noise_presion(1.8f);
@@ -409,6 +423,7 @@ int main(int argc, char *argv[])
     
     /* - CREATE MATERIAL! - */
 	sand.texture[0]=ilutGLLoadImage("mars_sand_rocks_2.tga");
+	if(!sand.texture[0]){exit(0);}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	//iluBuildMipmaps();
@@ -449,19 +464,34 @@ int main(int argc, char *argv[])
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
 
 	/* - POSINICIALIZACIÓN - */
+	scr_init_reset(0);
+	scr_init_printf ("Iniciando recursos...");
 	camera.pitch = 25;
 	camera.yaw = 0;
 	camera.pos_z=10;
 	camera.pos_y=-4.5;
 	
+	/* Cargamos el sol */
+	sun.texture[0]=ilutGLLoadImage("materials\\sun.tga");
+	//sun.texture[1]=ilutGLLoadImage("materials\\sun_mask.tga");
+	if(!sun.texture[0] /*|| !sun.texture[1]*/){return 1;}
+	
+	scr_init_printf ("Cargando modelos...");
+	
 	if(Load3DS(&test,"models\\test.3ds")!=1){exit(1);}
 	test.id_texture=ilutGLLoadImage("materials\\genericmetal05.jpg");
 	test.size=1.0f;
 	
+	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte);
 	create_map(&marte, sand);
+	//load_compiled_map("heightmaps\\marineris.nhmap", &marte, sand);
+	//scr_init_printf ("Guardando terreno compilado");
+	//save_compiled_map("heightmaps\\marineris.nhmap", marte);
 	
 	init_ciclon();
+	
+	scr_init_printf ("Iniciado");
 	
     glutMainLoop();
 
