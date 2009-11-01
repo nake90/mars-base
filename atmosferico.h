@@ -43,6 +43,7 @@ typedef struct
 	GLfloat specular[4];
 	GLfloat position[4];
 	float hora[1];
+	GLint texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
 }t_sun;
 
 t_ciclon ciclon[CICLONES];

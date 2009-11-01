@@ -5,6 +5,8 @@
 #include "GL/openglut.h"
 #include "IL/ilut.h"
 
+#define AMBIENTE 0.2f
+
 typedef struct
 {
 	GLuint list;
@@ -21,11 +23,15 @@ typedef struct
 	int ini_x;
 	int ini_y;
 	int ini_z;
-	int* data;
+	VECTOR* normal; /* Vector normal al plano (unitario) */
+	float* shadow; /* Valor de gris (0-1) */
+	int* data; /* Alturas (0-255) */
 }t_heightmap;
 
 int load_heightmap(const char* filename, t_heightmap* h_buffer);
 void destroy_heightmap(t_heightmap* obj);
 void create_map(t_heightmap* obj, t_texture texture);
+void save_compiled_map(const char* ruta, t_heightmap obj);
+int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture);
 
 #endif
