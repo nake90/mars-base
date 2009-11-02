@@ -10,8 +10,8 @@ A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "mars_base.ico"
 // TO CHANGE VERSION INFORMATION, EDIT PROJECT OPTIONS...
 //
 1 VERSIONINFO
-FILEVERSION 0,1,1,1093
-PRODUCTVERSION 0,1,1,1093
+FILEVERSION 0,1,1,1094
+PRODUCTVERSION 0,1,1,1094
 FILETYPE VFT_APP
 {
   BLOCK "StringFileInfo"
@@ -20,12 +20,12 @@ FILETYPE VFT_APP
 		 {
 			 VALUE "CompanyName", ""
 			 VALUE "FileVersion", ""
-			 VALUE "FileDescription", "Developed using the Dev-C++ IDE"
+			 VALUE "FileDescription", "Design, build and maintain your own Mars-base"
 			 VALUE "InternalName", ""
-			 VALUE "LegalCopyright", ""
+			 VALUE "LegalCopyright", "GNU-GPL (c) by Alfonso Arbona Gimeno (All rights reserved)"
 			 VALUE "LegalTrademarks", ""
 			 VALUE "OriginalFilename", ""
-			 VALUE "ProductName", ""
+			 VALUE "ProductName", "mars-base"
 			 VALUE "ProductVersion", ""
 		 }
 	 }
