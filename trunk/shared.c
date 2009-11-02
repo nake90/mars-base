@@ -112,6 +112,17 @@ void str_append(char* string1,const char* string2)
 	while(string2[j]!=0){string1[i]=string2[j];i++;j++;}
 	string1[i]=0;
 }
+int str_cmp(const char* string1,const char* string2)
+{
+	int valor = 0;
+	int pos=0;
+	while (valor == 0 && string1[pos]!=0 && string2[pos]!=0)
+	{
+		valor=string1[pos]-string2[pos];
+		pos++;
+	}
+	return valor;
+}
 
 /* - VECTORS - */
 VECTOR p_vect(VECTOR vec1,VECTOR vec2) /* Producto vectorial (cross) */

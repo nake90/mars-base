@@ -483,11 +483,7 @@ int main(int argc, char *argv[])
 	test.size=1.0f;
 	
 	scr_init_printf ("Cargando terreno...");
-	load_heightmap("heightmaps\\marineris",&marte);
-	create_map(&marte, sand);
-	//load_compiled_map("heightmaps\\marineris.nhmap", &marte, sand);
-	//scr_init_printf ("Guardando terreno compilado");
-	//save_compiled_map("heightmaps\\marineris.nhmap", marte);
+	load_heightmap("heightmaps\\marineris",&marte,sand);
 	
 	init_ciclon();
 	

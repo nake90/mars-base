@@ -62,6 +62,8 @@ int str_size(const char* string);
 void str_cpy(char* string1,const char* string2);
 void str_cpyl(char* string1, int len, const char* string2);
 void str_append(char* string1,const char* string2);
+int str_cmp(const char* string1,const char* string2);
+
 VECTOR p_vect(VECTOR vec1,VECTOR vec2);
 float p_escalar(VECTOR vec1,VECTOR vec2);
 void normalize(VECTOR* vec1);

@@ -28,10 +28,11 @@ typedef struct
 	int* data; /* Alturas (0-255) */
 }t_heightmap;
 
-int load_heightmap(const char* filename, t_heightmap* h_buffer);
+int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture);
 void destroy_heightmap(t_heightmap* obj);
-void create_map(t_heightmap* obj, t_texture texture);
+void compile_map(t_heightmap* obj, t_texture texture);
 void save_compiled_map(const char* ruta, t_heightmap obj);
 int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture);
+float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente);
 
 #endif
