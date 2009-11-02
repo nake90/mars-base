@@ -8,11 +8,19 @@ static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 	return resultado;
 }
 
-int load_heightmap(const char* filename, t_heightmap* h_buffer)
+int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)
 {
 	char str_buffer[255];/* Añade la extensión */
-	scr_init_printf(" > Cargando datos básicos");
-	h_buffer->list=0;
+	int res;
+	
+	/* Intentamos abrir el archivo precompilado */
+	str_cpy(str_buffer,filename);
+	str_append(str_buffer,".nhmap");
+	res=load_compiled_map(str_buffer, h_buffer, texture);
+	if(res==0){return 0;}
+	if(res==3){return 3;}/* Fallo en el malloc */
+	
+	/* Si estamos aquí es porque no se ha podido cargar el precompilado... */
 	
 	str_cpy(str_buffer,filename);
 	str_append(str_buffer,".pgm");
@@ -22,6 +30,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer)
 	str_append(str_buffer,".txt");
 	FILE* info = fopen(str_buffer,"r"); if (!info){debug_printf("### Fallo al abrir \"%s\"",str_buffer);return 2;}
 	
+	scr_init_printf(" > Cargando datos básicos");
 	/* Cargamos los datos básicos */
 	// Hay que currarse un cargador decente no tan secuencial...
 	fscanf(info,"North\t= %f\n",&(h_buffer->north));
@@ -41,6 +50,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer)
 	
 	h_buffer->scale*=1000.0f;
 	
+	h_buffer->list=0;
 	h_buffer->data=malloc(sizeof(int)*h_buffer->tam_y*h_buffer->tam_x);
 	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)",h_buffer->tam_y,h_buffer->tam_x);return 3;}
 	h_buffer->shadow=malloc(sizeof(float)*h_buffer->tam_y*h_buffer->tam_x);
@@ -62,93 +72,63 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer)
 	i=0;
 	while(fscanf(data,"%i\n",&(h_buffer->data[i]))!=EOF && i<h_buffer->tam_y*h_buffer->tam_x){i++;}
 	fclose(data);
+	
+	scr_init_printf ("Compilando el mapa. Puede tardar varios minutos.");
+	compile_map(h_buffer, texture);
+	str_cpy(str_buffer,filename);
+	str_append(str_buffer,".nhmap");
+	scr_init_printf ("Guardando terreno compilado");
+	save_compiled_map(str_buffer, *h_buffer);
 	return 0;
 }
 
 
-void destroy_heightmap(t_heightmap* obj)
-{
-	free(obj->data);
-	free(obj->shadow);
-	free(obj->normal);
-	glDeleteLists(obj->list,1);
-}
-
-/* --- */
-
-/*static float _get_real_height (int z, t_heightmap obj)/* Transforma una z (0-255) a su altura real *//*
-{
-	float v_scale = (obj.max_h-obj.min_h)/255.0f;
-	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
-}
-float get_real_height (int x, int y, t_heightmap obj)/* Obtiene el valor de la altura real de una casilla no centrada (0->tamaño_mapa) */
-/*{
-	if (x<0 || x>obj.tam_x || y<0 || y>obj.tam_y){return 0;}
-	return _get_real_height(obj.data[x+y*obj.tam_x],obj);
-}*/
-
-float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente)
-{
-	VECTOR cur_pos = {obj_x,obj_y,obj->data[obj_x+obj_y*obj->tam_x]};
-	VECTOR incr = ray; normalize(&incr);
-	/* Si es vertical no hace falta calcular nada */
-	if(incr.x==0 && incr.y==0){obj->shadow[obj_x+obj_y*obj->tam_x]=ambiente; return ambiente;}
-	int sombra=0;
-	const int max_incrementos = 200;/* Usado para que no tenga que recorrer todo el mapa... así es más rápido. Aumentar si el mapa tiene montañas muy grandes  */
-	int incrementos=0;
-	
-	cur_pos=vsub(cur_pos,incr);
-	/* Mientras estemos en el mapa y no se haya detectado aun una sombra */
-	while(sombra==0 && incrementos<max_incrementos && (cur_pos.x<obj->tam_x && cur_pos.x>0  &&  cur_pos.y<obj->tam_y && cur_pos.y>0 && cur_pos.z<256))
-	{
-		if(obj->data[nround(cur_pos.x)+nround(cur_pos.y)*obj->tam_x]+0.0f > nround(cur_pos.z)){sombra=1;}
-		cur_pos=vsub(cur_pos,incr);
-		incrementos++;
-	}
-	cur_pos=vadd(cur_pos,incr);
-	if (1 && sombra==1){debug_printf(" -- SOMBRA:(%i,%i,%i) Corte:(%i,%i,%i) Altura:%.2f Loops: %i RAY:(%.2f,%.2f,%.2f)\n",
-					obj_x , obj_y , obj->data[obj_x+obj_y*obj->tam_x],
-					nround(cur_pos.x) , nround(cur_pos.y) , obj->data[nround(cur_pos.x)+nround(cur_pos.y)*obj->tam_x],
-					cur_pos.z,
-					incrementos,
-					ray.x,ray.y,ray.z);}
-	if (sombra==1){obj->shadow[obj_x+obj_y*obj->tam_x]=ambiente + nabs(p_escalar(obj->normal[obj_x+obj_y*obj->tam_x],incr))/10; return obj->shadow[obj_x+obj_y*obj->tam_x];}
-	
-	float resultado = nabs(p_escalar(obj->normal[obj_x+obj_y*obj->tam_x],incr)) + ambiente;
-	
-	if (resultado>1){resultado=1;}
-	if (resultado<0){resultado=0;}
-	obj->shadow[obj_x+obj_y*obj->tam_x]=resultado;
-	return resultado;
-}
-
 int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 {
+	int magic_ = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
 	scr_init_reprintf (" > Cargando datos");
-	char magic[10];
+	int magic;
 	FILE* file = fopen(ruta,"rb");
+	if (!file){debug_printf("ERROR: Mapa no encontrado (%s)",ruta);return -1;}
+	
+	
 	/* -- Cabecera -- */
-	fscanf(file,"%s",&magic);/* Cadena mágica */
-	if (strcmp("nhmap",magic)!=0){fclose(file); debug_printf("ERROR: No es un nhmap (Mapa precompilado)");exit(-1);return -1;}
+	fread(&magic,sizeof(int),1,file);/* Cadena mágica */
+	if (magic!=magic_){fclose(file); debug_printf("ERROR: No es un mapa precompilado");exit(-1);return -2;}
+	
 	fread(&obj->tam_x,sizeof(int),1,file);
 	fread(&obj->tam_y,sizeof(int),1,file);
-	//fprintf(file,"%i%i",obj.tam_x,obj.tam_y);
 	fread(&obj->scale,sizeof(float),1,file);
-	//fprintf(file,"%f",obj.scale);
 	fread(&obj->zero_h,sizeof(int),1,file);
 	fread(&obj->min_h,sizeof(int),1,file);
 	fread(&obj->max_h,sizeof(int),1,file);
-	//fprintf(file,"%i%i%i",obj.zero_h,obj.min_h,obj.max_h);
 	fread(&obj->north,sizeof(float),1,file);
 	fread(&obj->south,sizeof(float),1,file);
 	fread(&obj->east,sizeof(float),1,file);
 	fread(&obj->west,sizeof(float),1,file);
-	//fprintf(file,"%f%f%f%f",obj.north,obj.south,obj.east,obj.west);
 	fread(&obj->ini_x,sizeof(int),1,file);
 	fread(&obj->ini_y,sizeof(int),1,file);
 	fread(&obj->ini_z,sizeof(int),1,file);
-	//fprintf(file,"%i%i%i",obj.ini_x,obj.ini_y,obj.ini_z);
+	/*
+	debug_printf(" -- CARGA_MAPA --\n");
+	debug_printf("    Tamaño: %i,%i\n",obj->tam_x,obj->tam_y);
+	debug_printf("    Escala: %f\n",obj->scale);
+	debug_printf("    Alturas: (Z)%i, (m)%i, M(%i)\n",obj->zero_h,obj->min_h,obj->max_h);
+	debug_printf("    Coordenadas: (N)%f, (S)%f, E(%f), O(%f)\n",obj->north,obj->south,obj->east,obj->west);
+	debug_printf("    Inicial: (%i,%i,%i)\n",obj->ini_x,obj->ini_y,obj->ini_z);//*/
+	
+	
 	/* -- Datos -- */
+	
+	/* malloc's */
+	obj->list=0;
+	obj->data=malloc(sizeof(int)*obj->tam_y*obj->tam_x);
+	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)",obj->tam_y,obj->tam_x);return 3;}
+	obj->shadow=malloc(sizeof(float)*obj->tam_y*obj->tam_x);
+	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de sombras (%i*%i)",obj->tam_y,obj->tam_x);return 3;}
+	obj->normal=malloc(sizeof(VECTOR)*obj->tam_y*obj->tam_x);
+	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de normales (%i*%i)",obj->tam_y,obj->tam_x);return 3;}
+	
 	/* Normales */
 	fread(obj->normal, sizeof(VECTOR), obj->tam_x*obj->tam_y, file);
 	/* Shadows */
@@ -156,7 +136,6 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 	/* Alturas */
 	fread(obj->data, sizeof(int), obj->tam_x*obj->tam_y, file);
 	fclose(file);
-	
 	
 	
 	/* --- */
@@ -212,27 +191,23 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 
 void save_compiled_map(const char* ruta, t_heightmap obj)
 {
+	int magic = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
 	FILE* file = fopen(ruta,"wb");
 	/* -- Cabecera -- */
-	fprintf(file,"nhmap\0");/* Cadena mágica */
+	fwrite(&magic,sizeof(int),1,file);
 	fwrite(&obj.tam_x,sizeof(int),1,file);
 	fwrite(&obj.tam_y,sizeof(int),1,file);
-	//fprintf(file,"%i%i",obj.tam_x,obj.tam_y);
 	fwrite(&obj.scale,sizeof(float),1,file);
-	//fprintf(file,"%f",obj.scale);
 	fwrite(&obj.zero_h,sizeof(int),1,file);
 	fwrite(&obj.min_h,sizeof(int),1,file);
 	fwrite(&obj.max_h,sizeof(int),1,file);
-	//fprintf(file,"%i%i%i",obj.zero_h,obj.min_h,obj.max_h);
 	fwrite(&obj.north,sizeof(float),1,file);
 	fwrite(&obj.south,sizeof(float),1,file);
 	fwrite(&obj.east,sizeof(float),1,file);
 	fwrite(&obj.west,sizeof(float),1,file);
-	//fprintf(file,"%f%f%f%f",obj.north,obj.south,obj.east,obj.west);
 	fwrite(&obj.ini_x,sizeof(int),1,file);
 	fwrite(&obj.ini_y,sizeof(int),1,file);
 	fwrite(&obj.ini_z,sizeof(int),1,file);
-	//fprintf(file,"%i%i%i",obj.ini_x,obj.ini_y,obj.ini_z);
 	/* -- Datos -- */
 	/* Normales */
 	fwrite(obj.normal, sizeof(VECTOR), obj.tam_x*obj.tam_y, file);
@@ -243,8 +218,31 @@ void save_compiled_map(const char* ruta, t_heightmap obj)
 	fclose(file);
 }
 
-void create_map(t_heightmap* obj, t_texture texture)
+
+void destroy_heightmap(t_heightmap* obj)
 {
+	free(obj->data);
+	free(obj->shadow);
+	free(obj->normal);
+	glDeleteLists(obj->list,1);
+}
+
+/* --- */
+
+/*static float _get_real_height (int z, t_heightmap obj)/* Transforma una z (0-255) a su altura real *//*
+{
+	float v_scale = (obj.max_h-obj.min_h)/255.0f;
+	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
+}
+float get_real_height (int x, int y, t_heightmap obj)/* Obtiene el valor de la altura real de una casilla no centrada (0->tamaño_mapa) */
+/*{
+	if (x<0 || x>obj.tam_x || y<0 || y>obj.tam_y){return 0;}
+	return _get_real_height(obj.data[x+y*obj.tam_x],obj);
+}*/
+
+void compile_map(t_heightmap* obj, t_texture texture)
+{
+	debug_printf(" -- Compilando mapa --\n");
 	float carga_estado=0;
 	float carga_inc=100.0/obj->tam_y;
 	int valores_guardados=0;
@@ -265,12 +263,12 @@ void create_map(t_heightmap* obj, t_texture texture)
 	
 	/* Primero calculamos las sombras y las normales */
 	/* 'x' e 'y' NUNCA = 0 */
-	//for (y=1;y<obj->tam_y; y++)
-	for (y=300;y<500; y++)
+	for (y=1;y<obj->tam_y; y++)
+	//for (y=300;y<500; y++)
 	{
 		if(y%64)scr_init_reprintf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
-		//for (x=1;x<obj->tam_x; x++)
-		for (x=400;x<600; x++)
+		for (x=1;x<obj->tam_x; x++)
+		//for (x=400;x<600; x++)
 		{
 				vec1.x=-1;//pos1.x-x;
 				vec1.y=0;//pos1.y-y;
@@ -357,4 +355,40 @@ void create_map(t_heightmap* obj, t_texture texture)
 		glPopMatrix();
 	glEndList();
 	scr_init_reprintf (" > Finalizado");
+	debug_printf("    Mapa compilado con éxito\n");
+}
+
+float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente)
+{
+	VECTOR cur_pos = {obj_x,obj_y,obj->data[obj_x+obj_y*obj->tam_x]};
+	VECTOR incr = ray; normalize(&incr);
+	/* Si es vertical no hace falta calcular nada */
+	if(incr.x==0 && incr.y==0){obj->shadow[obj_x+obj_y*obj->tam_x]=ambiente; return ambiente;}
+	int sombra=0;
+	const int max_incrementos = 200;/* Usado para que no tenga que recorrer todo el mapa... así es más rápido. Aumentar si el mapa tiene montañas muy grandes  */
+	int incrementos=0;
+	
+	cur_pos=vsub(cur_pos,incr);
+	/* Mientras estemos en el mapa y no se haya detectado aun una sombra */
+	while(sombra==0 && incrementos<max_incrementos && (cur_pos.x<obj->tam_x && cur_pos.x>0  &&  cur_pos.y<obj->tam_y && cur_pos.y>0 && cur_pos.z<256))
+	{
+		if(obj->data[nround(cur_pos.x)+nround(cur_pos.y)*obj->tam_x]+0.0f > nround(cur_pos.z)){sombra=1;}
+		cur_pos=vsub(cur_pos,incr);
+		incrementos++;
+	}
+	cur_pos=vadd(cur_pos,incr);
+	if (0 && sombra==1){debug_printf(" -- SOMBRA:(%i,%i,%i) Corte:(%i,%i,%i) Altura:%.2f Loops: %i RAY:(%.2f,%.2f,%.2f)\n",
+					obj_x , obj_y , obj->data[obj_x+obj_y*obj->tam_x],
+					nround(cur_pos.x) , nround(cur_pos.y) , obj->data[nround(cur_pos.x)+nround(cur_pos.y)*obj->tam_x],
+					cur_pos.z,
+					incrementos,
+					ray.x,ray.y,ray.z);}
+	if (sombra==1){obj->shadow[obj_x+obj_y*obj->tam_x]=ambiente + nabs(p_escalar(obj->normal[obj_x+obj_y*obj->tam_x],incr))/10; return obj->shadow[obj_x+obj_y*obj->tam_x];}
+	
+	float resultado = nabs(p_escalar(obj->normal[obj_x+obj_y*obj->tam_x],incr)) + ambiente;
+	
+	if (resultado>1){resultado=1;}
+	if (resultado<0){resultado=0;}
+	obj->shadow[obj_x+obj_y*obj->tam_x]=resultado;
+	return resultado;
 }

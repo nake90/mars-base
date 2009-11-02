@@ -4,7 +4,7 @@
 CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
-RES  = opengl_iso_private.res
+RES  = mars_base_private.res
 OBJ  = main.o atmosferico.o shared.o 3dsloader.o heightmap.o overlay.o $(RES)
 LINKOBJ  = main.o atmosferico.o shared.o 3dsloader.o heightmap.o overlay.o $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/lib" -mwindows -lopenglut -lglu32 -lopengl32 -lwinmm -lgdi32 -ldevil -lilu -lilut  
@@ -44,5 +44,5 @@ heightmap.o: heightmap.c
 overlay.o: overlay.c
 	$(CC) -c overlay.c -o overlay.o $(CFLAGS)
 
-opengl_iso_private.res: opengl_iso_private.rc 
-	$(WINDRES) -i opengl_iso_private.rc --input-format=rc -o opengl_iso_private.res -O coff 
+mars_base_private.res: mars_base_private.rc 
+	$(WINDRES) -i mars_base_private.rc --input-format=rc -o mars_base_private.res -O coff 
