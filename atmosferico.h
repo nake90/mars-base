@@ -35,6 +35,8 @@
 /* Número de refrescos de pantalla antes de recalcular la atmósfera */
 #define ATM_UPDATE 10
 
+#define SUN_SIZE 500.0f
+
 /* Presión media en Pascales */
 #define PRESION_MEDIA 800
 #define PRESION_MAX  1000
@@ -61,7 +63,7 @@ typedef struct
 	GLfloat ambient[4];
 	GLfloat diffuse[4];
 	GLfloat specular[4];
-	GLfloat position[4];
+	GLfloat position[3];
 	float hora[1];
 	GLint texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
 }t_sun;

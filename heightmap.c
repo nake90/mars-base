@@ -71,7 +71,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	h_buffer->scale*=1000.0f;
 	
 	h_buffer->list=0;
-	h_buffer->data=malloc(sizeof(int)*h_buffer->tam_y*h_buffer->tam_x);
+	h_buffer->data=malloc(sizeof(unsigned char)*h_buffer->tam_y*h_buffer->tam_x);
 	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)",h_buffer->tam_y,h_buffer->tam_x);return 3;}
 	h_buffer->shadow=malloc(sizeof(float)*h_buffer->tam_y*h_buffer->tam_x);
 	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de sombras (%i*%i)",h_buffer->tam_y,h_buffer->tam_x);return 3;}
@@ -102,63 +102,8 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	return 0;
 }
 
-
-int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
+void list_compile_map(t_heightmap* obj, t_texture texture)
 {
-	int magic_ = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
-	scr_init_reprintf (" > Cargando datos");
-	int magic;
-	FILE* file = fopen(ruta,"rb");
-	if (!file){debug_printf("ERROR: Mapa no encontrado (%s)",ruta);return -1;}
-	
-	
-	/* -- Cabecera -- */
-	fread(&magic,sizeof(int),1,file);/* Cadena mágica */
-	if (magic!=magic_){fclose(file); debug_printf("ERROR: No es un mapa precompilado");exit(-1);return -2;}
-	
-	fread(&obj->tam_x,sizeof(int),1,file);
-	fread(&obj->tam_y,sizeof(int),1,file);
-	fread(&obj->scale,sizeof(float),1,file);
-	fread(&obj->zero_h,sizeof(int),1,file);
-	fread(&obj->min_h,sizeof(int),1,file);
-	fread(&obj->max_h,sizeof(int),1,file);
-	fread(&obj->north,sizeof(float),1,file);
-	fread(&obj->south,sizeof(float),1,file);
-	fread(&obj->east,sizeof(float),1,file);
-	fread(&obj->west,sizeof(float),1,file);
-	fread(&obj->ini_x,sizeof(int),1,file);
-	fread(&obj->ini_y,sizeof(int),1,file);
-	fread(&obj->ini_z,sizeof(int),1,file);
-	/*
-	debug_printf(" -- CARGA_MAPA --\n");
-	debug_printf("    Tamaño: %i,%i\n",obj->tam_x,obj->tam_y);
-	debug_printf("    Escala: %f\n",obj->scale);
-	debug_printf("    Alturas: (Z)%i, (m)%i, M(%i)\n",obj->zero_h,obj->min_h,obj->max_h);
-	debug_printf("    Coordenadas: (N)%f, (S)%f, E(%f), O(%f)\n",obj->north,obj->south,obj->east,obj->west);
-	debug_printf("    Inicial: (%i,%i,%i)\n",obj->ini_x,obj->ini_y,obj->ini_z);//*/
-	
-	
-	/* -- Datos -- */
-	
-	/* malloc's */
-	obj->list=0;
-	obj->data=malloc(sizeof(int)*obj->tam_y*obj->tam_x);
-	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)",obj->tam_y,obj->tam_x);return 3;}
-	obj->shadow=malloc(sizeof(float)*obj->tam_y*obj->tam_x);
-	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de sombras (%i*%i)",obj->tam_y,obj->tam_x);return 3;}
-	obj->normal=malloc(sizeof(VECTOR)*obj->tam_y*obj->tam_x);
-	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de normales (%i*%i)",obj->tam_y,obj->tam_x);return 3;}
-	
-	/* Normales */
-	fread(obj->normal, sizeof(VECTOR), obj->tam_x*obj->tam_y, file);
-	/* Shadows */
-	fread(obj->shadow, sizeof(float), obj->tam_x*obj->tam_y, file);
-	/* Alturas */
-	fread(obj->data, sizeof(int), obj->tam_x*obj->tam_y, file);
-	fclose(file);
-	
-	
-	/* --- */
 	int x,y;
 	int half_x, half_y;
 	half_x = obj->tam_x/2;
@@ -167,150 +112,10 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 	float v_scale = (obj->max_h-obj->min_h)/255.0f;
 	float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale;
 	float color=1.0f;
+	scr_init_printf ("Predibujando terreno");
 	
-	scr_init_reprintf (" > Predibujando terreno");
-	/* DIBUJAMOS */
-	obj->list=glGenLists(1);
-	glDisable(GL_LIGHTING);
-	glNewList(obj->list,GL_COMPILE);
-		use_texture(texture);
-		glPushMatrix();
-		glTranslatef(-obj->ini_x,-obj->ini_y,-obj->ini_z);
-		glRotatef(180, 0, 0, 1.0f);
-		
-		for (y=0;y<obj->tam_y-1; y++)
-		{
-			/* DIBUJO DEL TERRENO TEXTURIZADO */
-			glEnable(GL_TEXTURE_2D);
-			glBegin(GL_TRIANGLE_STRIP);
-			for (x=0;x<obj->tam_x; x++)
-			{
-				color=obj->shadow[x+y*obj->tam_x];
-				if(color>=0){glColor3f(color,color,color);}else{glColor3f(1.0,0,1.0);}
-				if(y==0 && x==0){glColor3f(0.0,1,0.0);}
-				/* Dibujamos el primer triángulo */
-				// Lo de obj->tam_x-x+1 es porque sale todo como en un espejo en las x's
-				glTexCoord2i( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale);
-				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
-				
-				color=obj->shadow[x+(y+1)*obj->tam_x];
-				if(color>=0){glColor3f(color,color,color);}else{glColor3f(1.0,0,1.0);}
-				if(y==0 && x==0){glColor3f(0.0,1,0.0);}
-				/* Dibujamos el segundo triángulo */
-				glTexCoord2i( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale);
-				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale, (obj->data[x+(y+1)*obj->tam_x]-obj->zero_h)*v_scale+v_add);
-			}
-			glEnd();
-		}
-		glPopMatrix();
-	glEndList();
-	scr_init_reprintf (" > Finalizado");
+	obj->list=glGenLists(2);
 	
-	return 0;
-}
-
-void save_compiled_map(const char* ruta, t_heightmap obj)
-{
-	int magic = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
-	FILE* file = fopen(ruta,"wb");
-	/* -- Cabecera -- */
-	fwrite(&magic,sizeof(int),1,file);
-	fwrite(&obj.tam_x,sizeof(int),1,file);
-	fwrite(&obj.tam_y,sizeof(int),1,file);
-	fwrite(&obj.scale,sizeof(float),1,file);
-	fwrite(&obj.zero_h,sizeof(int),1,file);
-	fwrite(&obj.min_h,sizeof(int),1,file);
-	fwrite(&obj.max_h,sizeof(int),1,file);
-	fwrite(&obj.north,sizeof(float),1,file);
-	fwrite(&obj.south,sizeof(float),1,file);
-	fwrite(&obj.east,sizeof(float),1,file);
-	fwrite(&obj.west,sizeof(float),1,file);
-	fwrite(&obj.ini_x,sizeof(int),1,file);
-	fwrite(&obj.ini_y,sizeof(int),1,file);
-	fwrite(&obj.ini_z,sizeof(int),1,file);
-	/* -- Datos -- */
-	/* Normales */
-	fwrite(obj.normal, sizeof(VECTOR), obj.tam_x*obj.tam_y, file);
-	/* Shadows */
-	fwrite(obj.shadow, sizeof(float), obj.tam_x*obj.tam_y, file);
-	/* Alturas */
-	fwrite(obj.data, sizeof(int), obj.tam_x*obj.tam_y, file);
-	fclose(file);
-}
-
-
-void destroy_heightmap(t_heightmap* obj)
-{
-	free(obj->data);
-	free(obj->shadow);
-	free(obj->normal);
-	glDeleteLists(obj->list,1);
-}
-
-/* --- */
-
-/*static float _get_real_height (int z, t_heightmap obj)/* Transforma una z (0-255) a su altura real *//*
-{
-	float v_scale = (obj.max_h-obj.min_h)/255.0f;
-	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
-}
-float get_real_height (int x, int y, t_heightmap obj)/* Obtiene el valor de la altura real de una casilla no centrada (0->tamaño_mapa) */
-/*{
-	if (x<0 || x>obj.tam_x || y<0 || y>obj.tam_y){return 0;}
-	return _get_real_height(obj.data[x+y*obj.tam_x],obj);
-}*/
-
-void compile_map(t_heightmap* obj, t_texture texture)
-{
-	debug_printf(" -- Compilando mapa --\n");
-	float carga_estado=0;
-	float carga_inc=100.0/obj->tam_y;
-	int valores_guardados=0;
-	
-	int x,y;
-	int half_x, half_y;
-	half_x = obj->tam_x/2;
-	half_y = obj->tam_y/2;
-	
-	float v_scale = (obj->max_h-obj->min_h)/255.0f;
-	float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale;
-	float color=1.0f;
-	VECTOR ray = {0.6,0.7,-1.4};
-	
-	/* - NOTA - No uso al final las normales en reflejos porque hace muuucho lag! -> ¡Las uso en las sombras! */
-	VECTOR vec1, vec2, vec3;/* Vectores que forman las aristas de los triángulos para calcular las normales */
-	VECTOR pos1, pos2;/* Posición de los puntos anteriores */
-	
-	/* Primero calculamos las sombras y las normales */
-	/* 'x' e 'y' NUNCA = 0 */
-	for (y=1;y<obj->tam_y; y++)
-	//for (y=300;y<500; y++)
-	{
-		if(y%64)scr_init_reprintf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
-		for (x=1;x<obj->tam_x; x++)
-		//for (x=400;x<600; x++)
-		{
-				vec1.x=-1;//pos1.x-x;
-				vec1.y=0;//pos1.y-y;
-				vec1.z = -obj->data[(x-1)+(y-0)*obj->tam_x]  +  obj->data[x+y*obj->tam_x];/*No entiendo porqué tiene que estar invertido...*/
-				
-				vec2.x=0;//pos2.x-x;
-				vec2.y=-1;//pos2.y-y;
-				vec2.z =  obj->data[(x-0)+(y-1)*obj->tam_x]  -  obj->data[x+y*obj->tam_x];
-				
-				obj->normal[x+y*obj->tam_x]=calc_normal(vec1,vec2);
-				color=calc_shadow(x, y, ray, obj, AMBIENTE);
-				
-				if(0 && valores_guardados<20 && x==600 && y>500){valores_guardados++;
-				debug_printf("(%i) ---\n  Vector1:(%.2f,%.2f,%.2f)\n  Vector2:(%.2f,%.2f,%.2f)\n  NORMAL:(%.2f,%.2f,%.2f)\n  COORD(%i,%i)\n"
-				,valores_guardados,vec1.x,vec1.y,vec1.z,vec2.x,vec2.y,vec2.z,obj->normal[x+y*obj->tam_x].x,obj->normal[x+y*obj->tam_x].y,obj->normal[x+y*obj->tam_x].z,x,y);
-				obj->shadow[x+y*obj->tam_x]=-1;}
-		}
-		carga_estado+=carga_inc;
-	}
-	scr_init_reprintf (" > Predibujando terreno");
-	/* DIBUJAMOS */
-	obj->list=glGenLists(1);
 	glDisable(GL_LIGHTING);
 	glNewList(obj->list,GL_COMPILE);
 		use_texture(texture);
@@ -374,6 +179,228 @@ void compile_map(t_heightmap* obj, t_texture texture)
 		}
 		glPopMatrix();
 	glEndList();
+	
+	glNewList(obj->list+1,GL_COMPILE);
+		use_texture(texture);
+		glPushMatrix();
+		glTranslatef(-obj->ini_x,-obj->ini_y,-obj->ini_z);
+		glRotatef(180, 0, 0, 1.0f);
+		for (y=0;y<obj->tam_y-1; y++)
+		{
+			/* DIBUJO DE TRIANGULOS (wireframe) */
+			glDisable(GL_TEXTURE_2D);
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+			glBegin(GL_TRIANGLE_STRIP);
+			glColor3f(0.0,0,0.0);
+			for (x=0;x<obj->tam_x; x++)
+			{
+				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
+				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale, (obj->data[x+(y+1)*obj->tam_x]-obj->zero_h)*v_scale+v_add);
+			}
+			glEnd();
+			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+		}
+		glPopMatrix();
+	glEndList();
+	
+	glNewList(obj->list+2,GL_COMPILE);
+		use_texture(texture);
+		glPushMatrix();
+		glTranslatef(-obj->ini_x,-obj->ini_y,-obj->ini_z);
+		glRotatef(180, 0, 0, 1.0f);
+		
+		for (y=0;y<obj->tam_y-1; y++)
+		{
+			/* DIBUJO DE LAS NORMALES y la dirección del sol*/
+			glDisable(GL_TEXTURE_2D);
+			glBegin(GL_LINES);
+			for (x=obj->tam_x-1;x>=0; x--)
+			{
+				/* Normales */
+				glColor3f(1.0,0,1.0);
+				glVertex3f  ( (obj->tam_x-x+1                                - half_x)*obj->scale, (y- half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
+				glVertex3f  ( (obj->tam_x-x+1- half_x)*obj->scale + obj->normal[x+y*obj->tam_x].x*200, (y- half_y)  *obj->scale+obj->normal[x+y*obj->tam_x].y*200, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add+obj->normal[x+y*obj->tam_x].z*200);
+				/* Rayos *//*
+				glColor3f(0.0,1.0,0.0);
+				glVertex3f  ( (obj->tam_x-x+1      - half_x)*obj->scale, (y - half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
+				glVertex3f  ( (obj->tam_x-x+1- half_x)*obj->scale-ray.x*200, (y- half_y)  *obj->scale-ray.y*200, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale-ray.z*200+v_add);//*/
+			}
+			glEnd();//*/
+		}
+		glPopMatrix();
+	glEndList();
+}
+
+int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
+{
+	int magic_ = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
+	scr_init_printf (" > Cargando datos");
+	int magic;
+	unsigned char version;
+	FILE* file = fopen(ruta,"rb");
+	if (!file){debug_printf("ATENCIÓN: Mapa no encontrado (%s)\n",ruta);return -1;}
+	
+	
+	/* -- Cabecera -- */
+	fread(&magic,sizeof(int),1,file);/* Cadena mágica */
+	if (magic!=magic_){fclose(file); debug_printf("ERROR: No es un mapa precompilado\n");return -2;}
+	
+	fread(&version,sizeof(unsigned char),1,file);/* Versión del compilado */
+	if (version!=NHMAP_VERSION){fclose(file); debug_printf("ERROR: Versión del mapa precompilado incorrecta\n");return -3;}
+	
+	fread(&obj->tam_x,sizeof(int),1,file);
+	fread(&obj->tam_y,sizeof(int),1,file);
+	fread(&obj->scale,sizeof(float),1,file);
+	fread(&obj->zero_h,sizeof(int),1,file);
+	fread(&obj->min_h,sizeof(int),1,file);
+	fread(&obj->max_h,sizeof(int),1,file);
+	fread(&obj->north,sizeof(float),1,file);
+	fread(&obj->south,sizeof(float),1,file);
+	fread(&obj->east,sizeof(float),1,file);
+	fread(&obj->west,sizeof(float),1,file);
+	fread(&obj->ini_x,sizeof(int),1,file);
+	fread(&obj->ini_y,sizeof(int),1,file);
+	fread(&obj->ini_z,sizeof(int),1,file);
+	/*
+	debug_printf(" -- CARGA_MAPA --\n");
+	debug_printf("    Tamaño: %i,%i\n",obj->tam_x,obj->tam_y);
+	debug_printf("    Escala: %f\n",obj->scale);
+	debug_printf("    Alturas: (Z)%i, (m)%i, M(%i)\n",obj->zero_h,obj->min_h,obj->max_h);
+	debug_printf("    Coordenadas: (N)%f, (S)%f, E(%f), O(%f)\n",obj->north,obj->south,obj->east,obj->west);
+	debug_printf("    Inicial: (%i,%i,%i)\n",obj->ini_x,obj->ini_y,obj->ini_z);//*/
+	
+	
+	/* -- Datos -- */
+	
+	/* malloc's */
+	obj->list=0;
+	obj->data=malloc(sizeof(unsigned char)*obj->tam_y*obj->tam_x);
+	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)\n",obj->tam_y,obj->tam_x);return 3;}
+	obj->shadow=malloc(sizeof(float)*obj->tam_y*obj->tam_x);
+	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de sombras (%i*%i)\n",obj->tam_y,obj->tam_x);return 3;}
+	obj->normal=malloc(sizeof(VECTOR)*obj->tam_y*obj->tam_x);
+	if(!obj->data){debug_printf("### Fallo en el malloc de los datos de normales (%i*%i)\n",obj->tam_y,obj->tam_x);return 3;}
+	
+	/* Normales */
+	fread(obj->normal, sizeof(VECTOR), obj->tam_x*obj->tam_y, file);
+	/* Shadows */
+	fread(obj->shadow, sizeof(float), obj->tam_x*obj->tam_y, file);
+	/* Alturas */
+	fread(obj->data, sizeof(unsigned char), obj->tam_x*obj->tam_y, file);
+	fclose(file);
+	
+	
+	/* --- */
+	list_compile_map(obj, texture);
+	scr_init_printf (" > Finalizado");
+	
+	return 0;
+}
+
+void save_compiled_map(const char* ruta, t_heightmap obj)
+{
+	int magic = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
+	unsigned char version = NHMAP_VERSION;
+	FILE* file = fopen(ruta,"wb");
+	/* -- Cabecera -- */
+	fwrite(&magic,sizeof(int),1,file);
+	fwrite(&version,sizeof(unsigned char),1,file);
+	fwrite(&obj.tam_x,sizeof(int),1,file);
+	fwrite(&obj.tam_y,sizeof(int),1,file);
+	fwrite(&obj.scale,sizeof(float),1,file);
+	fwrite(&obj.zero_h,sizeof(int),1,file);
+	fwrite(&obj.min_h,sizeof(int),1,file);
+	fwrite(&obj.max_h,sizeof(int),1,file);
+	fwrite(&obj.north,sizeof(float),1,file);
+	fwrite(&obj.south,sizeof(float),1,file);
+	fwrite(&obj.east,sizeof(float),1,file);
+	fwrite(&obj.west,sizeof(float),1,file);
+	fwrite(&obj.ini_x,sizeof(int),1,file);
+	fwrite(&obj.ini_y,sizeof(int),1,file);
+	fwrite(&obj.ini_z,sizeof(int),1,file);
+	/* -- Datos -- */
+	/* Normales */
+	fwrite(obj.normal, sizeof(VECTOR), obj.tam_x*obj.tam_y, file);
+	/* Shadows */
+	fwrite(obj.shadow, sizeof(float), obj.tam_x*obj.tam_y, file);
+	/* Alturas */
+	fwrite(obj.data, sizeof(unsigned char), obj.tam_x*obj.tam_y, file);
+	fclose(file);
+}
+
+
+void destroy_heightmap(t_heightmap* obj)
+{
+	free(obj->data);
+	free(obj->shadow);
+	free(obj->normal);
+	glDeleteLists(obj->list,3);
+}
+
+/* --- */
+
+/*static float _get_real_height (int z, t_heightmap obj)/* Transforma una z (0-255) a su altura real *//*
+{
+	float v_scale = (obj.max_h-obj.min_h)/255.0f;
+	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
+}
+float get_real_height (int x, int y, t_heightmap obj)/* Obtiene el valor de la altura real de una casilla no centrada (0->tamaño_mapa) */
+/*{
+	if (x<0 || x>obj.tam_x || y<0 || y>obj.tam_y){return 0;}
+	return _get_real_height(obj.data[x+y*obj.tam_x],obj);
+}*/
+
+void compile_map(t_heightmap* obj, t_texture texture)
+{
+	debug_printf(" -- Compilando mapa --\n");
+	scr_init_printf ("Compilando mapa");
+	scr_init_printf ("Puede tardar unos minutos y puede que la pantalla se ponga en blanco");
+	float carga_estado=0;
+	float carga_inc=100.0/obj->tam_y;
+	int valores_guardados=0;
+	
+	int x,y;
+	int half_x, half_y;
+	half_x = obj->tam_x/2;
+	half_y = obj->tam_y/2;
+	
+	float v_scale = (obj->max_h-obj->min_h)/255.0f;
+	float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale;
+	float color=1.0f;
+	VECTOR ray = {0.6,0.7,-1.4};
+	
+	/* - NOTA - No uso al final las normales en reflejos porque hace muuucho lag! -> ¡Las uso en las sombras! */
+	VECTOR vec1, vec2, vec3;/* Vectores que forman las aristas de los triángulos para calcular las normales */
+	VECTOR pos1, pos2;/* Posición de los puntos anteriores */
+	
+	/* Primero calculamos las sombras y las normales */
+	/* 'x' e 'y' NUNCA = 0 */
+	for (y=1;y<obj->tam_y; y++)
+	//for (y=300;y<500; y++)
+	{
+		if(y%64)scr_init_printf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
+		for (x=1;x<obj->tam_x; x++)
+		//for (x=400;x<600; x++)
+		{
+				vec1.x=-1;//pos1.x-x;
+				vec1.y=0;//pos1.y-y;
+				vec1.z = -obj->data[(x-1)+(y-0)*obj->tam_x]  +  obj->data[x+y*obj->tam_x];/*No entiendo porqué tiene que estar invertido...*/
+				
+				vec2.x=0;//pos2.x-x;
+				vec2.y=-1;//pos2.y-y;
+				vec2.z =  obj->data[(x-0)+(y-1)*obj->tam_x]  -  obj->data[x+y*obj->tam_x];
+				
+				obj->normal[x+y*obj->tam_x]=calc_normal(vec1,vec2);
+				color=calc_shadow(x, y, ray, obj, AMBIENTE);
+				
+				if(0 && valores_guardados<20 && x==600 && y>500){valores_guardados++;
+				debug_printf("(%i) ---\n  Vector1:(%.2f,%.2f,%.2f)\n  Vector2:(%.2f,%.2f,%.2f)\n  NORMAL:(%.2f,%.2f,%.2f)\n  COORD(%i,%i)\n"
+				,valores_guardados,vec1.x,vec1.y,vec1.z,vec2.x,vec2.y,vec2.z,obj->normal[x+y*obj->tam_x].x,obj->normal[x+y*obj->tam_x].y,obj->normal[x+y*obj->tam_x].z,x,y);
+				obj->shadow[x+y*obj->tam_x]=-1;}
+		}
+		carga_estado+=carga_inc;
+	}
+	list_compile_map(obj, texture);
 	scr_init_reprintf (" > Finalizado");
 	debug_printf("    Mapa compilado con éxito\n");
 }

@@ -18,6 +18,8 @@
 
 */
 
+#include "mars_base_private.h"
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>
@@ -34,11 +36,13 @@
 
 /* TODO (#9#): Ratón, traces y esas cosas */
 /* TODO (#7#): Arreglar presión y añadir temperatura */
-/* TODO (#1#): Sombras */
+/* TODO (#7#): Sol */
+/* TODO (#7#): Cargar más objetos y poder elegirlos */
+/* TODO (#7#): Objetos, formato y tal */
+
 
 
 /* Casillas_textura/metros_que_representa (0.5 -> media textura equivale a un metro) */
-#define TEX_SIZE 0.25
 
 /* Número de casillas visibles en modo presión */
 #define PRESION_VISIBLE 30
@@ -57,7 +61,9 @@ GLfloat fogRange[2]= {25000.0f, 50000.0f};//{120.0f, 500.0f};
 /*					AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sand={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
-t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{2.0f, 5.0f, 5.0f, 0.0f},{12.0f},{0,0}};
+t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{20000.0f, 20000.0f, 20000.0f},{12.0f},{0,0}};
+/*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
+t_texture sun_texture={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
 t_heightmap marte;
 
@@ -157,6 +163,7 @@ void display(void)
     glLoadIdentity();
 
     glEnable(GL_LIGHTING);
+    glEnable(GL_FOG);
     
     glRotatef(-camera.pitch, 1.0f,0,0);
     glRotatef(-camera.yaw, 0,0,1.0f);
@@ -170,22 +177,8 @@ void display(void)
 	
 	glCallList(marte.list);
 	
-	/*
-	//glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	glBindTexture(GL_TEXTURE_2D, sun.texture[0]);
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.1f, -1.1f, 1.0f);// Bottom Left
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.1f, -1.1f, 1.0f);// Bottom Right
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.1f, 1.1f, 1.0f);// Top Right
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.1f, 1.1f, 1.0f);// Top Left
-	glEnd();
-	glBlendFunc(GL_ONE,GL_ZERO);
-	glDisable(GL_BLEND);
-	
 	/* - Display Casillas - FIXME!!!!!*/
-   	if (show_grid)
+   	/*if (show_grid)
 	{
 		glDisable(GL_TEXTURE_2D);
 		glLineWidth(1.5f);
@@ -199,11 +192,20 @@ void display(void)
 				glVertex3f(-TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
 			glEnd();
 		}
-	}
+	}*/
 	glColor3d(1.0,1.0,1.0);
 	
+	if (show_grid) /* Ahora muestra la cuadrícula */
+	{
+		glCallList(marte.list+1);
+	}
+	if (show_presion) /* Ahora muestra las normales */
+	{
+		glCallList(marte.list+2);
+	}
+	
 	/* - Display Presión - BORRADO */
-	if (show_presion && 0)
+	/*if (show_presion && 0)
 	{
 		glDisable(GL_TEXTURE_2D);
 		presion_m=0;
@@ -245,19 +247,45 @@ void display(void)
 				glVertex3f( i*1.0f -0.0f,  j*1.0f -0.0f, 0.001f);
 				glVertex3f( i*1.0f +1.0f,  j*1.0f -0.0f, 0.001f);
 		glEnd();
+		
 		position_printf ((int)v.x,(int)v.y,1.5, "%i,%i\n%.2f",(int)v.x,(int)v.y,get_presion((int)v.x,(int)v.y));
 		glColor3d(0.0,0.0,0.0);
 		glPointSize(5.0);
+		
 		for (i=0;i<CICLONES;i++)
 		{
 			glBegin(GL_POINTS);
 				glVertex3f( ciclon[i].pos_x,  ciclon[i].pos_y, 0.001f);
 			glEnd();
 		}
-	}
+	}*/
+	
+	
 	glColor3d(1.0,1.0,1.0);
 	
 	display_3ds(test);
+	
+	
+	//glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
+	
+	/*
+    glRotatef(camera.roll, sin(RAD(camera.yaw)),cos(RAD(camera.yaw)),-sin(RAD(camera.pitch)));
+    glRotatef(camera.yaw, 0,0,1.0f);
+    glRotatef(camera.pitch, 1.0f,0,0);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	//glBindTexture(GL_TEXTURE_2D, sun.texture[0]);
+	use_texture(sun_texture);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(sun.position[0]-SUN_SIZE, sun.position[1]-SUN_SIZE, sun.position[2]+0.0f);// Bottom Left
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(sun.position[0]+SUN_SIZE, sun.position[1]-SUN_SIZE, sun.position[2]+0.0f);// Bottom Right
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(sun.position[0]+SUN_SIZE, sun.position[1]+SUN_SIZE, sun.position[2]+0.0f);// Top Right
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(sun.position[0]-SUN_SIZE, sun.position[1]+SUN_SIZE, sun.position[2]+0.0f);// Top Left
+	glEnd();
+	glBlendFunc(GL_ONE,GL_ZERO);
+	glDisable(GL_BLEND);*/
+	
     glDisable(GL_LIGHTING);
 
     hud_printf (0, 0, "TEST de casillas isométricas");
@@ -265,6 +293,9 @@ void display(void)
     hud_printf (0, 2, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
     hud_printf (0, 3, "Flechas para moverse, shift para ir muy rápido");
     hud_printf (0, 4, "WASD+QE -> Girar cámara");
+    hud_printf (0, 5, "IJKL -> Girar objeto");
+    hud_printf (0, 6, "C/V -> Ver/ocultar la cuadrícula");
+    hud_printf (0, 7, "B/N -> Ver/ocultar las normales");
 
 	glutSwapBuffers();
 }
@@ -425,7 +456,7 @@ int main(int argc, char *argv[])
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE );
 
-    glutCreateWindow("TEST isométria - nake");
+    glutCreateWindow("Mars Base v" VER_STRING);
 
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
@@ -433,9 +464,7 @@ int main(int argc, char *argv[])
     glutSpecialFunc(special_keys);
     glutIdleFunc(idle);
     
-    glutFullScreen();
-    glutSetMenu(1); 
-    glutAddMenuEntry("TEST",1);
+	glutFullScreen();
     
 	ilInit();
     ilutInit();
@@ -446,8 +475,12 @@ int main(int argc, char *argv[])
 	if(!sand.texture[0]){exit(0);}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//iluBuildMipmaps();
-	//gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 16, 16,GL_RGB, GL_UNSIGNED_BYTE, sand.texture[0]);
+	ilutGLBuildMipmaps();
+	
+	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
+	if(!sun_texture.texture[0]){exit(0);}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	ilutGLBuildMipmaps();
 	
     glShadeModel(GL_SMOOTH);
@@ -492,9 +525,9 @@ int main(int argc, char *argv[])
 	camera.pos_y=-4.5;
 	
 	/* Cargamos el sol */
-	sun.texture[0]=ilutGLLoadImage("materials\\sun.tga");
+	//sun.texture[0]=ilutGLLoadImage("materials\\sun.tga");
 	//sun.texture[1]=ilutGLLoadImage("materials\\sun_mask.tga");
-	if(!sun.texture[0] /*|| !sun.texture[1]*/){return 1;}
+	//if(!sun.texture[0] /*|| !sun.texture[1]*/){return 1;}
 	
 	scr_init_printf ("Cargando modelos...");
 	
