@@ -25,11 +25,13 @@
 #include "GL/openglut.h"
 #include "IL/ilut.h"
 
+#define NHMAP_VERSION 2 /* Define la versión de los mapas precompilados */
+
 #define AMBIENTE 0.2f
 
 typedef struct
 {
-	GLuint list;
+	GLuint list; /* list -> Terreno; list+1 -> Casillas; list+2 -> Normales; */
 	int tam_x;
 	int tam_y;
 	float scale;
@@ -45,7 +47,7 @@ typedef struct
 	int ini_z;
 	VECTOR* normal; /* Vector normal al plano (unitario) */
 	float* shadow; /* Valor de gris (0-1) */
-	int* data; /* Alturas (0-255) */
+	unsigned char* data; /* Alturas (0-255) */
 }t_heightmap;
 
 int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture);
@@ -54,5 +56,6 @@ void compile_map(t_heightmap* obj, t_texture texture);
 void save_compiled_map(const char* ruta, t_heightmap obj);
 int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture);
 float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente);
+void list_compile_map(t_heightmap* obj, t_texture texture);
 
 #endif
