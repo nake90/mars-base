@@ -78,6 +78,18 @@ void hud_printf (int col, int row, const char *fmt, ...);
 void use_texture (t_texture texture);
 //void load_material (t_texture texture);
 
+/* Trace *//*
+VECTOR trace_camera(float x, float y, float z)
+{
+	VECTOR vec={0,0,0};
+	float d;
+	if (camera.pitch>=80 || camera.pitch<=-80){return vec;}
+	d=tan(RAD(camera.pitch))*z;
+	vec.y=d*cos(RAD(-camera.yaw))+y;
+	vec.x=d*sin(RAD(-camera.yaw))+x;
+	return vec;
+}*/
+
 int str_size(const char* string);
 void str_cpy(char* string1,const char* string2);
 void str_cpyl(char* string1, int len, const char* string2);

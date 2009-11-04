@@ -42,9 +42,7 @@
 
 
 
-/* Casillas_textura/metros_que_representa (0.5 -> media textura equivale a un metro) */
-
-/* Número de casillas visibles en modo presión */
+/* Número de casillas visibles en modo presión - ## OBSOLETO ##, cuando arregle la presión lo quitaré */
 #define PRESION_VISIBLE 30
 
 #include "atmosferico.h"
@@ -53,6 +51,15 @@ static short update=0;
 
 int show_grid;
 int show_presion;
+
+enum botones_raton
+{
+	B_IZQ_RATON,
+	B_DER_RATON,
+	B_CEN_RATON
+};
+short int b_raton[3]={0,0,0};
+int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla */
 
 t_3ds_model test;
 
@@ -67,18 +74,7 @@ t_texture sun_texture={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 
 
 t_heightmap marte;
 
-/* - FUNCIONES BASE - */
-/* Trace */
-VECTOR trace_camera(float x, float y, float z)
-{
-	VECTOR vec={0,0,0};
-	float d;
-	if (camera.pitch>=80 || camera.pitch<=-80){return vec;}
-	d=tan(RAD(camera.pitch))*z;
-	vec.y=d*cos(RAD(-camera.yaw))+y;
-	vec.x=d*sin(RAD(-camera.yaw))+x;
-	return vec;
-}
+
 
 /* GLUT callback Handlers */
 
@@ -173,7 +169,7 @@ void display(void)
 	
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
 	
-	use_texture(sand);
+	//use_texture(sand);
 	
 	glCallList(marte.list);
 	
@@ -357,7 +353,7 @@ key(unsigned char key, int x, int y)
     case 'n':
 		show_presion=0;
 		break;
-		
+		/*
     case 'z':
 		vec=trace_camera(camera.pos_x,camera.pos_y,camera.pos_z);
 		presion=get_presion((int)vec.x, (int)vec.y)-0.5;
@@ -368,7 +364,7 @@ key(unsigned char key, int x, int y)
 		presion=get_presion((int)vec.x, (int)vec.y)+0.5;
 		set_presion(presion,(int)vec.x, (int)vec.y);
 		break;
-
+*/
     default:
         break;
     }
@@ -417,74 +413,108 @@ special_keys(int key, int x, int y)
 static void
 idle(void)
 {
-    update++;
+    /*update++;
     if (update>9999)//ATM_UPDATE) NO USAR!!!!
     {
 		update=0;
 		add_noise_presion(1.8f);
 		update_ciclon();
 	    flow_presion (10.0f);
-	}
+	}*/
 	glutPostRedisplay();
 }
 
+static /* Si se aprieta o se suelta una tecla del ratón */
+void mouse_but(int button, int state,int x, int y)
+{
+	p_raton_last_pres[0]=x;
+	p_raton_last_pres[1]=y;
+	if (button==GLUT_LEFT_BUTTON)
+	{
+		b_raton[B_IZQ_RATON]=(state-GLUT_DOWN)?0:1;
+	}
+	if (button==GLUT_RIGHT_BUTTON)
+	{
+		b_raton[B_DER_RATON]=(state-GLUT_DOWN)?0:1;
+	}
+	if (button==GLUT_MIDDLE_BUTTON)
+	{
+		b_raton[B_CEN_RATON]=(state-GLUT_DOWN)?0:1;
+	}
+}
 
+static /* Si se mueve el ratón mientras se está pulsando algun botón del ratón */
+void mouse_move_but(int x, int y)
+{
+	float cx, cy;
+	int w=glutGet(GLUT_WINDOW_WIDTH);
+	int h=glutGet(GLUT_WINDOW_HEIGHT);
+	int val;
+	
+	if (b_raton[B_DER_RATON] && !b_raton[B_IZQ_RATON])/* Desplazamiento por la pantalla */
+	{
+		/* cx, cy -> Incrementos de posición del ratón */
+		cx=(p_raton_last_pres[0]-x);
+		cy=(p_raton_last_pres[1]-y);
+		camera.pos_x+=cx*cos(RAD(camera.yaw))*camera.pos_z/1000.0;
+		camera.pos_y+=cx*sin(RAD(camera.yaw))*camera.pos_z/1000.0;
+		camera.pos_x-=cy*sin(RAD(-camera.yaw))*camera.pos_z/1000.0;
+		camera.pos_y-=cy*cos(RAD(-camera.yaw))*camera.pos_z/1000.0;
+	}
+	
+	if (b_raton[B_IZQ_RATON] && b_raton[B_DER_RATON])/* Zoom */
+	{
+		/* cy -> Incremento de posición del ratón */
+		cy=(p_raton_last_pres[1]-y);
+		camera.pos_z+=cy*camera.pos_z/1000.0;
+	}
+	p_raton_last_pres[0]=x;
+	p_raton_last_pres[1]=y;
+}
 
+static /* Si se mueve el ratón mientras NO se pulsa algun botón del ratón */
+void mouse_move_pas(int x, int y)
+{
+	
+}
+
+static
 void salir (void)
 {
 	destroy_heightmap(&marte);
 }
 
 
-
-/* Program entry point */
-
-int main(int argc, char *argv[])
+void GLinit(void)
 {
-    /* - INICIACIÓN VARIABLES - */
-    debug_reset();
-	tam_mapa_x = TERR_SIZE*2;
-	tam_mapa_y = TERR_SIZE*2;
-    show_grid=0;
-    show_presion=0;
-    //randomize_presion(PRESION_MEDIA,50);
-    
-    /* - INICIACIÓN PROGRAMA - */
-    atexit(salir);
+	/* Inicio del GLUT*/
 	glutInitWindowSize(800,600);
-    glutInitWindowPosition(40,40);
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE );
-
-    glutCreateWindow("Mars Base v" VER_STRING);
-
-    glutReshapeFunc(resize);
-    glutDisplayFunc(display);
-    glutKeyboardFunc(key);
-    glutSpecialFunc(special_keys);
-    glutIdleFunc(idle);
-    
+	glutInitWindowPosition(40,40);
+	
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE );
+	glutCreateWindow("Mars Base v" VER_STRING);
 	glutFullScreen();
-    
+	
+	/* Funciones por mensaje */
+	atexit(salir);
+	glutReshapeFunc(resize);
+	glutDisplayFunc(display);
+	glutKeyboardFunc(key);
+	glutSpecialFunc(special_keys);
+	glutIdleFunc(idle);
+	glutMouseFunc(mouse_but);
+	glutMotionFunc(mouse_move_but);
+	glutPassiveMotionFunc(mouse_move_pas);
+	
+	/* DevIL init */
 	ilInit();
-    ilutInit();
-    ilutRenderer(ILUT_OPENGL);
-    
-    /* - CREATE MATERIAL! - */
-	sand.texture[0]=ilutGLLoadImage("mars_sand_rocks_2.tga");
-	if(!sand.texture[0]){exit(0);}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	ilutGLBuildMipmaps();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
 	
-	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
-	if(!sun_texture.texture[0]){exit(0);}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	ilutGLBuildMipmaps();
-	
-    glShadeModel(GL_SMOOTH);
-	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
+	/* OpenGL - Specific */
+	glShadeModel(GL_SMOOTH);
+	glClearColor(0.02f,0.1f,0.02f,1.0f);
+	//glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
 	
 	glFogi(GL_FOG_MODE, GL_LINEAR);
 	glFogfv(GL_FOG_COLOR, fogColor);
@@ -515,9 +545,47 @@ int main(int argc, char *argv[])
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  sun.diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, sun.specular);
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
+}
+
+
+
+
+
+
+
+
+int main(int argc, char *argv[])
+{
+    /* - INICIACIÓN VARIABLES - */
+    debug_reset();
+	tam_mapa_x = TERR_SIZE*2;
+	tam_mapa_y = TERR_SIZE*2;
+    show_grid=0;
+    show_presion=0;
+    //randomize_presion(PRESION_MEDIA,50);
+    
+    
+    /* - INICIACIÓN PROGRAMA - */
+    glutInit(&argc, argv);
+	GLinit();
+	scr_init_reset(0);
 
 	/* - POSINICIALIZACIÓN - */
-	scr_init_reset(0);
+	
+	/* CREATE MATERIAL! TODO!!!*/
+	sand.texture[0]=ilutGLLoadImage("mars_sand_rocks_2.tga");
+	if(!sand.texture[0]){exit(0);}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	ilutGLBuildMipmaps();
+	
+	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
+	if(!sun_texture.texture[0]){exit(0);}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	ilutGLBuildMipmaps();
+	
+	
 	scr_init_printf ("Iniciando recursos...");
 	camera.pitch = 25;
 	camera.yaw = 0;
@@ -542,6 +610,7 @@ int main(int argc, char *argv[])
 	
 	scr_init_printf ("Iniciado");
 	
+	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
     glutMainLoop();
 
     return 0;
