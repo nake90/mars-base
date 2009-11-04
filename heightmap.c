@@ -50,6 +50,8 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	str_append(str_buffer,".txt");
 	FILE* info = fopen(str_buffer,"r"); if (!info){debug_printf("### Fallo al abrir \"%s\"",str_buffer);return 2;}
 	
+	scr_init_printf ("Fallo al cargar el mapa precompilado... Compilando");
+	
 	scr_init_printf(" > Cargando datos básicos");
 	/* Cargamos los datos básicos */
 	// Hay que currarse un cargador decente no tan secuencial...
@@ -93,7 +95,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	while(fscanf(data,"%i\n",&(h_buffer->data[i]))!=EOF && i<h_buffer->tam_y*h_buffer->tam_x){i++;}
 	fclose(data);
 	
-	scr_init_printf ("Compilando el mapa. Puede tardar varios minutos.");
+	
 	compile_map(h_buffer, texture);
 	str_cpy(str_buffer,filename);
 	str_append(str_buffer,".nhmap");
@@ -146,36 +148,6 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale, (obj->data[x+(y+1)*obj->tam_x]-obj->zero_h)*v_scale+v_add);
 			}
 			glEnd();
-			
-			/* DIBUJO DE TRIANGULOS (wireframe) *//*
-			glDisable(GL_TEXTURE_2D);
-			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-			glBegin(GL_TRIANGLE_STRIP);
-			glColor3f(0.0,0,0.0);
-			for (x=0;x<obj->tam_x; x++)
-			{
-				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
-				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale, (obj->data[x+(y+1)*obj->tam_x]-obj->zero_h)*v_scale+v_add);
-			}
-			glEnd();
-			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-			
-			/* DIBUJO DE LAS NORMALES y la dirección del sol*//*
-			glDisable(GL_TEXTURE_2D);
-			glBegin(GL_LINES);
-			for (x=obj->tam_x-1;x>=0; x--)
-			{
-				/* Normales *//*
-				glColor3f(1.0,0,1.0);
-				glVertex3f  ( (obj->tam_x-x+1                                - half_x)*obj->scale, (y- half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
-				glVertex3f  ( (obj->tam_x-x+1- half_x)*obj->scale + obj->normal[x+y*obj->tam_x].x*200, (y- half_y)  *obj->scale+obj->normal[x+y*obj->tam_x].y*200, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add+obj->normal[x+y*obj->tam_x].z*200);
-				/* Rayos *//*
-				glColor3f(0.0,1.0,0.0);
-				glVertex3f  ( (obj->tam_x-x+1      - half_x)*obj->scale, (y - half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
-				glVertex3f  ( (obj->tam_x-x+1- half_x)*obj->scale-ray.x*200, (y- half_y)  *obj->scale-ray.y*200, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale-ray.z*200+v_add);//*/
-			/*
-			}
-			glEnd();//*/
 		}
 		glPopMatrix();
 	glEndList();
@@ -331,10 +303,13 @@ void save_compiled_map(const char* ruta, t_heightmap obj)
 
 void destroy_heightmap(t_heightmap* obj)
 {
-	free(obj->data);
-	free(obj->shadow);
-	free(obj->normal);
-	glDeleteLists(obj->list,3);
+	if (obj)
+	{
+		if (obj->data)free(obj->data);
+		if (obj->shadow)free(obj->shadow);
+		if (obj->normal)free(obj->normal);
+		/*if (obj->list>0)*/glDeleteLists(obj->list,3); /* No estoy seguro de que el cero sea nulo para las listas de openGl */
+	}
 }
 
 /* --- */
@@ -355,6 +330,7 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	debug_printf(" -- Compilando mapa --\n");
 	scr_init_printf ("Compilando mapa");
 	scr_init_printf ("Puede tardar unos minutos y puede que la pantalla se ponga en blanco");
+	scr_init_printf (" > Iniciando compilación");
 	float carga_estado=0;
 	float carga_inc=100.0/obj->tam_y;
 	int valores_guardados=0;
@@ -378,7 +354,7 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	for (y=1;y<obj->tam_y; y++)
 	//for (y=300;y<500; y++)
 	{
-		if(y%64)scr_init_printf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
+		if(y%64)scr_init_reprintf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
 		for (x=1;x<obj->tam_x; x++)
 		//for (x=400;x<600; x++)
 		{

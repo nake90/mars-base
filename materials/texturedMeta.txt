@@ -1,0 +1,5 @@
+AMBIENT{0.2f, 0.2f, 0.2f, 1.0f}
+DIFUSE{0.92f, 0.72f, 0.21f, 1.0f}
+SPECULAR{0.05f, 0.05f, 0.05f, 1.0f}
+SHININESS{1.0}
+TEXTURE{texturedMeta.jpg}
