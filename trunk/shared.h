@@ -1,21 +1,23 @@
 /*
-	Copyright (C) 2009 Alfonso Arbona Gimeno (nake90@terra.es)
-	
-	This file is part of mars_base.
+	mars_base - Design, build and maintain your own base on Mars
+    Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
-    Mars_base is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Mars_base is distributed in the hope that it will be useful,
+    This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+    
+    If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
+    If you plan to use any part of this code on a comercial game please email me at:
+	   	   nake90@terra.es
 */
 
 #ifndef SHARED_H
@@ -75,8 +77,8 @@ void scr_init_printf (const char *fmt, ...);
 void scr_init_reprintf (const char *fmt, ...);/* Como scr_init_printf pero sobre la última línea */
 void position_printf (float x, float y, float z, const char *fmt, ...);
 void hud_printf (int col, int row, const char *fmt, ...);
+
 void use_texture (t_texture texture);
-//void load_material (t_texture texture);
 
 /* Trace *//*
 VECTOR trace_camera(float x, float y, float z)

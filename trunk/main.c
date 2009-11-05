@@ -1,21 +1,23 @@
 /*
-	Copyright (C) 2009 Alfonso Arbona Gimeno (nake90@terra.es)
-	
-	This file is part of mars_base.
+	mars_base - Design, build and maintain your own base on Mars
+    Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
-    Mars_base is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    Mars_base is distributed in the hope that it will be useful,
+    This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+    
+    If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
+    If you plan to use any part of this code on a comercial game please email me at:
+	   	   nake90@terra.es
 */
 
 #include "mars_base_private.h"
@@ -33,11 +35,12 @@
 #include "shared.h"
 #include "overlay.h"
 #include "heightmap.h"
+#include "materiales.h"
 
-/* TODO (#9#): Ratón, traces y esas cosas */
+/* TODO (#9#): traces y esas cosas */
 /* TODO (#7#): Arreglar presión y añadir temperatura */
 /* TODO (#7#): Sol */
-/* TODO (#7#): Cargar más objetos y poder elegirlos */
+/* TODO (#7#): Cargar más objetos y poder elegirlos!! */
 /* TODO (#7#): Objetos, formato y tal */
 
 
@@ -66,7 +69,7 @@ t_3ds_model test;
 GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f};
 GLfloat fogRange[2]= {25000.0f, 50000.0f};//{120.0f, 500.0f};
 /*					AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
-t_texture sand={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
+t_texture sand;//={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
 t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{20000.0f, 20000.0f, 20000.0f},{12.0f},{0,0}};
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
@@ -173,7 +176,7 @@ void display(void)
 	
 	glCallList(marte.list);
 	
-	/* - Display Casillas - FIXME!!!!!*/
+	/* - Display Casillas - FIXME!!!!! (casillas solo de la zona actual, de 1x1m^2) */
    	/*if (show_grid)
 	{
 		glDisable(GL_TEXTURE_2D);
@@ -468,6 +471,15 @@ void mouse_move_but(int x, int y)
 		cy=(p_raton_last_pres[1]-y);
 		camera.pos_z+=cy*camera.pos_z/1000.0;
 	}
+	
+	if (b_raton[B_CEN_RATON])/* Girar pantalla */
+	{
+		/* cx, cy -> Incrementos de posición del ratón */
+		cx=(p_raton_last_pres[0]-x);
+		cy=(p_raton_last_pres[1]-y);
+		camera.pitch+=cy/10.0f;
+		camera.yaw+=cx/10.0f;
+	}
 	p_raton_last_pres[0]=x;
 	p_raton_last_pres[1]=y;
 }
@@ -557,7 +569,9 @@ void GLinit(void)
 int main(int argc, char *argv[])
 {
     /* - INICIACIÓN VARIABLES - */
+    int i;
     debug_reset();
+    debug_printf("Mars_Base v." VER_STRING " - by nake\n\n");
 	tam_mapa_x = TERR_SIZE*2;
 	tam_mapa_y = TERR_SIZE*2;
     show_grid=0;
@@ -572,12 +586,13 @@ int main(int argc, char *argv[])
 
 	/* - POSINICIALIZACIÓN - */
 	
-	/* CREATE MATERIAL! TODO!!!*/
-	sand.texture[0]=ilutGLLoadImage("mars_sand_rocks_2.tga");
+	i=load_material(&sand, "materials\\sand_default");
+	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); return(-1);}
+	/*sand.texture[0]=ilutGLLoadImage("mars_sand_rocks_2.tga");
 	if(!sand.texture[0]){exit(0);}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	ilutGLBuildMipmaps();
+	ilutGLBuildMipmaps();*/
 	
 	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
 	if(!sun_texture.texture[0]){exit(0);}
