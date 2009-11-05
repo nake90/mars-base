@@ -20,10 +20,17 @@
 	   	   nake90@terra.es
 */
 
-#include "overlay.h"
+#ifndef MATERIALES_H
+#define MATERIALES_H
+#include "shared.h"
 
-void draw_minimap(GLuint minimap)
-{
-	glEnable(GL_TEXTURE_2D);
-	
-}
+int load_material (t_texture *texture, const char* ruta_);
+
+
+
+
+
+
+
+
+#endif
