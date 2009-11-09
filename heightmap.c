@@ -35,10 +35,18 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	char str_buffer[255];/* Añade la extensión */
 	int res;
 	
+	
+	/* Cargamos el minimapa */
+	str_cpy(str_buffer,filename);
+	str_append(str_buffer,"_minimap.jpg");
+	minimapa=ilutGLLoadImage(str_buffer);
+	if(!minimapa)debug_printf("ATENCIÓN: Minimapa no encontrado \"%s\"\n",str_buffer);
+	
 	/* Intentamos abrir el archivo precompilado */
 	str_cpy(str_buffer,filename);
 	str_append(str_buffer,".nhmap");
 	res=load_compiled_map(str_buffer, h_buffer, texture);
+	
 	if(res==0){return 0;}
 	if(res==3){return 3;}/* Fallo en el malloc */
 	

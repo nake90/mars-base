@@ -25,5 +25,6 @@
 #include "shared.h"
 
 void draw_minimap(GLuint minimap);
+void draw_HUD(void);
 
 #endif

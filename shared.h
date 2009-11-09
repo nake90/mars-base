@@ -35,7 +35,7 @@
 #define RAD(x) (float)x*0.01745329
 
 
-/* Realmente el tamaño es el doble de este valor */
+/* Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */
 #define TERR_SIZE 100
 
 int tam_mapa_x;
@@ -46,6 +46,8 @@ int tam_mapa_y;
 char scr_messages[80][255];
 int scr_message_index;
 int scr_message_debug;
+
+GLuint minimapa;
 
 typedef struct{float x; float y; float z;}VECTOR;
 

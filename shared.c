@@ -211,7 +211,6 @@ void debug_printf (const char *fmt, ...)
 /* - PRINTING - */
 void position_printf (float x, float y, float z, const char *fmt, ...)
 {
-    glDisable(GL_TEXTURE_2D);
 	static char buf[256];
     int viewport[4];
     void *font = GLUT_STROKE_ROMAN;
