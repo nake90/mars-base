@@ -48,6 +48,7 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
 	fgets(textura,256,file);
 	
 	debug_printf("%s",textura);
+	//glGenTextures(1, &texture->texture[0]);
 	texture->texture[0]=ilutGLLoadImage(textura);
 	if(!texture->texture[0]){return(-2);}
 	

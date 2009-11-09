@@ -24,6 +24,43 @@
 
 void draw_minimap(GLuint minimap)
 {
-	glEnable(GL_TEXTURE_2D);
+	if (!minimap)return;
 	
+	glPushMatrix();
+	glEnable(GL_TEXTURE_2D);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glFrustum(0,1,0,1,0.001,-2);
+	
+	glTranslatef(0,0,-2);
+	
+	glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
+	glDisable(GL_DEPTH_TEST);
+	
+	
+	
+	glBindTexture(GL_TEXTURE_2D, minimap);
+	glBegin(GL_QUADS);
+		glTexCoord2f(1,1);
+		glVertex2f(+1.0f,  +0.8f);
+		glTexCoord2f(0,1);
+		glVertex2f(+0.5f,  +0.8f);
+		glTexCoord2f(0,0);
+		glVertex2f(+0.5f,  +0.5f);
+		glTexCoord2f(1,0);
+		glVertex2f(+1.0f,  +0.5f);
+	glEnd();
+	/* Falta que muestre la posición actual */
+	
+	glEnable(GL_FOG);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	glPopMatrix();
+}
+
+void draw_HUD(void)
+{
+	draw_minimap(minimapa);
+	//glutSwapBuffers();
 }

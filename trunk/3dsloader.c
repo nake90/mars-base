@@ -11,6 +11,7 @@
  * 
  * Include File: 3dsloader.cpp
  *  
+ * EDITED by: Alfonso Arbona Gimeno <nake90@terra.es>
  */
 
 
@@ -68,28 +69,13 @@ char Load3DS (t_3ds_model_ptr p_object, char *p_filename)
 
 		switch (l_chunk_id)
         {
-			//----------------- MAIN3DS -----------------
-			// Description: Main chunk, contains all the other chunks
-			// Chunk ID: 4d4d 
-			// Chunk Lenght: 0 + sub chunks
-			//-------------------------------------------
-			case 0x4d4d: 
+			case MAIN3DS: 
 			break;    
-
-			//----------------- EDIT3DS -----------------
-			// Description: 3D Editor chunk, objects layout info 
-			// Chunk ID: 3d3d (hex)
-			// Chunk Lenght: 0 + sub chunks
-			//-------------------------------------------
-			case 0x3d3d:
+			
+			case EDIT3DS:
 			break;
 			
-			//--------------- EDIT_OBJECT ---------------
-			// Description: Object block, info for each object
-			// Chunk ID: 4000 (hex)
-			// Chunk Lenght: len(object name) + sub chunks
-			//-------------------------------------------
-			case 0x4000: 
+			case EDIT_OBJECT: 
 				i=0;
 				do
 				{
@@ -98,23 +84,11 @@ char Load3DS (t_3ds_model_ptr p_object, char *p_filename)
 					i++;
                 }while(l_char != '\0' && i<20);
 			break;
-
-			//--------------- OBJ_TRIMESH ---------------
-			// Description: Triangular mesh, contains chunks for 3d mesh info
-			// Chunk ID: 4100 (hex)
-			// Chunk Lenght: 0 + sub chunks
-			//-------------------------------------------
-			case 0x4100:
+			
+			case OBJ_TRIMESH:
 			break;
 			
-			//--------------- TRI_VERTEXL ---------------
-			// Description: Vertices list
-			// Chunk ID: 4110 (hex)
-			// Chunk Lenght: 1 x unsigned short (number of vertices) 
-			//             + 3 x float (vertex coordinates) x (number of vertices)
-			//             + sub chunks
-			//-------------------------------------------
-			case 0x4110: 
+			case TRI_VERTEXL: 
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
                 p_object->vertices_qty = l_qty;
                 if(DEBUG_LOAD)debug_printf("Number of vertices: %d\n",l_qty);
@@ -128,15 +102,8 @@ char Load3DS (t_3ds_model_ptr p_object, char *p_filename)
  					if(DEBUG_LOAD)debug_printf("Vertices list z: %f\n",p_object->vertex[i].z);
 				}
 				break;
-
-			//--------------- TRI_FACEL1 ----------------
-			// Description: Polygons (faces) list
-			// Chunk ID: 4120 (hex)
-			// Chunk Lenght: 1 x unsigned short (number of polygons) 
-			//             + 3 x unsigned short (polygon points) x (number of polygons)
-			//             + sub chunks
-			//-------------------------------------------
-			case 0x4120:
+			
+			case TRI_FACEL1:
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
                 p_object->polygons_qty = l_qty;
                 if(DEBUG_LOAD)debug_printf("Number of polygons: %d\n",l_qty); 
@@ -152,15 +119,8 @@ char Load3DS (t_3ds_model_ptr p_object, char *p_filename)
 					if(DEBUG_LOAD)debug_printf("Face flags: %x\n",l_face_flags);
 				}
                 break;
-
-			//------------- TRI_MAPPINGCOORS ------------
-			// Description: Vertices list
-			// Chunk ID: 4140 (hex)
-			// Chunk Lenght: 1 x unsigned short (number of mapping points) 
-			//             + 2 x float (mapping coordinates) x (number of mapping points)
-			//             + sub chunks
-			//-------------------------------------------
-			case 0x4140:
+			
+			case TRI_MAPPINGCOORS:
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
 				for (i=0; i<l_qty; i++)
 				{

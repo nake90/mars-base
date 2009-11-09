@@ -64,6 +64,12 @@ enum botones_raton
 short int b_raton[3]={0,0,0};
 int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla */
 
+
+
+/* VARIABLES DE CONFIGURACIÓN */
+//int overlay_posible; Asumo que si se puede... no creo que alguien juegue a un juego 3D y su pantalla no pueda añadir overlays.
+
+
 t_3ds_model test;
 
 GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f};
@@ -83,19 +89,30 @@ t_heightmap marte;
 
 static void resize(int width, int height)
 {
-    const float ar = (float) width / (float) height;
-
-    glViewport(0, 0, width, height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,fogRange[1]+100.0f);
-    /*if( ar > .5 )
-        glFrustum( -ar, ar, -1.0, 1.0, 2.0, 100.0 );
-    else
-        glFrustum( -1.0, 1.0, -1/ar, 1/ar, 2.0, 100.0 );*/
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity() ;
+	const float ar = (float) width / (float) height;
+	/* NORMAL */
+	glutUseLayer(GLUT_NORMAL);
+	glViewport(0, 0, width, height);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,fogRange[1]+100.0f);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	/* OVERLAY */
+	glutUseLayer(GLUT_OVERLAY);
+	glViewport(0, 0, width, height);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,fogRange[1]+100.0f);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	glutUseLayer(GLUT_NORMAL);
 }
 
 static void display_3ds(t_3ds_model object)
@@ -107,7 +124,7 @@ static void display_3ds(t_3ds_model object)
 
     glRotatef(object.yaw, 0,0,1.0f);
     glRotatef(object.pitch, 1.0f,0,0);
-    //glRotatef(object.roll, sin(RAD(object.yaw)),cos(RAD(object.yaw)),-sin(RAD(object.pitch)));
+    //glRotatef(object.roll, sin(RAD(object.yaw)),cos(RAD(object.yaw)),-sin(RAD(object.pitch))); ARREGLAR!!!
     
     
     glTranslatef(object.x,object.y,object.z);
@@ -295,7 +312,9 @@ void display(void)
     hud_printf (0, 5, "IJKL -> Girar objeto");
     hud_printf (0, 6, "C/V -> Ver/ocultar la cuadrícula");
     hud_printf (0, 7, "B/N -> Ver/ocultar las normales");
-
+	
+	/* Como los overlays aun no están implementados en openGLUT, mostramos el HUD sobre la pantalla directamente */
+	draw_HUD();
 	glutSwapBuffers();
 }
 
@@ -425,6 +444,7 @@ idle(void)
 	    flow_presion (10.0f);
 	}*/
 	glutPostRedisplay();
+	/*glutPostOverlayRedisplay(); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
 }
 
 static /* Si se aprieta o se suelta una tecla del ratón */
@@ -453,23 +473,24 @@ void mouse_move_but(int x, int y)
 	int w=glutGet(GLUT_WINDOW_WIDTH);
 	int h=glutGet(GLUT_WINDOW_HEIGHT);
 	int val;
+	float altura_real=camera.pos_z;
 	
 	if (b_raton[B_DER_RATON] && !b_raton[B_IZQ_RATON])/* Desplazamiento por la pantalla */
 	{
 		/* cx, cy -> Incrementos de posición del ratón */
 		cx=(p_raton_last_pres[0]-x);
 		cy=(p_raton_last_pres[1]-y);
-		camera.pos_x+=cx*cos(RAD(camera.yaw))*camera.pos_z/1000.0;
-		camera.pos_y+=cx*sin(RAD(camera.yaw))*camera.pos_z/1000.0;
-		camera.pos_x-=cy*sin(RAD(-camera.yaw))*camera.pos_z/1000.0;
-		camera.pos_y-=cy*cos(RAD(-camera.yaw))*camera.pos_z/1000.0;
+		camera.pos_x+=cx*cos(RAD(camera.yaw))*altura_real/1000.0;
+		camera.pos_y+=cx*sin(RAD(camera.yaw))*altura_real/1000.0;
+		camera.pos_x-=cy*sin(RAD(-camera.yaw))*altura_real/1000.0;
+		camera.pos_y-=cy*cos(RAD(-camera.yaw))*altura_real/1000.0;
 	}
 	
 	if (b_raton[B_IZQ_RATON] && b_raton[B_DER_RATON])/* Zoom */
 	{
 		/* cy -> Incremento de posición del ratón */
 		cy=(p_raton_last_pres[1]-y);
-		camera.pos_z+=cy*camera.pos_z/1000.0;
+		camera.pos_z+=cy*altura_real/1000.0;
 	}
 	
 	if (b_raton[B_CEN_RATON])/* Girar pantalla */
@@ -505,12 +526,15 @@ void GLinit(void)
 	
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE );
 	glutCreateWindow("Mars Base v" VER_STRING);
+	//glutEstablishOverlay(); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
+	//glutHideOverlay(); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
 	glutFullScreen();
 	
 	/* Funciones por mensaje */
 	atexit(salir);
 	glutReshapeFunc(resize);
 	glutDisplayFunc(display);
+	/*glutOverlayDisplayFunc(draw_HUD); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
 	glutKeyboardFunc(key);
 	glutSpecialFunc(special_keys);
 	glutIdleFunc(idle);
