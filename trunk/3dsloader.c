@@ -69,13 +69,13 @@ char Load3DS (t_3ds_model_ptr p_object, char *p_filename)
 
 		switch (l_chunk_id)
         {
-			case MAIN3DS: 
+			case MAIN3DS: /* Lenght: 0 + sub chunks */
 			break;    
 			
-			case EDIT3DS:
+			case EDIT3DS: /* Lenght: 0 + sub chunks */
 			break;
 			
-			case EDIT_OBJECT: 
+			case EDIT_OBJECT:
 				i=0;
 				do
 				{
@@ -85,10 +85,10 @@ char Load3DS (t_3ds_model_ptr p_object, char *p_filename)
                 }while(l_char != '\0' && i<20);
 			break;
 			
-			case OBJ_TRIMESH:
+			case OBJ_TRIMESH: /* Lenght: 0 + sub chunks */
 			break;
 			
-			case TRI_VERTEXL: 
+			case TRI_VERTEXL:
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
                 p_object->vertices_qty = l_qty;
                 if(DEBUG_LOAD)debug_printf("Number of vertices: %d\n",l_qty);
