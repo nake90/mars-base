@@ -7,7 +7,11 @@ Recomiendo que *no* uses los binarios, ya que prácticamente siempre, en este es
 
 Si aun así quieres descargar los binarios: *[http://code.google.com/p/mars-base/downloads/list]*
 
-= Descargar datos por primera vez =
+----
+
+= Uso del TortoiseSVN =
+
+== Descargar datos por primera vez ==
 
 Creas una carpeta vacía donde quieras tener tu copia del trabajo y la llamas como quieras.
 Haces click derecho y elijes _SVN Checkout_.
@@ -16,13 +20,13 @@ El segundo recuadro debería apuntar a la carpeta que has creado.
 Click en _OK_ y se descargarán los datos.
 
 
-= Actualizar =
+== Actualizar ==
 
 Para actualizar haz click derecho sobre la carpeta donde tienes el proyecto y eleje _SVN Update_.
 Espera a que se descarguen los datos que han cambiado y ya está.
 
 
-= Subir archivos =
+== Subir archivos ==
 
  * Si no eres parte del equipo no podrás subir los archivos.
  * Mejor actualizar antes de empezar a hacer cambios, pero no pasa nada si se han cambiado cosas mientras editabas el proyecto.
@@ -33,7 +37,7 @@ Comprueba que estén seleccionados todos los cambios que quieras hacer en la lis
 Haz click en OK y espera mientras se envían los datos.
 
 
-= Mover, Copiar, Borrar y Añadir archivos =
+== Mover, Copiar, Borrar y Añadir archivos ==
 
 Es *muy aconsejable* que en vez de usar los comandos de Windows para mover, copiar y borrar usas los del TortoiseSVN.
 
@@ -47,7 +51,7 @@ Si quieres *añadir un archivo nuevo* que no estaba versionado, haz click derech
 Es mejor ya que así el TortoiseSVN sabe que hemos cambiado cosas, si usamos los comandos de Windows no se da cuenta de que hemos movido/borrado/añadido archivos hasta que hacemos el checkout y no los selecciona por defecto en la lista de archivos a enviar.
 
 
-= Iconos y su significado =
+== Iconos y su significado ==
 
  * Círculo verde -> Archivo sin editar.
  * Círculo rojo -> Archivo editado sin enviar al servidor.
