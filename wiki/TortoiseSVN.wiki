@@ -1,6 +1,12 @@
 #summary Uso del TortoiseSVN paso a paso.
 #labels Phase-Support,Featured
 
+= Descargar binarios =
+
+Recomiendo que *no* uses los binarios, ya que prácticamente siempre, en este estado del juego, estarán desactualizados y pueden tener bugs y/o que le falten cosas.
+
+Si aun así quieres descargar los binarios: *[http://code.google.com/p/mars-base/downloads/list]*
+
 = Descargar datos por primera vez =
 
 Creas una carpeta vacía donde quieras tener tu copia del trabajo y la llamas como quieras.
