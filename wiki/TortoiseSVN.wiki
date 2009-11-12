@@ -11,11 +11,14 @@ Si aun así quieres descargar los binarios: *[http://code.google.com/p/mars-base
 
 = Uso del TortoiseSVN =
 
+<font color=red> *[http://tortoisesvn.net/downloads Descargar TortoiseSVN]* </font>
+
+
 == Descargar datos por primera vez ==
 
 Creas una carpeta vacía donde quieras tener tu copia del trabajo y la llamas como quieras.
 Haces click derecho y elijes _SVN Checkout_.
-En _URL of repository_ (Primer recuadro) escribes: `https://mars-base.googlecode.com/svn/trunk/` (Si no eres parte del equipo sustituye _https_ por _http_)
+En _URL of repository_ (Primer recuadro) escribes: `http://mars-base.googlecode.com/svn/trunk/` (Si eres parte del equipo sustituye _http_ por _https_)
 El segundo recuadro debería apuntar a la carpeta que has creado.
 Click en _OK_ y se descargarán los datos.
 
