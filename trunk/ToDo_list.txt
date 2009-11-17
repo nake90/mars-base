@@ -1,0 +1,11 @@
+!!	Carga texturas del .3ds
+!!!	Arreglar 3ds_loader.h -> Si se incluye el proyecto no compila
+!	Info en el minimapa de coordenadas.
+?	Rotación Roll de los objetos (no estoy seguro de si funciona y ahora no lo puedo comprobar)
+!	Console
+!!	Lista de objetos cargables
+!	Presión atmosférica
+!	Temperatura atmosférica
+!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
+!	Control de nodos
+!	Funciones de transferencia de calor, gases y presión
