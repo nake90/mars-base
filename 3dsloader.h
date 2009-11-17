@@ -15,6 +15,9 @@
  * INFO: http://www.the-labs.com/Blender/3dsspec.html
  */
 
+#ifndef OBJ_LOADER_H
+#define OBJ_LOADER_H
+
 /* ### NOTA - 3DS es un formato propietario... habría que usar uno libre
 
 INFO DE FORMATO:
@@ -125,8 +128,8 @@ Fragmento del 3ds:
 
 #include "shared.h"
 
-#define MAX_VERTICES 8000 // Max number of vertices (for each object)
-#define MAX_POLYGONS 8000 // Max number of polygons (for each object)
+#define MAX_VERTICES 65536 /* Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds */
+#define MAX_POLYGONS 65536 /* Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds */
 #define DEBUG_LOAD 0
 
 // Our vertex type
@@ -165,3 +168,4 @@ typedef struct {
 
 extern char Load3DS (t_3ds_model_ptr ogg, char *filename);
 
+#endif

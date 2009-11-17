@@ -31,7 +31,7 @@
 #include "GL/openglut.h"
 #include "IL/ilut.h"
 
-#include "3dsloader.h"
+//#include "3dsloader.h"
 #include "shared.h"
 #include "overlay.h"
 #include "heightmap.h"
@@ -70,7 +70,7 @@ int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla 
 //int overlay_posible; Asumo que si se puede... no creo que alguien juegue a un juego 3D y su pantalla no pueda añadir overlays.
 
 
-t_3ds_model test;
+//t_3ds_model test;
 
 GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f};
 GLfloat fogRange[2]= {25000.0f, 50000.0f};//{120.0f, 500.0f};
@@ -115,6 +115,7 @@ static void resize(int width, int height)
 	glutUseLayer(GLUT_NORMAL);
 }
 
+#if(0)
 static void display_3ds(t_3ds_model object)
 {
 	int l_index;
@@ -161,7 +162,7 @@ static void display_3ds(t_3ds_model object)
     }
     glEnd();
 }
-
+#endif
 void display(void)
 {
     int i;
@@ -279,7 +280,7 @@ void display(void)
 	
 	glColor3d(1.0,1.0,1.0);
 	
-	display_3ds(test);
+	//display_3ds(test);
 	
 	
 	//glDisable(GL_LIGHTING);
@@ -345,7 +346,7 @@ key(unsigned char key, int x, int y)
     case 'd': camera.yaw--;
 		break;
 		
-		
+		/*
 	case 'i': test.pitch++;
 		break;
     case 'k': test.pitch--;
@@ -360,7 +361,7 @@ key(unsigned char key, int x, int y)
 		break;
     case 'l': test.yaw--;
 		break;
-		
+		*/
 	
     case 'c':
 		show_grid=1;
@@ -638,9 +639,9 @@ int main(int argc, char *argv[])
 	
 	scr_init_printf ("Cargando modelos...");
 	
-	if(Load3DS(&test,"models\\test.3ds")!=1){exit(1);}
+	/*if(Load3DS(&test,"models\\test.3ds")!=1){exit(1);}
 	test.id_texture=ilutGLLoadImage("materials\\genericmetal05.jpg");
-	test.size=1.0f;
+	test.size=1.0f;*/
 	
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);

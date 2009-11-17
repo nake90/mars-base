@@ -17,9 +17,9 @@
 
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
-#include <io.h>
+//#include <stdlib.h>
+//#include <conio.h>
+//#include <io.h>
 
 #include "3dsloader.h"
 
