@@ -3,13 +3,13 @@ gravedad: 3.69 m/s²
 cambia rápidamente de temperatura, por la noche mucho frío, por el día calor (+-)
 1 Día = 24h 37m 22.663s
 
--Tormentas de arena
+-Tormentas de arena-
 duración: ~1 mes
 aumentan mucho la temperatura (unos 30ºC), pero la estación siguiente tiene 4ºC menos que la media
 normalmente durante el perihelion
 
 -Atmósfera-
-presión: ~600–1000 Pa (Mín: 30Pa en Olympus Mons's, Máx: 1155Pa en Hellas Planitia)
+presión: ~600–1000 Pa (Mín: 30Pa en Olympus Mons's (+27km de altura), Máx: 1155Pa en Hellas Planitia (-7km de altura))
 temperatura: 186 K; ~227 K; 268 K
 CO2: 95.72%
 Ar: 1.6%

@@ -1,0 +1,86 @@
+\section{Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/heightmap.h}
+\label{heightmap_8h}\index{C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/heightmap.h@{C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/heightmap.h}}
+
+
+Header que controla los heightmaps (mapas).  
+{\ttfamily \#include \char`\"{}shared.h\char`\"{}}\par
+{\ttfamily \#include $<$stdio.h$>$}\par
+{\ttfamily \#include \char`\"{}GL/openglut.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}IL/ilut.h\char`\"{}}\par
+\subsection*{Estructuras de datos}
+\begin{DoxyCompactItemize}
+\item 
+struct {\bf t\_\-heightmap}
+\end{DoxyCompactItemize}
+\subsection*{Definiciones}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bfseries NHMAP\_\-VERSION}~2\label{heightmap_8h_a75d3f3db472596f0c6a0d790e007ba38}
+
+\item 
+\#define {\bfseries AMBIENTE}~0.2f\label{heightmap_8h_a214e26f6ef3547099209ae11dbbffeb0}
+
+\end{DoxyCompactItemize}
+\subsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+int {\bf load\_\-heightmap} (const char $\ast$filename, {\bf t\_\-heightmap} $\ast$h\_\-buffer, {\bf t\_\-texture} texture)
+\begin{DoxyCompactList}\small\item\em Función principal para la carga de heightmaps Esta función intenta primero cargar el heightmap precompilado, si no lo encuentra lo compila y lo guarda. \item\end{DoxyCompactList}\item 
+void {\bfseries destroy\_\-heightmap} ({\bf t\_\-heightmap} $\ast$obj)\label{heightmap_8h_a96fef409bbc870002703c7a55d2591c9}
+
+\item 
+void {\bfseries compile\_\-map} ({\bf t\_\-heightmap} $\ast$obj, {\bf t\_\-texture} texture)\label{heightmap_8h_ac95a5ca74fe1123edc7e88fe2b4c1cd0}
+
+\item 
+void {\bfseries save\_\-compiled\_\-map} (const char $\ast$ruta, {\bf t\_\-heightmap} obj)\label{heightmap_8h_a0ea2caf90742c16e0a103f91668bb359}
+
+\item 
+int {\bfseries load\_\-compiled\_\-map} (const char $\ast$ruta, {\bf t\_\-heightmap} $\ast$obj, {\bf t\_\-texture} texture)\label{heightmap_8h_a02c72f16c50a4499ae51a664bd02e9a3}
+
+\item 
+float {\bfseries calc\_\-shadow} (int obj\_\-x, int obj\_\-y, {\bf VECTOR} ray, {\bf t\_\-heightmap} $\ast$obj, float ambiente)\label{heightmap_8h_a752b82b3bd6b16cbfac7ac591bacdbc1}
+
+\item 
+void {\bfseries list\_\-compile\_\-map} ({\bf t\_\-heightmap} $\ast$obj, {\bf t\_\-texture} texture)\label{heightmap_8h_ad85161fbb63b928eaabb16f0f3275683}
+
+\item 
+float {\bfseries get\_\-real\_\-height} (float coord\_\-x, float coord\_\-y)\label{heightmap_8h_ac853e2c0c9e5c2c52b7d948d0fab7fb7}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+{\bf t\_\-heightmap} {\bfseries marte}\label{heightmap_8h_a0bbad8f0b11f3175c39708fe30d5302f}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Descripción detallada}
+Header que controla los heightmaps (mapas). \begin{DoxyAuthor}{Autor}
+Alfonso Arbona Gimeno 
+\end{DoxyAuthor}
+
+
+\subsection{Documentación de las funciones}
+\index{heightmap.h@{heightmap.h}!load\_\-heightmap@{load\_\-heightmap}}
+\index{load\_\-heightmap@{load\_\-heightmap}!heightmap.h@{heightmap.h}}
+\subsubsection[{load\_\-heightmap}]{\setlength{\rightskip}{0pt plus 5cm}int load\_\-heightmap (const char $\ast$ {\em filename}, \/  {\bf t\_\-heightmap} $\ast$ {\em h\_\-buffer}, \/  {\bf t\_\-texture} {\em texture})}\label{heightmap_8h_a2d71672188b29fc583865d61ff526d86}
+
+
+Función principal para la carga de heightmaps Esta función intenta primero cargar el heightmap precompilado, si no lo encuentra lo compila y lo guarda. \begin{DoxyWarning}{Atención}
+La ruta al archivo no debe contener extensión ya que se usa la función append para añadir la extensión que se requiera en cada caso. 
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parámetros}
+\item[{\em filename}]Ruta a la carpeta y nombre del archivo SIN EXTENSIÓN \item[{\em h\_\-buffer}]Puntero al heightmap a crear \item[{\em texture}]Textura que se usará en el mapa \end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+0 -\/$>$ Ok 
+
+1 -\/$>$ Imagen de alturas (.pgm) no encontrado 
+
+2 -\/$>$ Archivo de información (.txt) no encontrado 
+
+3 -\/$>$ Fallo en el malloc 
+
+4 -\/$>$ El archivo de alturas no es un PGM 
+\end{DoxyReturn}

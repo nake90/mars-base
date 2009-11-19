@@ -20,7 +20,13 @@
 	   	   nake90@terra.es
 */
 
+/** \file overlay.c
+ * \brief Controla el HUD
+ * \author Alfonso Arbona Gimeno
+*/
+
 #include "overlay.h"
+#include "heightmap.h"
 
 void draw_minimap(GLuint minimap)
 {
@@ -32,7 +38,7 @@ void draw_minimap(GLuint minimap)
 	glMatrixMode(GL_MODELVIEW);
 	glFrustum(0,1,0,1,0.001,-2);
 	
-	glTranslatef(0,0,-2);
+	glTranslatef(0.5f,0.5f,-2.0f);
 	
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
@@ -43,24 +49,59 @@ void draw_minimap(GLuint minimap)
 	glBindTexture(GL_TEXTURE_2D, minimap);
 	glBegin(GL_QUADS);
 		glTexCoord2f(1,1);
-		glVertex2f(+1.0f,  +0.8f);
+		glVertex2f(+0.5f,  +0.3f);
 		glTexCoord2f(0,1);
-		glVertex2f(+0.5f,  +0.8f);
+		glVertex2f(+0.0f,  +0.3f);
 		glTexCoord2f(0,0);
-		glVertex2f(+0.5f,  +0.5f);
+		glVertex2f(+0.0f,  +0.0f);
 		glTexCoord2f(1,0);
-		glVertex2f(+1.0f,  +0.5f);
+		glVertex2f(+0.5f,  +0.0f);
 	glEnd();
-	/* Falta que muestre la posición actual */
+	
+	/*
+	y
+	^(0, 0.3)
+	|
+	|      (0.5, 0)
+	o-----> x
+	*/
+	
+	float x, y;
+	x = ((camera.pos_x/marte.scale) + marte.tam_x/2 - 1)*0.5f/ marte.tam_x;
+	y = ((camera.pos_y/marte.scale) + marte.tam_y/2 - 1)*0.3f/ marte.tam_y;
+	
+	glDisable(GL_TEXTURE_2D);
+	glColor3d(0.0f, 0.0f, 1.0f);
+	glPointSize(4.0);
+	glBegin(GL_POINTS);
+		glVertex2f(x,y);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex2f(x,y);
+		glVertex2f(x+sin(RAD(-camera.yaw))*0.02f,y+cos(RAD(camera.yaw))*0.02f);
+	glEnd();
+	
+	glPopMatrix();
+	
+	
+	
+	/* Mostramos el texto de información en el HUD */
+	hud_printf (0, 0, "Mars Base - v" VER_STRING);
+	hud_printf (0, 1, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
+	hud_printf (0, 2, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
+	hud_printf (0, 3, "Flechas para moverse, shift para ir muy rápido");
+	hud_printf (0, 4, "WASD+QE -> Girar cámara");
+	hud_printf (0, 5, "IJKL -> Girar objeto");
+	hud_printf (0, 6, "C/V -> Ver/ocultar la cuadrícula");
+	hud_printf (0, 7, "B/N -> Ver/ocultar las normales");
 	
 	glEnable(GL_FOG);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
-	glPopMatrix();
 }
 
 void draw_HUD(void)
 {
 	draw_minimap(minimapa);
-	//glutSwapBuffers();
+	
 }

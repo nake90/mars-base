@@ -1,0 +1,44 @@
+\section{Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/objetos.c}
+\label{objetos_8c}\index{C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/objetos.c@{C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/objetos.c}}
+
+
+Control de objetos Este archivo se encarga de todo lo relacionado con los objetos. (Carga, dibujo, control, ...).  
+{\ttfamily \#include \char`\"{}objetos.h\char`\"{}}\par
+{\ttfamily \#include $<$stdio.h$>$}\par
+\subsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+int {\bf load\_\-3DS} ({\bf t\_\-model\_\-ptr} data, char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Carga los datos básicos de un objeto desde un archivo 3ds. \item\end{DoxyCompactList}\item 
+void {\bf object\_\-draw} ({\bf t\_\-obj\_\-base} object)
+\begin{DoxyCompactList}\small\item\em Dibuja un objeto mediante OpenGL en las coordenadas correspondientes. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Descripción detallada}
+Control de objetos Este archivo se encarga de todo lo relacionado con los objetos. (Carga, dibujo, control, ...). \begin{DoxyAuthor}{Autor}
+Alfonso Arbona Gimeno 
+\end{DoxyAuthor}
+
+
+\subsection{Documentación de las funciones}
+\index{objetos.c@{objetos.c}!load\_\-3DS@{load\_\-3DS}}
+\index{load\_\-3DS@{load\_\-3DS}!objetos.c@{objetos.c}}
+\subsubsection[{load\_\-3DS}]{\setlength{\rightskip}{0pt plus 5cm}int load\_\-3DS ({\bf t\_\-model\_\-ptr} {\em data}, \/  char $\ast$ {\em filename})}\label{objetos_8c_a191f00b4d95e50b73000ed459c27ee37}
+
+
+Carga los datos básicos de un objeto desde un archivo 3ds. 
+\begin{DoxyParams}{Parámetros}
+\item[{\em data}]Pointer al lugar donde se deben guardar los datos \item[{\em filename}]Ruta al archivo 3ds \end{DoxyParams}
+\begin{DoxyReturn}{Devuelve}
+0 -\/$>$ Ok; 1 -\/$>$ Archivo no encontrado 
+\end{DoxyReturn}
+\index{objetos.c@{objetos.c}!object\_\-draw@{object\_\-draw}}
+\index{object\_\-draw@{object\_\-draw}!objetos.c@{objetos.c}}
+\subsubsection[{object\_\-draw}]{\setlength{\rightskip}{0pt plus 5cm}void object\_\-draw ({\bf t\_\-obj\_\-base} {\em object})}\label{objetos_8c_a0ac96b56eb1c63648a05e7c1fc4a857b}
+
+
+Dibuja un objeto mediante OpenGL en las coordenadas correspondientes. 
+\begin{DoxyParams}{Parámetros}
+\item[{\em object}]Objeto a dibujar \end{DoxyParams}
+\begin{Desc}
+\item[{\bf Bug}]Falta el roll del objeto \end{Desc}

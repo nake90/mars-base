@@ -20,6 +20,13 @@
 	   	   nake90@terra.es
 */
 
+/** \file shared.c
+ * \brief Funciones compartidas por todos los módulos
+ * Este archivo contiene todo el código de las funciones que son necesarias por todos los
+ * diferentes módulos del programa. Está formado por funciones de bajo nivel personalizadas para la aplicación.
+ * \author Alfonso Arbona Gimeno
+*/
+
 #include "shared.h"
 
 /* - MATH - */
@@ -109,24 +116,53 @@ void scr_init_reprintf (const char *fmt, ...)
 
 
 /* - STRINGS - */
+
+/*! \fn int str_size(const char* string)
+ *  \brief Obtiene el número de carácteres de un string.
+ *  \param string String a medir
+ *	\return Número de carácteres del string (Sin el \\0 final)
+*/
 int str_size(const char* string)
 {
 	int i=0;
 	while(string[i]!=0){i++;}
 	return i;
 }
+
+/*! \fn void str_cpy(char* string1,const char* string2)
+ *  \brief Copia el contenido de string2 a string1
+ *  \param string1 String de destino
+ *  \param string2 String de origen
+ *	\sa str_cpyl
+*/
 void str_cpy(char* string1,const char* string2)
 {
 	int i=0;
 	while(string2[i]!=0){string1[i]=string2[i];i++;}
 	string1[i]=0;
 }
+
+/*! \fn void str_cpyl(char* string1, int len, const char* string2)
+ *  \brief Copia el contenido de string2 a string1 con un máximo de 'len' carácteres
+ * 	Es mucho más recomendable usar esta función para evitar salirnos del tamaño del string.
+ * 	Siempre acaba con \\0, incluso cuando no hay espacio.
+ *  \param string1 String de destino
+ *  \param string2 String de origen
+ *	\sa str_cpy
+*/
 void str_cpyl(char* string1, int len, const char* string2)
 {
 	int i=0;
 	while(string2[i]!=0 && i<len){string1[i]=string2[i];i++;}
 	string1[i]=0;
 }
+
+/*! \fn void str_append(char* string1,const char* string2)
+ *  \brief Añade el contenido de string2 a string1
+ * 	Hay que asegurarse de que hay suficiente espacio en string1 para ambos strings
+ *  \param string1 String de destino
+ *  \param string2 String de origen
+*/
 void str_append(char* string1,const char* string2)
 {
 	int i=str_size(string1);
@@ -134,6 +170,15 @@ void str_append(char* string1,const char* string2)
 	while(string2[j]!=0){string1[i]=string2[j];i++;j++;}
 	string1[i]=0;
 }
+
+/*! \fn int str_cmp(const char* string1,const char* string2)
+ *  \brief Compara el contenido de ambos strings
+ *  \warning Si los strings son distintos el resultado retornado es la resta de
+ *	los primeros carácteres distintos. Creo que es distinto de la función de strings.h
+ *  \param string1 String1
+ *  \param string2 String2
+ *  \return 0 si son iguales.
+*/
 int str_cmp(const char* string1,const char* string2)
 {
 	int valor = 0;
@@ -147,7 +192,14 @@ int str_cmp(const char* string1,const char* string2)
 }
 
 /* - VECTORS - */
-VECTOR p_vect(VECTOR vec1,VECTOR vec2) /* Producto vectorial (cross) */
+
+/*! \fn VECTOR p_vect(VECTOR vec1,VECTOR vec2)
+ *  \brief Calcula el producto vectorial de dos vectores
+ *  \param vec1 Vector 1
+ *  \param vec2 Vector 2
+ *  \return El vector resultante del producto vectorial (Perpendicular a ambos vectores)
+*/
+VECTOR p_vect(VECTOR vec1,VECTOR vec2)
 {
 	VECTOR resultado;
 	resultado.x = vec1.y*vec2.z -vec1.z*vec2.y;
@@ -156,10 +208,21 @@ VECTOR p_vect(VECTOR vec1,VECTOR vec2) /* Producto vectorial (cross) */
 	return resultado;
 }
 
-float p_escalar(VECTOR vec1,VECTOR vec2) /* Producto escalar (dot) */
+/*! \fn float p_escalar(VECTOR vec1,VECTOR vec2)
+ *  \brief Calcula el producto escalar de dos vectores
+ *  \param vec1 Vector 1
+ *  \param vec2 Vector 2
+ *  \return El resultado del producto escalar de dos vectores (Proyección)
+*/
+float p_escalar(VECTOR vec1,VECTOR vec2)
 {
 	return vec1.x*vec2.x + vec1.y*vec2.y + vec1.z*vec2.z;
 }
+
+/*! \fn void normalize(VECTOR* vec1)
+ *  \brief Normaliza el vector. (Unitario)
+ *  \param vec1 Vector a normalizar (También es el vector de retorno)
+*/
 void normalize(VECTOR* vec1)
 {
 	if (vec1->x||vec1->y||vec1->z)
@@ -170,6 +233,13 @@ void normalize(VECTOR* vec1)
 		vec1->z/=modulo;
 	}
 }
+
+/*! \fn VECTOR vadd(VECTOR vec1, VECTOR vec2)
+ *  \brief Calcula la suma de dos vectores
+ *  \param vec1 Vector 1
+ *  \param vec2 Vector 2
+ *  \return vec1+vec2
+*/
 VECTOR vadd(VECTOR vec1, VECTOR vec2)
 {
 	VECTOR res;
@@ -178,6 +248,13 @@ VECTOR vadd(VECTOR vec1, VECTOR vec2)
 	res.z=vec1.z+vec2.z;
 	return res;
 }
+
+/*! \fn VECTOR vsub(VECTOR vec1, VECTOR vec2)
+ *  \brief Calcula la resta de dos vectores
+ *  \param vec1 Vector 1
+ *  \param vec2 Vector 2
+ *  \return vec1-vec2
+*/
 VECTOR vsub(VECTOR vec1, VECTOR vec2)
 {
 	VECTOR res;
@@ -188,7 +265,14 @@ VECTOR vsub(VECTOR vec1, VECTOR vec2)
 }
 
 /* - DEBUG - */
-void debug_reset (void)
+
+/*! \fn void debug_reset(void)
+ *  \brief Resetea el archivo debug.log
+ *  Se debe llamar a esta función antes de usar las funciones de debug.
+ *	Si el archivo debug.log no existe lo crea.
+ *	Escribe en el archivo: " --- DEBUG --- \\n\\n"
+*/
+void debug_reset(void)
 {
     FILE* file;
     file=fopen("debug.log","w");
@@ -196,7 +280,10 @@ void debug_reset (void)
     fclose(file);
 }
 
-void debug_printf (const char *fmt, ...)
+/*! \fn void debug_printf(const char *fmt, ...)
+ *  \brief Escribe en el archivo debug.log como un fprintf
+*/
+void debug_printf(const char *fmt, ...)
 {
     static char buf[256];
     FILE* file;
@@ -209,7 +296,13 @@ void debug_printf (const char *fmt, ...)
 }
 
 /* - PRINTING - */
-void position_printf (float x, float y, float z, const char *fmt, ...)
+
+/*! \fn void position_printf(float x, float y, float z, const char *fmt, ...)
+ *  \brief Muestra texto en el mundo en 3D al estilo de printf
+ *  \param x,y,z Posición del texto en el mundo
+ *	Esta es una función muy básica ya que no permite girar ni cambiar el tamaño del texto.
+*/
+void position_printf(float x, float y, float z, const char *fmt, ...)
 {
 	static char buf[256];
     int viewport[4];
@@ -250,7 +343,13 @@ void position_printf (float x, float y, float z, const char *fmt, ...)
     //glPopMatrix();
 }
 
-void hud_printf (int col, int row, const char *fmt, ...)
+/*! \fn void hud_printf(int col, int row, const char *fmt, ...)
+ *  \brief Muestra texto en el HUD (2D) al estilo de printf
+ *  \param col Columna en la que mostrar el texto
+ *  \param row Fila en la que mostrar el texto
+ *	Esta es una función muy básica ya que no permite cambiar el color del texto.
+*/
+void hud_printf(int col, int row, const char *fmt, ...)
 {
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
@@ -291,7 +390,13 @@ void hud_printf (int col, int row, const char *fmt, ...)
     glEnable(GL_DEPTH_TEST);
 }
 
-void use_texture (t_texture texture)
+/* - Other - */
+
+/*! \fn void use_texture(t_texture texture)
+ *  \brief glBindTexture para materiales
+ *  \param texture Material a usar en OpenGL
+*/
+void use_texture(t_texture texture)
 {
 	glEnable(GL_TEXTURE_2D);
 	glMaterialfv(GL_FRONT, GL_AMBIENT,   texture.ambient);

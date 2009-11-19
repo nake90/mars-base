@@ -1,25 +1,39 @@
-/*
-	mars_base - Design, build and maintain your own base on Mars
-    Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
-    If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
-    If you plan to use any part of this code on a comercial game please email me at:
-	   	   nake90@terra.es
+/*! \mainpage Mars Base
+ *
+ * \section intro_sec Introducción
+ *
+ * Mars-Base (nombre no definitivo) es un juego que estamos desarrollando que consistirá en diseñar, construir y mantener una colonia en Marte. Siendo en todo momento lo más fieles a la realidad en los aspectos químicos, físicos y topográficos.
+ * Para crear la base se contará con módulos prefabricados (pasillos, puertas, habitaciones, biodomes,...) que se podrán ensamblar entre sí permitiendo bases de estructura diseñada por el jugador. A nivel más de interiores, se deberá diseñar el sistema de circuitos eléctricos (sensores, actuadores y suministro eléctrico) y de fluidos (aire, agua,...), aunque supongo que se podrán usar elementos prefabricados.
+ * El juego está siendo desarrollado usando openGLUT y devIL. Por ahora tan solo puede mostrar el mapa tridimensional marciano (Valles Marineris) y cargar objetos simples, pero está siendo desarrollado con intensidad. 
+ *
+ * \section copyright Copyright
+ * 
+ * mars_base - Design, build and maintain your own base on Mars
+ * Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
+ * If you plan to use any part of this code on a comercial game please email me at:
+ *    	   nake90@terra.es
 */
 
+/** \file main.c
+ * \brief Archivo principal del Mars-Base
+ * Este archivo se encarga de la inicialización del juego y contiene el main central.
+ * \author Alfonso Arbona Gimeno
+*/
 #include "mars_base_private.h"
 
 #include <stdio.h>
@@ -31,23 +45,11 @@
 #include "GL/openglut.h"
 #include "IL/ilut.h"
 
-//#include "3dsloader.h"
+#include "objetos.h"
 #include "shared.h"
 #include "overlay.h"
 #include "heightmap.h"
 #include "materiales.h"
-
-/* TODO (#9#): traces y esas cosas */
-/* TODO (#7#): Arreglar presión y añadir temperatura */
-/* TODO (#7#): Sol */
-/* TODO (#7#): Cargar más objetos y poder elegirlos!! */
-/* TODO (#7#): Objetos, formato y tal */
-
-
-
-/* Número de casillas visibles en modo presión - ## OBSOLETO ##, cuando arregle la presión lo quitaré */
-#define PRESION_VISIBLE 30
-
 #include "atmosferico.h"
 
 static short update=0;
@@ -66,23 +68,19 @@ int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla 
 
 
 
-/* VARIABLES DE CONFIGURACIÓN */
-//int overlay_posible; Asumo que si se puede... no creo que alguien juegue a un juego 3D y su pantalla no pueda añadir overlays.
-
-
 //t_3ds_model test;
 
-GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f};
-GLfloat fogRange[2]= {25000.0f, 50000.0f};//{120.0f, 500.0f};
+/* Niebla y atmósfera */
+GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
+GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y distancia máxima visible */
+
+/* TEXTURAS BÁSICAS -- ToDo: Transformarlas en materiales y cargarlas al principio como todos los materiales */
 /*					AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sand;//={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
 t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{20000.0f, 20000.0f, 20000.0f},{12.0f},{0,0}};
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sun_texture={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
-
-t_heightmap marte;
-
 
 
 /* GLUT callback Handlers */
@@ -115,54 +113,6 @@ static void resize(int width, int height)
 	glutUseLayer(GLUT_NORMAL);
 }
 
-#if(0)
-static void display_3ds(t_3ds_model object)
-{
-	int l_index;
-	glEnable(GL_LIGHTING);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, object.id_texture); // We set the active texture 
-
-    glRotatef(object.yaw, 0,0,1.0f);
-    glRotatef(object.pitch, 1.0f,0,0);
-    //glRotatef(object.roll, sin(RAD(object.yaw)),cos(RAD(object.yaw)),-sin(RAD(object.pitch))); ARREGLAR!!!
-    
-    
-    glTranslatef(object.x,object.y,object.z);
-
-    glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
-	for (l_index=0;l_index<object.polygons_qty;l_index++)
-    {
-        //----------------- FIRST VERTEX -----------------
-        // Texture coordinates of the first vertex
-        glTexCoord2f( object.mapcoord[ object.polygon[l_index].a ].u ,
-                      object.mapcoord[ object.polygon[l_index].a ].v );
-        // Coordinates of the first vertex
-        glVertex3f( object.vertex[ object.polygon[l_index].a ].x *object.size,
-                    object.vertex[ object.polygon[l_index].a ].y *object.size,
-                    object.vertex[ object.polygon[l_index].a ].z *object.size); //Vertex definition
-
-        //----------------- SECOND VERTEX -----------------
-        // Texture coordinates of the second vertex
-        glTexCoord2f( object.mapcoord[ object.polygon[l_index].b ].u ,
-                      object.mapcoord[ object.polygon[l_index].b ].v );
-        // Coordinates of the second vertex
-        glVertex3f( object.vertex[ object.polygon[l_index].b ].x *object.size,
-                    object.vertex[ object.polygon[l_index].b ].y *object.size,
-                    object.vertex[ object.polygon[l_index].b ].z *object.size);
-        
-        //----------------- THIRD VERTEX -----------------
-        // Texture coordinates of the third vertex
-        glTexCoord2f( object.mapcoord[ object.polygon[l_index].c ].u ,
-                      object.mapcoord[ object.polygon[l_index].c ].v );
-        // Coordinates of the Third vertex
-        glVertex3f( object.vertex[ object.polygon[l_index].c ].x *object.size,
-                    object.vertex[ object.polygon[l_index].c ].y *object.size,
-                    object.vertex[ object.polygon[l_index].c ].z *object.size);
-    }
-    glEnd();
-}
-#endif
 void display(void)
 {
     int i;
@@ -173,8 +123,6 @@ void display(void)
     float r2,b2;
     float r3,b3;
     float r4,b4;
-	//const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    //const double a = t*90.0;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -189,10 +137,10 @@ void display(void)
     glTranslatef(-camera.pos_x,-camera.pos_y,-camera.pos_z);
 	
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
+    
+	glCallList(marte.list);/* Dibujamos el terreno */
 	
-	//use_texture(sand);
-	
-	glCallList(marte.list);
+	/* Dibujamos los extras del terreno */
 	
 	/* - Display Casillas - FIXME!!!!! (casillas solo de la zona actual, de 1x1m^2) */
    	/*if (show_grid)
@@ -220,72 +168,14 @@ void display(void)
 	{
 		glCallList(marte.list+2);
 	}
-	
-	/* - Display Presión - BORRADO */
-	/*if (show_presion && 0)
-	{
-		glDisable(GL_TEXTURE_2D);
-		presion_m=0;
-		presion_m_c=0;
-		for (j=((int)camera.pos_y)-PRESION_VISIBLE; j<((int)camera.pos_y)+PRESION_VISIBLE; j++)
-		for (i=((int)camera.pos_x)-PRESION_VISIBLE; i<((int)camera.pos_x)+PRESION_VISIBLE; i++)
-		{
-			g=0.1f;
-			b =1.0-(get_presion(i+1,j+1)-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			r =    (get_presion(i+1,j+1)-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			b2=1.0-(get_presion(i  ,j+1)-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			r2=    (get_presion(i  ,j+1)-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			b3=1.0-(get_presion(i  ,j  )-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			r3=    (get_presion(i  ,j  )-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			b4=1.0-(get_presion(i+1,j  )-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			r4=    (get_presion(i+1,j  )-PRESION_MIN)/(PRESION_MAX-PRESION_MIN);
-			presion_m+=get_presion(i,j);
-			presion_m_c++;
-			glBegin(GL_QUADS);
-				glNormal3f( 0.0f, 0.0f, +1.0f);
-				
-					glColor4d(r,g,b,0.4f);
-				glVertex3f( i*1.0f +1.0f,  j*1.0f +1.0f, 0.001f);
-					glColor4d(r2,g,b2,0.4f);
-				glVertex3f( i*1.0f -0.0f,  j*1.0f +1.0f, 0.001f);
-					glColor4d(r3,g,b3,0.4f);
-				glVertex3f( i*1.0f -0.0f,  j*1.0f -0.0f, 0.001f);
-					glColor4d(r4,g,b4,0.4f);
-				glVertex3f( i*1.0f +1.0f,  j*1.0f -0.0f, 0.001f);
-			glEnd();
-		}
-		v=trace_camera(camera.pos_x,camera.pos_y,camera.pos_z);
-		glColor3d(0.0f,0.0f,0.0f);
-		i=((int)v.x);
-		j=((int)v.y);
-		glBegin(GL_LINE_LOOP);
-				glVertex3f( i*1.0f +1.0f,  j*1.0f +1.0f, 0.001f);
-				glVertex3f( i*1.0f -0.0f,  j*1.0f +1.0f, 0.001f);
-				glVertex3f( i*1.0f -0.0f,  j*1.0f -0.0f, 0.001f);
-				glVertex3f( i*1.0f +1.0f,  j*1.0f -0.0f, 0.001f);
-		glEnd();
-		
-		position_printf ((int)v.x,(int)v.y,1.5, "%i,%i\n%.2f",(int)v.x,(int)v.y,get_presion((int)v.x,(int)v.y));
-		glColor3d(0.0,0.0,0.0);
-		glPointSize(5.0);
-		
-		for (i=0;i<CICLONES;i++)
-		{
-			glBegin(GL_POINTS);
-				glVertex3f( ciclon[i].pos_x,  ciclon[i].pos_y, 0.001f);
-			glEnd();
-		}
-	}*/
-	
-	
 	glColor3d(1.0,1.0,1.0);
 	
+	/* Dibujamos los objetos */
 	//display_3ds(test);
 	
-	
+	/* Dibujamos el Sol */
 	//glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
-	
 	/*
     glRotatef(camera.roll, sin(RAD(camera.yaw)),cos(RAD(camera.yaw)),-sin(RAD(camera.pitch)));
     glRotatef(camera.yaw, 0,0,1.0f);
@@ -302,19 +192,9 @@ void display(void)
 	glEnd();
 	glBlendFunc(GL_ONE,GL_ZERO);
 	glDisable(GL_BLEND);*/
-	
     glDisable(GL_LIGHTING);
-
-    hud_printf (0, 0, "TEST de casillas isométricas");
-    hud_printf (0, 1, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
-    hud_printf (0, 2, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
-    hud_printf (0, 3, "Flechas para moverse, shift para ir muy rápido");
-    hud_printf (0, 4, "WASD+QE -> Girar cámara");
-    hud_printf (0, 5, "IJKL -> Girar objeto");
-    hud_printf (0, 6, "C/V -> Ver/ocultar la cuadrícula");
-    hud_printf (0, 7, "B/N -> Ver/ocultar las normales");
-	
-	/* Como los overlays aun no están implementados en openGLUT, mostramos el HUD sobre la pantalla directamente */
+    
+	/* Dibujamos el HUD */
 	draw_HUD();
 	glutSwapBuffers();
 }
@@ -436,16 +316,7 @@ special_keys(int key, int x, int y)
 static void
 idle(void)
 {
-    /*update++;
-    if (update>9999)//ATM_UPDATE) NO USAR!!!!
-    {
-		update=0;
-		add_noise_presion(1.8f);
-		update_ciclon();
-	    flow_presion (10.0f);
-	}*/
 	glutPostRedisplay();
-	/*glutPostOverlayRedisplay(); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
 }
 
 static /* Si se aprieta o se suelta una tecla del ratón */
@@ -518,7 +389,7 @@ void salir (void)
 	destroy_heightmap(&marte);
 }
 
-
+static
 void GLinit(void)
 {
 	/* Inicio del GLUT*/
@@ -646,7 +517,6 @@ int main(int argc, char *argv[])
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);
 	
-	init_ciclon();
 	
 	scr_init_printf ("Iniciado");
 	
