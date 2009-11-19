@@ -20,6 +20,11 @@
 	   	   nake90@terra.es
 */
 
+/** \file heightmap.h
+ * \brief Header que controla los heightmaps (mapas)
+ * \author Alfonso Arbona Gimeno
+*/
+
 #ifndef HEIGHTMAP_H
 #define HEIGHTMAP_H
 #include "shared.h"
@@ -51,6 +56,7 @@ typedef struct
 	float* shadow; /* Valor de gris (0-1) */
 	unsigned char* data; /* Alturas (0-255) */
 }t_heightmap;
+t_heightmap marte;
 
 int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture);
 void destroy_heightmap(t_heightmap* obj);
@@ -59,5 +65,7 @@ void save_compiled_map(const char* ruta, t_heightmap obj);
 int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture);
 float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente);
 void list_compile_map(t_heightmap* obj, t_texture texture);
+
+float get_real_height(float coord_x, float coord_y);
 
 #endif

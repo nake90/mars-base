@@ -20,6 +20,13 @@
 	   	   nake90@terra.es
 */
 
+/** \file shared.h
+ * \brief Definiciones compartidas por todos los módulos
+ * Este archivo se encarga de todas las definiciones, structs, funciones, ... que son necesarias por todos los
+ * diferentes módulos del programa. Está formado por funciones de bajo nivel personalizadas para la aplicación.
+ * \author Alfonso Arbona Gimeno
+*/
+
 #ifndef SHARED_H
 #define SHARED_H
 
@@ -30,6 +37,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <time.h>
+#include "mars_base_private.h"
 
 //2*PI/360 = 0.017453292519943295769236907684886
 #define RAD(x) (float)x*0.01745329

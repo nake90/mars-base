@@ -20,6 +20,11 @@
 	   	   nake90@terra.es
 */
 
+/** \file materiales.c
+ * \brief Header que controla los materiales (texturas)
+ * \author Alfonso Arbona Gimeno
+*/
+
 #include "materiales.h"
 
 int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #-1# -> Material not found; #-2# -> Texture not found */
@@ -31,16 +36,6 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
 	FILE* file = fopen(ruta,"r");
 	if (!file){return -1;}
 	
-	/*
-	typedef struct
-	{
-		GLfloat ambient[4];
-		GLfloat diffuse[4];
-		GLfloat specular[4];
-		GLfloat shininess[1];
-		GLint texture[1];
-	}t_texture;
-	*/
 	fscanf(file,"%f, %f, %f, %f\n",&texture->ambient[0],&texture->ambient[1],&texture->ambient[2],&texture->ambient[3]);
 	fscanf(file,"%f, %f, %f, %f\n",&texture->diffuse[0],&texture->diffuse[1],&texture->diffuse[2],&texture->diffuse[3]);
 	fscanf(file,"%f, %f, %f, %f\n",&texture->specular[0],&texture->specular[1],&texture->specular[2],&texture->specular[3]);

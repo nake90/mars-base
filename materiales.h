@@ -20,6 +20,11 @@
 	   	   nake90@terra.es
 */
 
+/** \file materiales.h
+ * \brief Header que controla los materiales (texturas)
+ * \author Alfonso Arbona Gimeno
+*/
+
 #ifndef MATERIALES_H
 #define MATERIALES_H
 #include "shared.h"

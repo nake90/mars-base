@@ -1,0 +1,79 @@
+\section{Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/main.c}
+\label{main_8c}\index{C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/main.c@{C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars\_\-base/main.c}}
+
+
+Archivo principal del Mars-\/Base Este archivo se encarga de la inicialización del juego y contiene el main central.  
+{\ttfamily \#include \char`\"{}mars\_\-base\_\-private.h\char`\"{}}\par
+{\ttfamily \#include $<$stdio.h$>$}\par
+{\ttfamily \#include $<$stdarg.h$>$}\par
+{\ttfamily \#include $<$math.h$>$}\par
+{\ttfamily \#include $<$time.h$>$}\par
+{\ttfamily \#include \char`\"{}GL/openglut.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}IL/ilut.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}objetos.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}shared.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}overlay.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}heightmap.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}materiales.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}atmosferico.h\char`\"{}}\par
+\subsection*{Enumeraciones}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries botones\_\-raton} \{ {\bfseries B\_\-IZQ\_\-RATON}, 
+{\bfseries B\_\-DER\_\-RATON}, 
+{\bfseries B\_\-CEN\_\-RATON}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Funciones}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries display} (void)\label{main_8c_a4ea013001a5fb47853d0fab8f8de35cd}
+
+\item 
+int {\bfseries main} (int argc, char $\ast$argv[$\,$])\label{main_8c_a0ddf1224851353fc92bfbff6f499fa97}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries show\_\-grid}\label{main_8c_a649b3c48c39dfcaeb3764b5a33535bd7}
+
+\item 
+int {\bfseries show\_\-presion}\label{main_8c_af4c758d3daac127140a86e5abb8c8f43}
+
+\item 
+short int {\bfseries b\_\-raton} [3] = \{0,0,0\}\label{main_8c_ac1d9dedec4f6d075343d17e546f3e391}
+
+\item 
+int {\bfseries p\_\-raton\_\-last\_\-pres} [2] = \{0,0\}\label{main_8c_a27f8eacfb01de5ffb476981df65fd7c8}
+
+\item 
+GLfloat {\bf fogColor} [4] = \{0.81f, 0.64f, 0.61f, 1.0f\}
+\item 
+GLfloat {\bf fogRange} [2] = \{25000.0f, 50000.0f\}
+\item 
+{\bf t\_\-texture} {\bfseries sand}\label{main_8c_ab7b35883b12fe06f42688d93a36f685c}
+
+\item 
+{\bf t\_\-sun} {\bfseries sun} = \{\{0.5f, 0.5f, 0.5f, 1.0f\},\{1.0f, 1.0f, 1.0f, 1.0f\},\{1.0f, 1.0f, 1.0f, 1.0f\},\{20000.0f, 20000.0f, 20000.0f\},\{12.0f\},\{0,0\}\}\label{main_8c_ac724115b4c0bb518e7ab1e1a9b15815f}
+
+\item 
+{\bf t\_\-texture} {\bfseries sun\_\-texture} = \{\{1.0f, 1.0f, 1.0f, 1.0f\},\{1.0f, 1.0f, 1.0f, 1.0f\},\{0.0f, 0.0f, 0.0f, 1.0f\},\{1.0\},\{0\}\}\label{main_8c_a8e9f03e85c74742e4ef03cc131e73109}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Descripción detallada}
+Archivo principal del Mars-\/Base Este archivo se encarga de la inicialización del juego y contiene el main central. \begin{DoxyAuthor}{Autor}
+Alfonso Arbona Gimeno 
+\end{DoxyAuthor}
+
+
+\subsection{Documentación de las variables}
+\index{main.c@{main.c}!fogColor@{fogColor}}
+\index{fogColor@{fogColor}!main.c@{main.c}}
+\subsubsection[{fogColor}]{\setlength{\rightskip}{0pt plus 5cm}GLfloat {\bf fogColor}[4] = \{0.81f, 0.64f, 0.61f, 1.0f\}}\label{main_8c_a8e753e0bde61b66d622c8c1dd6a3a261}
+Color de la niebla \index{main.c@{main.c}!fogRange@{fogRange}}
+\index{fogRange@{fogRange}!main.c@{main.c}}
+\subsubsection[{fogRange}]{\setlength{\rightskip}{0pt plus 5cm}GLfloat {\bf fogRange}[2] = \{25000.0f, 50000.0f\}}\label{main_8c_aace75dc6535d69bd15d6e9cc159f7d96}
+Distancia mínima de la niebla y distancia máxima visible 

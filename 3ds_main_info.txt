@@ -1,26 +1,11 @@
+Contenido:
+- Formato
+- Defines
+
+NOTA - 3DS es un formato propietario... habría que usar uno libre
+____________________________________________________________________________________________________
 /*
- * ---------------- www.spacesimulator.net --------------
- *   ---- Space simulators and 3d engine tutorials ----
- *
- *  Author: Damiano Vitulli <info@spacesimulator.net>
- *
- * ALL RIGHTS RESERVED
- *
- *
- * Tutorial 4: 3d engine - 3ds models loader
- * 
- * File header: 3dsloader.h
- *  
- * EDITED by: Alfonso Arbona Gimeno <nake90@terra.es>
- * INFO: http://www.the-labs.com/Blender/3dsspec.html
- */
-
-#ifndef OBJ_LOADER_H
-#define OBJ_LOADER_H
-
-/* ### NOTA - 3DS es un formato propietario... habría que usar uno libre
-
-INFO DE FORMATO:
+--- FORMATO ---
 Dividido en chunk's
 	short chunk_id -> Único y define el tipo y chunks subordinados
 	long chunk_len -> Puede ser mayor del necesario si tiene sub-chunks! Omitirlos [EN BYTES]
@@ -80,7 +65,8 @@ Fragmento del 3ds:
 			*	  *	 *	*
 			
 */
-
+____________________________________________________________________________________________________
+/* --- DEFINES --- */
 /* MAIN */
 #define MAIN3DS 0x4D4D			/*OK Main chunk, contains all the other chunks - Lenght: 0 + sub chunks */
 /* MATERIAL */
@@ -111,61 +97,3 @@ Fragmento del 3ds:
 #define TRI_LOCAL 0x4160		/* #POSIBLE# MESH_MATRIX - float matrix[4][3]; */
 #define TRI_VISIBLE 0x4165		/* #POSIBLE# MESH_COLOR - short color_index; */
 #define TRI_MAPPINGSTANDARD 0x4170		/* #UNK# MESH_TEXTURE_INFO - short map_type; float x_tiling, y_tiling; float icon_x, icon_y, icon_z; float matrix[4][3]; float scaling, plan_icon_w, plan_icon_h, cyl_icon_h;  */
-
-
-
-/**********************************************************
- *
- * FUNCTION Load3DS (obj_type_ptr, char *)
- *
- * This function loads a mesh from a 3ds file.
- * Please note that we are loading only the vertices, polygons and mapping lists.
- * If you need to load meshes with advanced features as for example: 
- * multi objects, materials, lights and so on, you must insert other chunk parsers.
- *
- *********************************************************/
-
-
-#include "shared.h"
-
-#define MAX_VERTICES 65536 /* Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds */
-#define MAX_POLYGONS 65536 /* Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds */
-#define DEBUG_LOAD 0
-
-// Our vertex type
-typedef struct{
-    float x,y,z;
-}vertex_type;
-
-// The polygon (triangle), 3 numbers that aim 3 vertices
-typedef struct{
-    int a,b,c;
-}polygon_type;
-
-// The mapcoord type, 2 texture coordinates for each vertex
-typedef struct{
-    float u,v;
-}mapcoord_type;
-
-// The object type
-typedef struct {
-	char name[20];
-    
-	int vertices_qty;
-    int polygons_qty;
-
-    vertex_type vertex[MAX_VERTICES]; 
-    polygon_type polygon[MAX_POLYGONS];
-    mapcoord_type mapcoord[MAX_VERTICES];
-    int id_texture;
-    float size;
-    float pitch;
-    float yaw;
-    float roll;
-    float x,y,z;
-    float vx,vy,vz;
-} t_3ds_model, *t_3ds_model_ptr;
-
-extern char Load3DS (t_3ds_model_ptr ogg, char *filename);
-
-#endif

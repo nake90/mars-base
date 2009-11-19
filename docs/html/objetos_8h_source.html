@@ -1,0 +1,143 @@
+<!-- This comment will put IE 6, 7 and 8 in quirks mode -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>Mars Base: Fichero Fuente C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/objetos.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javaScript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<!-- Generado por Doxygen 1.6.1 -->
+<script type="text/javascript"><!--
+var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
+--></script>
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Página&nbsp;principal</span></a></li>
+      <li><a href="pages.html"><span>Páginas&nbsp;relacionadas</span></a></li>
+      <li><a href="annotated.html"><span>Estructuras&nbsp;de&nbsp;Datos</span></a></li>
+      <li class="current"><a href="files.html"><span>Archivos</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <img id="MSearchSelect" src="search/search.png"
+             onmouseover="return searchBox.OnSearchSelectShow()"
+             onmouseout="return searchBox.OnSearchSelectHide()"
+             alt=""/>
+        <input type="text" id="MSearchField" value="Buscar" accesskey="S"
+             onfocus="searchBox.OnSearchFieldFocus(true)" 
+             onblur="searchBox.OnSearchFieldFocus(false)" 
+             onkeyup="searchBox.OnSearchFieldChange(event)"/>
+        <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>Lista&nbsp;de&nbsp;archivos</span></a></li>
+      <li><a href="globals.html"><span>Globales</span></a></li>
+    </ul>
+  </div>
+<h1>C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/objetos.h</h1><a href="objetos_8h.html">Ir a la documentación de este archivo.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">        mars_base - Design, build and maintain your own base on Mars</span>
+<a name="l00003"></a>00003 <span class="comment">    Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.</span>
+<a name="l00004"></a>00004 <span class="comment"></span>
+<a name="l00005"></a>00005 <span class="comment">    This program is free software: you can redistribute it and/or modify</span>
+<a name="l00006"></a>00006 <span class="comment">    it under the terms of the GNU General Public License as published by</span>
+<a name="l00007"></a>00007 <span class="comment">    the Free Software Foundation, either version 3 of the License, or</span>
+<a name="l00008"></a>00008 <span class="comment">    (at your option) any later version.</span>
+<a name="l00009"></a>00009 <span class="comment"></span>
+<a name="l00010"></a>00010 <span class="comment">    This program is distributed in the hope that it will be useful,</span>
+<a name="l00011"></a>00011 <span class="comment">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00012"></a>00012 <span class="comment">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00013"></a>00013 <span class="comment">    GNU General Public License for more details.</span>
+<a name="l00014"></a>00014 <span class="comment"></span>
+<a name="l00015"></a>00015 <span class="comment">    You should have received a copy of the GNU General Public License</span>
+<a name="l00016"></a>00016 <span class="comment">    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<a name="l00017"></a>00017 <span class="comment">    </span>
+<a name="l00018"></a>00018 <span class="comment">    If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.</span>
+<a name="l00019"></a>00019 <span class="comment">    If you plan to use any part of this code on a comercial game please email me at:</span>
+<a name="l00020"></a>00020 <span class="comment">                   nake90@terra.es</span>
+<a name="l00021"></a>00021 <span class="comment">*/</span>
+<a name="l00022"></a>00022 
+<a name="l00029"></a>00029 <span class="preprocessor">#ifndef OBJETOS_H</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">#define OBJETOS_H</span>
+<a name="l00031"></a>00031 <span class="preprocessor"></span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include &quot;<a class="code" href="shared_8h.html" title="Definiciones compartidas por todos los módulos Este archivo se encarga de todas...">shared.h</a>&quot;</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#include &quot;GL/openglut.h&quot;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &quot;IL/ilut.h&quot;</span>
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="comment">/* --- DEFINES --- */</span>
+<a name="l00037"></a><a class="code" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">00037</a> <span class="preprocessor">#define MAX_VERTICES 65536 </span>
+<a name="l00038"></a><a class="code" href="objetos_8h.html#a0aaa578e910c66db37a344dcfc514f3b">00038</a> <span class="preprocessor">#define MAX_POLYGONS 65536 </span>
+<a name="l00048"></a><a class="code" href="objetos_8h.html#a989e0563d45aaff3ba8d7e4c0a740d39">00048</a> <span class="preprocessor">#define MAIN3DS 0x4D4D                          </span>
+<a name="l00050"></a><a class="code" href="objetos_8h.html#adc62d551c5959780c87369cdad3ec29c">00050</a> <span class="preprocessor">#define EDIT_MATERIAL 0xAFFF            </span>
+<a name="l00052"></a><a class="code" href="objetos_8h.html#af00ff38c2ca2f5278a135bc4302f23ce">00052</a> <span class="preprocessor">#define EDIT3DS 0x3D3D                          </span>
+<a name="l00053"></a><a class="code" href="objetos_8h.html#a3382608a5f7d73fc7e5539160aaa4b38">00053</a> <span class="preprocessor">#define EDIT_OBJECT 0x4000                      </span>
+<a name="l00054"></a><a class="code" href="objetos_8h.html#a4925d3d641bec11ca0c49ba3d636393c">00054</a> <span class="preprocessor">#define OBJ_TRIMESH 0x4100                      </span>
+<a name="l00055"></a><a class="code" href="objetos_8h.html#aa2ed62aba74d2ee70c828600be3105f1">00055</a> <span class="preprocessor">#define TRI_VERTEXL 0x4110                      </span>
+<a name="l00056"></a><a class="code" href="objetos_8h.html#a5b77b286ad52d41568fccdac45942765">00056</a> <span class="preprocessor">#define TRI_VERTEXOPTIONS 0x4111        </span>
+<a name="l00057"></a><a class="code" href="objetos_8h.html#a13512db294c63f8477e47aeefcc7697a">00057</a> <span class="preprocessor">#define TRI_FACEL1 0x4120                       </span>
+<a name="l00058"></a><a class="code" href="objetos_8h.html#adf958945f9ca6a11dd6dc9900b038523">00058</a> <span class="preprocessor">#define TRI_MATERIAL 0x4130                     </span>
+<a name="l00059"></a><a class="code" href="objetos_8h.html#a6d9396a66d6d3690152ebff37cab8e2a">00059</a> <span class="preprocessor">#define TRI_MAPPINGCOORS 0x4140         </span>
+<a name="l00060"></a><a class="code" href="objetos_8h.html#ae37eb990650413fcfd3281ff25f89e32">00060</a> <span class="preprocessor">#define TRI_SMOOTH 0x4150                       </span>
+<a name="l00061"></a><a class="code" href="objetos_8h.html#a269b0df4388c015cae6ba837d499dfd5">00061</a> <span class="preprocessor">#define TRI_LOCAL 0x4160                        </span>
+<a name="l00062"></a><a class="code" href="objetos_8h.html#afbee9cf3b965e943dd07b07fd032adff">00062</a> <span class="preprocessor">#define TRI_VISIBLE 0x4165                      </span>
+<a name="l00063"></a><a class="code" href="objetos_8h.html#ae245ca6e00ec7bea4d75d9f9d27d44cb">00063</a> <span class="preprocessor">#define TRI_MAPPINGSTANDARD 0x4170      </span>
+<a name="l00065"></a>00065 <span class="preprocessor"></span><span class="comment">/* - TYPEDEFS usados - */</span>
+<a name="l00066"></a>00066 <span class="comment">/* Vértices */</span>
+<a name="l00067"></a>00067 <span class="comment">/*typedef struct{float x,y,z;}t_vertex; USO VECTOR definido en shared.h */</span>
+<a name="l00068"></a>00068 
+<a name="l00069"></a><a class="code" href="structt__polygon.html">00069</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">int</span> a,b,c; <span class="keywordtype">int</span> texture;}<a class="code" href="structt__polygon.html">t_polygon</a>; 
+<a name="l00070"></a><a class="code" href="structt__mapcoord.html">00070</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">float</span> u,v;}<a class="code" href="structt__mapcoord.html">t_mapcoord</a>; 
+<a name="l00073"></a><a class="code" href="structt__model.html">00073</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00074"></a>00074 {
+<a name="l00075"></a><a class="code" href="structt__model.html#a3777dbae63a15da001b2baa317a25149">00075</a>         <span class="keywordtype">char</span> name[80]; 
+<a name="l00076"></a><a class="code" href="structt__model.html#af45b6a3417c461d69a8af85781ca7080">00076</a>         <span class="keywordtype">int</span> vertices_qty; 
+<a name="l00077"></a><a class="code" href="structt__model.html#a4f43c79d7e9b7e38af52be9386765d8e">00077</a>         <span class="keywordtype">int</span> polygons_qty; 
+<a name="l00078"></a>00078         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vertex[<a class="code" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">MAX_VERTICES</a>]; 
+<a name="l00079"></a>00079         <a class="code" href="structt__polygon.html">t_polygon</a> polygon[<a class="code" href="objetos_8h.html#a0aaa578e910c66db37a344dcfc514f3b">MAX_POLYGONS</a>];
+<a name="l00080"></a>00080         <a class="code" href="structt__mapcoord.html">t_mapcoord</a> mapcoord[<a class="code" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">MAX_VERTICES</a>];
+<a name="l00081"></a>00081         <span class="keywordtype">float</span> size; <span class="comment">/* Valor de la escala */</span>
+<a name="l00082"></a>00082 }<a class="code" href="structt__model.html">t_model</a>, *<a class="code" href="structt__model.html">t_model_ptr</a>;
+<a name="l00083"></a>00083 
+<a name="l00085"></a><a class="code" href="structt__obj__base.html">00085</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00086"></a>00086 {
+<a name="l00087"></a><a class="code" href="structt__obj__base.html#a8e03167ce04350be901b028cc4cf1ce1">00087</a>         <span class="keywordtype">char</span> name[256]; 
+<a name="l00088"></a><a class="code" href="structt__obj__base.html#a7c3957c02c6d110a204adf63166cdcd6">00088</a>         <a class="code" href="structt__model.html">t_model</a> modelo; 
+<a name="l00089"></a><a class="code" href="structt__obj__base.html#adb75f132fa864de961fa8b900dda9c5e">00089</a>         <span class="keywordtype">int</span> icono; 
+<a name="l00090"></a><a class="code" href="structt__obj__base.html#a973f240c50caa6c6c6857e217853d193">00090</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> pos; 
+<a name="l00091"></a><a class="code" href="structt__obj__base.html#af9816f15b9da8a8a09b7afa3f0fe9c7e">00091</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> rot; 
+<a name="l00092"></a><a class="code" href="structt__obj__base.html#a80773f7b73e38fc1936f65e8b102af4d">00092</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vel; 
+<a name="l00093"></a><a class="code" href="structt__obj__base.html#a1386555347bbe012a0440a4ba9578318">00093</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> velang; 
+<a name="l00094"></a>00094 }<a class="code" href="structt__obj__base.html">t_obj_base</a>, *<a class="code" href="structt__obj__base.html">t_obj_base_ptr</a>;
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 <span class="comment">/* - FUNCIONES - */</span>
+<a name="l00097"></a>00097 <span class="keywordtype">int</span> <a class="code" href="objetos_8c.html#a191f00b4d95e50b73000ed459c27ee37" title="Carga los datos básicos de un objeto desde un archivo 3ds.">load_3DS</a> (t_model_ptr data, <span class="keywordtype">char</span> *filename);
+<a name="l00098"></a>00098 <span class="keywordtype">void</span> <a class="code" href="objetos_8c.html#a0ac96b56eb1c63648a05e7c1fc4a857b" title="Dibuja un objeto mediante OpenGL en las coordenadas correspondientes.">object_draw</a>(<a class="code" href="structt__obj__base.html">t_obj_base</a> <span class="keywordtype">object</span>);
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 <span class="preprocessor">#endif</span>
+</pre></div></div>
+<!--- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>

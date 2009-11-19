@@ -20,6 +20,11 @@
 	   	   nake90@terra.es
 */
 
+/** \file overlay.h
+ * \brief Header que controla el HUD
+ * \author Alfonso Arbona Gimeno
+*/
+
 #ifndef OVERLAY_H
 #define OVERLAY_H
 #include "shared.h"

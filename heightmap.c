@@ -20,6 +20,11 @@
 	   	   nake90@terra.es
 */
 
+/** \file heightmap.c
+ * \brief Carga los heightmaps (mapas)
+ * \author Alfonso Arbona Gimeno
+*/
+
 #include "heightmap.h"
 
 static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
@@ -30,6 +35,21 @@ static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 	return resultado;
 }
 
+/*! \fn int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)
+ *  \brief Función principal para la carga de heightmaps
+ *	Esta función intenta primero cargar el heightmap precompilado, si no lo encuentra lo compila y lo guarda.
+ *	\warning La ruta al archivo no debe contener extensión ya que se usa la función append para añadir la extensión que
+ *	se requiera en cada caso.
+ *  \param filename Ruta a la carpeta y nombre del archivo SIN EXTENSIÓN
+ *  \param h_buffer Puntero al heightmap a crear
+ *  \param texture Textura que se usará en el mapa
+ *  \return 0 -> Ok
+ *	\return 1 -> Imagen de alturas (.pgm) no encontrado
+ *	\return 2 -> Archivo de información (.txt) no encontrado
+ *	\return 3 -> Fallo en el malloc
+ *	\return 4 -> El archivo de alturas no es un PGM
+ *
+*/
 int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)
 {
 	char str_buffer[255];/* Añade la extensión */
@@ -425,3 +445,5 @@ float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float amb
 	obj->shadow[obj_x+obj_y*obj->tam_x]=resultado;
 	return resultado;
 }
+
+float get_real_height(float coord_x, float coord_y);
