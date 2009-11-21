@@ -40,10 +40,11 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
 	fscanf(file,"%f, %f, %f, %f\n",&texture->diffuse[0],&texture->diffuse[1],&texture->diffuse[2],&texture->diffuse[3]);
 	fscanf(file,"%f, %f, %f, %f\n",&texture->specular[0],&texture->specular[1],&texture->specular[2],&texture->specular[3]);
 	fscanf(file,"%f\n",&texture->shininess[0]);
+	fscanf(file,"%f\n",&texture->transparency[0]);
 	fgets(textura,256,file);
 	
-	debug_printf("%s",textura);
 	//glGenTextures(1, &texture->texture[0]);
+	str_cpyl(texture->name, 80, textura);
 	texture->texture[0]=ilutGLLoadImage(textura);
 	if(!texture->texture[0]){return(-2);}
 	

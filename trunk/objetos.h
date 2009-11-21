@@ -36,26 +36,48 @@
 /* --- DEFINES --- */
 #define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
+#define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
 
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
  - #OK# -> Implementado y funcionando 
  - #FALTA# -> Aun no implementado
  - #UNK# -> No tengo claro para qué funciona ni si lo implementaré
- - #POSIBLE# -> Posiblemente lo implementaré; aun por decidir */
+ - #POSIBLE# -> Posiblemente lo implementaré; aun por decidir
+ - #TEST# -> Teoricamente bien, falta testear */
 
-/*! MAIN */
+/* MAIN */
 #define MAIN3DS 0x4D4D				/*!< #OK# Main chunk */
-/*! MATERIAL */
-#define EDIT_MATERIAL 0xAFFF		/*!< #FALTA# 3D Material chunk */
-/*! OBJECT */
+
+/* MATERIAL */
+#define EDIT_MATERIAL		0xAFFF		/*!< #TEST# 3D Material chunk */
+#define MAT_NAME 			0xA000		/*!< #TEST# Material name ASCII*/
+#define MAT_AMBIENT			0xA010		/*!< #TEST# Material ambient color SUB_RGB */
+#define MAT_DIFFUSE			0xA020		/*!< #TEST# Material diffuse color SUB_RGB */
+#define MAT_SPECULAR		0xA030		/*!< #TEST# Material specular color SUB_RGB */
+#define MAT_SHININESS		0xA040		/*!< #TEST# Material shininess percent SUB_PER */
+#define MAT_SHIN2PCT		0xA041		/*!< #UNK# Material shininess percent SUB_PER */
+#define MAT_SHIN3PCT		0xA042		/*!< #UNK# Material shininess percent SUB_PER */
+#define MAT_TRANSPARENCY	0xA050		/*!< #TEST# Material transparency percent SUB_PER */
+#define MAT_XPFALL			0xA052		/*!< #UNK# Material transparency falloff SUB_PER */
+#define MAT_REFBLUR			0xA053		/*!< #UNK# Material reflect blur SUB_PER */
+#define MAT_TEX1			0xA200		/*!< #TEST# Material texture 1 SUB_MAP */
+#define MAT_MASK1			0xA33E		/*!< #POSIBLE# Material mask 1 SUB_MAP */
+#define MAT_SUB_RGB			0x0011		/*!< #TEST# Material SUB_RGB 3chars rgb */
+#define MAT_SUB_PER			0x0030		/*!< #TEST# Material SUB_PER short integer */
+#define MAT_MAPNAME			0xA300		/*!< #TEST# Map name (Usado para cargar la textura) ASCII */
+
+/* OBJECT */
 #define EDIT3DS 0x3D3D				/*!< #OK# 3D Editor chunk */
 #define EDIT_OBJECT 0x4000			/*!< #OK# Object block */
 #define OBJ_TRIMESH 0x4100			/*!< #OK# Triangular mesh */
 #define TRI_VERTEXL 0x4110			/*!< #OK# Vertices list */
 #define TRI_VERTEXOPTIONS 0x4111	/*!< #UNK# POINT_FLAG_ARRAY */
 #define TRI_FACEL1 0x4120			/*!< #OK# Polygons (faces) list */
-#define TRI_MATERIAL 0x4130			/*!< #FALTA# MSH_MAT_GROUP mesh_material_group */
+#define TRI_MATERIAL 0x4130			/*!< #FALTA# MSH_MAT_GROUP mesh_material_group
+		cstr material_name;
+		short nfaces;
+		short facenum[nfaces];*/
 #define TRI_MAPPINGCOORS 0x4140		/*!< #OK# Vertices list */
 #define TRI_SMOOTH 0x4150			/*!< #POSIBLE# SMOOTH_GROUP */
 #define TRI_LOCAL 0x4160			/*!< #POSIBLE# MESH_MATRIX */
@@ -75,9 +97,13 @@ typedef struct
 	char name[80]; /*!< Nombre definido en el archivo 3ds */
 	int vertices_qty; /*!< Cantidad de vertices */
 	int polygons_qty; /*!< Cantidad de polígonos */
+	int materials_qty; /*!< Cantidad de materiales */
+	
 	VECTOR vertex[MAX_VERTICES]; 
 	t_polygon polygon[MAX_POLYGONS];
 	t_mapcoord mapcoord[MAX_VERTICES];
+	t_texture material[MAX_MATERIALS];
+	
 	float size; /* Valor de la escala */
 }t_model, *t_model_ptr;
 
@@ -89,8 +115,10 @@ typedef struct
 	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
 	VECTOR pos; /*!< Posición (en metros) */
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
-	VECTOR vel; /*!< Velocidad (en m/s) */
+	VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
 	VECTOR velang; /*!< Velocidad angular (en rad/s) */
+	float sq_a, sq_b; /*!< Ambos lados que definen la base rectangular de colisión del objeto */
+	
 }t_obj_base, *t_obj_base_ptr;
 
 /* - FUNCIONES - */

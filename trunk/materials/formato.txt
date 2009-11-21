@@ -5,6 +5,7 @@ AMBIENT -
 DIFFUSE - 
 SPECULAR - 
 SHININESS - 
+TRANSPARENCY - 
 TEXTURE - Nombre de la textura con su extensión, no tiene por qué coincidir con el nombre del material.
 
 Ejemplo 'material.nmf':
@@ -12,4 +13,5 @@ Ejemplo 'material.nmf':
 0.92, 0.72, 0.21, 1.0
 0.05, 0.05, 0.05, 1.0
 1.0
+0.0
 material_image_name.jpg

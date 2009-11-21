@@ -45,14 +45,19 @@ int load_3DS (t_model_ptr data, char *filename)
 	unsigned short l_chunk_id;
 	unsigned int l_chunk_lenght;
 
+	unsigned short l_subchunk_id=0;
+	
 	unsigned char l_char;
+	char string[80];
+	unsigned char l_rgb[3];
 	unsigned short l_qty; /* Número de elementos en el chunk */
 
 	unsigned short l_face_flags; /* Flag that stores some face information */
 
-	if ((l_file=fopen (filename, "rb"))== NULL) return 1;
+	if ((l_file=fopen (filename, "rb"))== NULL){debug_printf("ERROR: Modelo \"%s\" no encontrado.\n",filename); return 1;}
 	
 	data->size=1.0f;
+	data->materials_qty=0;
 	
 	while (ftell (l_file) < filelength (fileno (l_file))) /* Leemos todo el archivo */
 	{
@@ -111,7 +116,104 @@ int load_3DS (t_model_ptr data, char *filename)
                     fread (&data->mapcoord[i].v, sizeof (float), 1, l_file);
 				}
                 break;
-
+                
+			/*case TRI_MATERIAL: FALTA FUNCIÓN QUE BUSQUE CON EL NOMBRE DEL MATERIAL y retorne el ID!!!
+				i=0;
+				do
+				{
+					fread (&l_char, 1, 1, l_file);
+                    string[i]=(char)l_char;
+					i++;
+                }while(l_char != '\0' && i<80);
+                
+                fread (&l_qty, sizeof (unsigned short), 1, l_file);
+                break;*/
+                
+			case EDIT_MATERIAL: /* Lenght: 0 + sub chunks */
+                break;
+			
+			case MAT_NAME:
+				data->materials_qty++;
+				i=0;
+				do
+				{
+					fread (&l_char, 1, 1, l_file);
+                    data->material[data->materials_qty-1].name[i]=l_char;
+					i++;
+                }while(l_char != '\0' && i<20);
+                break;
+			
+			case MAT_AMBIENT:
+			case MAT_DIFFUSE:
+			case MAT_SPECULAR:
+			case MAT_SHININESS:
+			case MAT_TRANSPARENCY:
+				l_subchunk_id=l_chunk_id;
+                break;
+                
+                
+			case MAT_SUB_RGB:
+				fread (l_rgb, 2, 3, l_file);
+				switch (l_subchunk_id)
+				{
+					case MAT_AMBIENT:
+						data->material[data->materials_qty-1].ambient[0]=l_rgb[0];
+						data->material[data->materials_qty-1].ambient[1]=l_rgb[1];
+						data->material[data->materials_qty-1].ambient[2]=l_rgb[2];
+						data->material[data->materials_qty-1].ambient[3]=1.0f;
+						break;
+					case MAT_DIFFUSE:
+						data->material[data->materials_qty-1].diffuse[0]=l_rgb[0];
+						data->material[data->materials_qty-1].diffuse[1]=l_rgb[1];
+						data->material[data->materials_qty-1].diffuse[2]=l_rgb[2];
+						data->material[data->materials_qty-1].diffuse[3]=1.0f;
+						break;
+					case MAT_SPECULAR:
+						data->material[data->materials_qty-1].specular[0]=l_rgb[0];
+						data->material[data->materials_qty-1].specular[1]=l_rgb[1];
+						data->material[data->materials_qty-1].specular[2]=l_rgb[2];
+						data->material[data->materials_qty-1].specular[3]=1.0f;
+						break;
+				}
+                break;
+                
+			case MAT_SUB_PER:
+				fread (&l_qty, sizeof (unsigned short), 1, l_file);
+				switch (l_subchunk_id)
+				{
+					case MAT_SHININESS:
+						data->material[data->materials_qty-1].shininess[0]=l_qty;
+						break;
+					case MAT_TRANSPARENCY:
+						data->material[data->materials_qty-1].transparency[0]=l_qty;
+						break;
+				}
+                break;
+			
+			case MAT_TEX1:
+				break;
+			
+			case MAT_MAPNAME:
+				i=0;
+				do
+				{
+					fread (&l_char, 1, 1, l_file);
+                    string[i]=(char)l_char;
+					i++;
+                }while(l_char != '\0' && i<80);
+                str_append(string,".tga");
+                /* Cargamos la textura */
+				data->material[data->materials_qty-1].texture[0]=ilutGLLoadImage(string);
+				if(!data->material[data->materials_qty-1].texture[0]){debug_printf("ALERTA: Textura autocargada del 3ds \"%s\" no encontrada.\n",string);}
+				else
+				{
+					ilutGLBuildMipmaps();
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				}
+				break;
+			
+			
 			/* Nos saltamos los desconocidos */
 			default:
 				 fseek(l_file, l_chunk_lenght-6, SEEK_CUR);
@@ -137,7 +239,7 @@ void object_draw(t_obj_base object)
 
     glRotatef(object.rot.y, 0,0,1.0f);
     glRotatef(object.rot.x, 1.0f,0,0);
-    //glRotatef(object.rot.z, sin(RAD(object.yaw)),cos(RAD(object.yaw)),-sin(RAD(object.pitch))); ARREGLAR!!!
+    /*glRotatef(object.rot.z, sin(RAD(object.yaw)),cos(RAD(object.yaw)),-sin(RAD(object.pitch))); ARREGLAR!!!*/
     
     
     glTranslatef(object.pos.x,object.pos.y,object.pos.z);

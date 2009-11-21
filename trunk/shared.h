@@ -73,10 +73,12 @@ t_camera camera;
 
 typedef struct
 {
+	char name[80];
 	GLfloat ambient[4];
 	GLfloat diffuse[4];
 	GLfloat specular[4];
 	GLfloat shininess[1];
+	GLfloat transparency[1];
 	GLint texture[1];
 }t_texture;
 
