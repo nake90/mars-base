@@ -68,7 +68,7 @@ int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla 
 
 
 
-//t_3ds_model test;
+t_obj_base test;
 
 /* Niebla y atmósfera */
 GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
@@ -133,7 +133,6 @@ void display(void)
     glRotatef(-camera.pitch, 1.0f,0,0);
     glRotatef(-camera.yaw, 0,0,1.0f);
     glRotatef(-camera.roll, sin(RAD(-camera.yaw)),cos(RAD(-camera.yaw)),-sin(RAD(camera.pitch)));
-    
     glTranslatef(-camera.pos_x,-camera.pos_y,-camera.pos_z);
 	
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
@@ -171,12 +170,13 @@ void display(void)
 	glColor3d(1.0,1.0,1.0);
 	
 	/* Dibujamos los objetos */
-	//display_3ds(test);
+	//object_draw(test);
 	
 	/* Dibujamos el Sol */
-	//glDisable(GL_LIGHTING);
-	glDisable(GL_FOG);
 	/*
+	glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
+	
     glRotatef(camera.roll, sin(RAD(camera.yaw)),cos(RAD(camera.yaw)),-sin(RAD(camera.pitch)));
     glRotatef(camera.yaw, 0,0,1.0f);
     glRotatef(camera.pitch, 1.0f,0,0);
@@ -192,6 +192,8 @@ void display(void)
 	glEnd();
 	glBlendFunc(GL_ONE,GL_ZERO);
 	glDisable(GL_BLEND);*/
+	
+	
     glDisable(GL_LIGHTING);
     
 	/* Dibujamos el HUD */
@@ -256,18 +258,7 @@ key(unsigned char key, int x, int y)
     case 'n':
 		show_presion=0;
 		break;
-		/*
-    case 'z':
-		vec=trace_camera(camera.pos_x,camera.pos_y,camera.pos_z);
-		presion=get_presion((int)vec.x, (int)vec.y)-0.5;
-		set_presion(presion,(int)vec.x, (int)vec.y);
-		break;
-    case 'x':
-		vec=trace_camera(camera.pos_x,camera.pos_y,camera.pos_z);
-		presion=get_presion((int)vec.x, (int)vec.y)+0.5;
-		set_presion(presion,(int)vec.x, (int)vec.y);
-		break;
-*/
+
     default:
         break;
     }
@@ -472,7 +463,6 @@ int main(int argc, char *argv[])
 	tam_mapa_y = TERR_SIZE*2;
     show_grid=0;
     show_presion=0;
-    //randomize_presion(PRESION_MEDIA,50);
     
     
     /* - INICIACIÓN PROGRAMA - */
@@ -510,9 +500,8 @@ int main(int argc, char *argv[])
 	
 	scr_init_printf ("Cargando modelos...");
 	
-	/*if(Load3DS(&test,"models\\test.3ds")!=1){exit(1);}
-	test.id_texture=ilutGLLoadImage("materials\\genericmetal05.jpg");
-	test.size=1.0f;*/
+	if(load_3DS(&(test.modelo),"models\\test.3ds")!=0){exit(1);}
+	//test.id_texture=ilutGLLoadImage("materials\\genericmetal05.jpg");
 	
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);

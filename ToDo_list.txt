@@ -1,4 +1,5 @@
-!!	Carga texturas del .3ds <- Necesito objetos de ejemplo...
+!!	Carga texturas del .3ds -> Falta función que busque con el nombre del material y retorne el ID
+!!	Carga texturas del .3ds -> Falta testear todo
 !!	Rotación Roll de los objetos <- Necesito Carga texturas del .3ds
 !	Console
 !!	Lista de objetos cargables
