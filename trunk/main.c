@@ -45,8 +45,8 @@
 #include "GL/openglut.h"
 #include "IL/ilut.h"
 
-#include "objetos.h"
 #include "shared.h"
+#include "objetos.h"
 #include "overlay.h"
 #include "heightmap.h"
 #include "materiales.h"
@@ -68,6 +68,7 @@ int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla 
 
 
 
+t_model test_data;
 t_obj_base test;
 
 /* Niebla y atmósfera */
@@ -115,7 +116,7 @@ static void resize(int width, int height)
 
 void display(void)
 {
-    int i;
+	int i;
     int j;
     VECTOR v;
     
@@ -170,7 +171,7 @@ void display(void)
 	glColor3d(1.0,1.0,1.0);
 	
 	/* Dibujamos los objetos */
-	//object_draw(test);
+	object_draw_l(&(test));
 	
 	/* Dibujamos el Sol */
 	/*
@@ -228,22 +229,20 @@ key(unsigned char key, int x, int y)
     case 'd': camera.yaw--;
 		break;
 		
-		/*
-	case 'i': test.pitch++;
+	case 'i': test.rot.x++;
 		break;
-    case 'k': test.pitch--;
-		break;
-		
-    case 'o': test.roll++;
-		break;
-    case 'u': test.roll--;
+    case 'k': test.rot.x--;
 		break;
 		
-    case 'j': test.yaw++;
+    case 'o': test.rot.z++;
 		break;
-    case 'l': test.yaw--;
+    case 'u': test.rot.z--;
 		break;
-		*/
+		
+    case 'j': test.rot.y++;
+		break;
+    case 'l': test.rot.y--;
+		break;
 	
     case 'c':
 		show_grid=1;
@@ -378,6 +377,7 @@ static
 void salir (void)
 {
 	destroy_heightmap(&marte);
+	glDeleteLists(test.modelo->draw_list,1);
 }
 
 static
@@ -456,9 +456,11 @@ void GLinit(void)
 int main(int argc, char *argv[])
 {
     /* - INICIACIÓN VARIABLES - */
+    str_cpy(app_path,argv[0]);
+    str_ruta_back(app_path);
     int i;
     debug_reset();
-    debug_printf("Mars_Base v." VER_STRING " - by nake\n\n");
+    debug_printf("Mars_Base v." VER_STRING " (%s) - by nake\n\n",app_path);
 	tam_mapa_x = TERR_SIZE*2;
 	tam_mapa_y = TERR_SIZE*2;
     show_grid=0;
@@ -470,7 +472,7 @@ int main(int argc, char *argv[])
 	GLinit();
 	scr_init_reset(0);
 
-	/* - POSINICIALIZACIÓN - */
+	/* - POSINICIALIZACIÓN (Carga elementos) - */
 	
 	i=load_material(&sand, "materials\\sand_default");
 	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); return(-1);}
@@ -499,9 +501,10 @@ int main(int argc, char *argv[])
 	//if(!sun.texture[0] /*|| !sun.texture[1]*/){return 1;}
 	
 	scr_init_printf ("Cargando modelos...");
-	
-	if(load_3DS(&(test.modelo),"models\\test.3ds")!=0){exit(1);}
-	//test.id_texture=ilutGLLoadImage("materials\\genericmetal05.jpg");
+	test.modelo=&test_data;
+	if(load_3DS(test.modelo,"models\\test.3ds")!=0){exit(1);}
+	object_predraw(&(test));
+	obj_setpos(test,0,0,0);
 	
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);
@@ -510,6 +513,9 @@ int main(int argc, char *argv[])
 	scr_init_printf ("Iniciado");
 	
 	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
+	
+	
+	/* - MAIN LOOP - */
     glutMainLoop();
 
     return 0;

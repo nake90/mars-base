@@ -32,4 +32,12 @@
 void draw_minimap(GLuint minimap);
 void draw_HUD(void);
 
+/*
+glMatrixMode (GL_PROJECTION);
+glLoadIdentity ();
+gluOrtho2D (0, windowWidth, 0, windowHeight);
+glDisable(GL_DEPTH_TEST);
+
+*/
+
 #endif
