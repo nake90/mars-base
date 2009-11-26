@@ -33,11 +33,14 @@
 #include "GL/openglut.h"
 #include "IL/ilut.h"
 
+/* --- MACROS --- */
+#define obj_setpos(a,b,c,d) a.pos.x=b; a.pos.y=c; a.pos.z=d;
+
 /* --- DEFINES --- */
 #define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
-
+#define objetos_debug 0 /*!< Nivel de debug de los objetos */
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
  - #OK# -> Implementado y funcionando 
@@ -50,22 +53,22 @@
 #define MAIN3DS 0x4D4D				/*!< #OK# Main chunk */
 
 /* MATERIAL */
-#define EDIT_MATERIAL		0xAFFF		/*!< #TEST# 3D Material chunk */
-#define MAT_NAME 			0xA000		/*!< #TEST# Material name ASCII*/
-#define MAT_AMBIENT			0xA010		/*!< #TEST# Material ambient color SUB_RGB */
-#define MAT_DIFFUSE			0xA020		/*!< #TEST# Material diffuse color SUB_RGB */
-#define MAT_SPECULAR		0xA030		/*!< #TEST# Material specular color SUB_RGB */
-#define MAT_SHININESS		0xA040		/*!< #TEST# Material shininess percent SUB_PER */
+#define EDIT_MATERIAL		0xAFFF		/*!< #OK# 3D Material chunk */
+#define MAT_NAME 			0xA000		/*!< #OK# Material name ASCII*/
+#define MAT_AMBIENT			0xA010		/*!< #OK# Material ambient color SUB_RGB */
+#define MAT_DIFFUSE			0xA020		/*!< #OK# Material diffuse color SUB_RGB */
+#define MAT_SPECULAR		0xA030		/*!< #OK# Material specular color SUB_RGB */
+#define MAT_SHININESS		0xA040		/*!< #OK# Material shininess percent SUB_PER */
 #define MAT_SHIN2PCT		0xA041		/*!< #UNK# Material shininess percent SUB_PER */
 #define MAT_SHIN3PCT		0xA042		/*!< #UNK# Material shininess percent SUB_PER */
-#define MAT_TRANSPARENCY	0xA050		/*!< #TEST# Material transparency percent SUB_PER */
+#define MAT_TRANSPARENCY	0xA050		/*!< #OK# Material transparency percent SUB_PER */
 #define MAT_XPFALL			0xA052		/*!< #UNK# Material transparency falloff SUB_PER */
 #define MAT_REFBLUR			0xA053		/*!< #UNK# Material reflect blur SUB_PER */
-#define MAT_TEX1			0xA200		/*!< #TEST# Material texture 1 SUB_MAP */
+#define MAT_TEX1			0xA200		/*!< #OK# Material texture 1 SUB_MAP */
 #define MAT_MASK1			0xA33E		/*!< #POSIBLE# Material mask 1 SUB_MAP */
-#define MAT_SUB_RGB			0x0011		/*!< #TEST# Material SUB_RGB 3chars rgb */
-#define MAT_SUB_PER			0x0030		/*!< #TEST# Material SUB_PER short integer */
-#define MAT_MAPNAME			0xA300		/*!< #TEST# Map name (Usado para cargar la textura) ASCII */
+#define MAT_SUB_RGB			0x0011		/*!< #OK# Material SUB_RGB 3chars rgb */
+#define MAT_SUB_PER			0x0030		/*!< #OK# Material SUB_PER short integer */
+#define MAT_MAPNAME			0xA300		/*!< #OK# Map name (Usado para cargar la textura) ASCII */
 
 /* OBJECT */
 #define EDIT3DS 0x3D3D				/*!< #OK# 3D Editor chunk */
@@ -74,7 +77,7 @@
 #define TRI_VERTEXL 0x4110			/*!< #OK# Vertices list */
 #define TRI_VERTEXOPTIONS 0x4111	/*!< #UNK# POINT_FLAG_ARRAY */
 #define TRI_FACEL1 0x4120			/*!< #OK# Polygons (faces) list */
-#define TRI_MATERIAL 0x4130			/*!< #FALTA# MSH_MAT_GROUP mesh_material_group
+#define TRI_MATERIAL 0x4130			/*!< #OK# MSH_MAT_GROUP mesh_material_group
 		cstr material_name;
 		short nfaces;
 		short facenum[nfaces];*/
@@ -103,6 +106,10 @@ typedef struct
 	t_polygon polygon[MAX_POLYGONS];
 	t_mapcoord mapcoord[MAX_VERTICES];
 	t_texture material[MAX_MATERIALS];
+	//char material_name_list[MAX_MATERIALS][256];
+	
+	int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
+	int draw_lists; /*!< Número de índices compilados de OpenGL */
 	
 	float size; /* Valor de la escala */
 }t_model, *t_model_ptr;
@@ -111,7 +118,7 @@ typedef struct
 typedef struct
 {
 	char name[256]; /*!< Nombre del objeto */
-	t_model modelo; /*!< Datos de vértices y demás */
+	t_model_ptr modelo; /*!< Datos de vértices y demás */
 	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
 	VECTOR pos; /*!< Posición (en metros) */
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
@@ -123,6 +130,8 @@ typedef struct
 
 /* - FUNCIONES - */
 int load_3DS (t_model_ptr data, char *filename);
+void object_predraw(t_obj_base_ptr object);
 void object_draw(t_obj_base object);
+void object_draw_l(t_obj_base_ptr object);
 
 #endif

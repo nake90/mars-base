@@ -191,6 +191,35 @@ int str_cmp(const char* string1,const char* string2)
 	return valor;
 }
 
+/*! \fn void str_ruta_back(char* ruta)
+ *  \brief Borra el texto empezando desde el final hasta el primer '\' (El '\' se mantiene)
+ *  \param ruta Ruta a la que se va a borrar el final
+*/
+void str_ruta_back(char* ruta)
+{
+	int pos=str_size(ruta);
+	while (pos>=0 && ruta[pos]!='\\'){pos--;}
+	if(pos>0){ruta[pos+1]=0;}
+}
+
+/*! \fn int str_list_find(const char* find,const char* table[], int elementos)
+ *  \brief Busca un string en una lista de strings y retorna la posición en la lista
+ *  \param find Texto a encontrar
+ *  \param table Lista de strings donde se debe buscar el texto
+ *  \param elementos Número de elementos (o filas) en la lista 'table'
+ *  \return -1 si no se encuentra el texto
+ *  \return La fila en la que se encuentra el texto. (Empezando por 0)
+*/
+int str_list_find(const char* find,const char* table[], int elementos)
+{
+	int i;
+	for (i=0; i<elementos; i++)
+	{
+		if (!str_cmp(find, table[i])){return i;}
+	}
+	return -1;
+}
+
 /* - VECTORS - */
 
 /*! \fn VECTOR p_vect(VECTOR vec1,VECTOR vec2)

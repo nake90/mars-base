@@ -148,8 +148,8 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 	
 	obj->list=glGenLists(2);
 	
-	glDisable(GL_LIGHTING);
 	glNewList(obj->list,GL_COMPILE);
+		glDisable(GL_LIGHTING);
 		use_texture(texture);
 		glPushMatrix();
 		glTranslatef(-obj->ini_x,-obj->ini_y,-obj->ini_z);

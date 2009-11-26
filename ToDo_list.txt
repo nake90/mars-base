@@ -1,12 +1,9 @@
-!!	Carga texturas del .3ds -> Falta función que busque con el nombre del material y retorne el ID
-!!	Carga texturas del .3ds -> Falta testear todo
-!!	Rotación Roll de los objetos <- Necesito Carga texturas del .3ds
-!	Console
-!!	Lista de objetos cargables
+!!!	Acabar el Sol (SKYBOX)	<--(ON IT)
+!!!!TRACES (+Altura, ....)
 !	Presión atmosférica
 !	Temperatura atmosférica
+!	Funciones de transferencia de calor, gases y presión
+!!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
 !!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
 !	Control de nodos
-!	Funciones de transferencia de calor, gases y presión
-!!!	Acabar el Sol
-!!!!TRACES (+Altura, ....)
+!	Console

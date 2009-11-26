@@ -55,6 +55,8 @@ char scr_messages[80][255];
 int scr_message_index;
 int scr_message_debug;
 
+char app_path[256];
+
 GLuint minimapa;
 
 typedef struct{float x; float y; float z;}VECTOR;
@@ -109,6 +111,8 @@ void str_cpy(char* string1,const char* string2);
 void str_cpyl(char* string1, int len, const char* string2);
 void str_append(char* string1,const char* string2);
 int str_cmp(const char* string1,const char* string2);
+void str_ruta_back(char* ruta);
+int str_list_find(const char* find,const char* table[], int elementos);
 
 VECTOR p_vect(VECTOR vec1,VECTOR vec2);
 float p_escalar(VECTOR vec1,VECTOR vec2);
