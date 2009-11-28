@@ -79,10 +79,9 @@ GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y 
 /*					AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sand;//={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
-t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{20000.0f, 20000.0f, 20000.0f},{12.0f},{0,0}};
+t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sun_texture={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
-
 
 /* GLUT callback Handlers */
 
@@ -128,23 +127,37 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_FOG);
-    
+    glDisable(GL_LIGHTING);
+    glDisable(GL_FOG);
     glRotatef(-camera.pitch, 1.0f,0,0);
     glRotatef(-camera.yaw, 0,0,1.0f);
     glRotatef(-camera.roll, sin(RAD(-camera.yaw)),cos(RAD(-camera.yaw)),-sin(RAD(camera.pitch)));
-    glTranslatef(-camera.pos_x,-camera.pos_y,-camera.pos_z);
+	/* Dibujos estáticos (Sky) */
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	draw_fixsprite(sun.position[0],sun.position[1],sun.position[2]+SUN_SIZE,sun_texture,SUN_SIZE);
+	glBlendFunc(GL_ONE,GL_ZERO);
+	glDisable(GL_BLEND);
+	
+	/* Dibujo normal */
+	glTranslatef(-camera.pos_x,-camera.pos_y,-camera.pos_z);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_FOG);
+	
+	
+	
 	
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
     
 	glCallList(marte.list);/* Dibujamos el terreno */
 	
+	
 	/* Dibujamos los extras del terreno */
 	
 	/* - Display Casillas - FIXME!!!!! (casillas solo de la zona actual, de 1x1m^2) */
    	/*if (show_grid)
-	{
+	{*/
 		glDisable(GL_TEXTURE_2D);
 		glLineWidth(1.5f);
 		for (i=-TERR_SIZE; i<=TERR_SIZE; i++)
@@ -156,7 +169,7 @@ void display(void)
 				glVertex3f( TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
 				glVertex3f(-TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
 			glEnd();
-		}
+		}/*
 	}*/
 	glColor3d(1.0,1.0,1.0);
 	
@@ -172,28 +185,6 @@ void display(void)
 	
 	/* Dibujamos los objetos */
 	object_draw_l(&(test));
-	
-	/* Dibujamos el Sol */
-	/*
-	glDisable(GL_LIGHTING);
-	glDisable(GL_FOG);
-	
-    glRotatef(camera.roll, sin(RAD(camera.yaw)),cos(RAD(camera.yaw)),-sin(RAD(camera.pitch)));
-    glRotatef(camera.yaw, 0,0,1.0f);
-    glRotatef(camera.pitch, 1.0f,0,0);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	//glBindTexture(GL_TEXTURE_2D, sun.texture[0]);
-	use_texture(sun_texture);
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(sun.position[0]-SUN_SIZE, sun.position[1]-SUN_SIZE, sun.position[2]+0.0f);// Bottom Left
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(sun.position[0]+SUN_SIZE, sun.position[1]-SUN_SIZE, sun.position[2]+0.0f);// Bottom Right
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(sun.position[0]+SUN_SIZE, sun.position[1]+SUN_SIZE, sun.position[2]+0.0f);// Top Right
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(sun.position[0]-SUN_SIZE, sun.position[1]+SUN_SIZE, sun.position[2]+0.0f);// Top Left
-	glEnd();
-	glBlendFunc(GL_ONE,GL_ZERO);
-	glDisable(GL_BLEND);*/
-	
 	
     glDisable(GL_LIGHTING);
     
@@ -389,15 +380,12 @@ void GLinit(void)
 	
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE );
 	glutCreateWindow("Mars Base v" VER_STRING);
-	//glutEstablishOverlay(); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
-	//glutHideOverlay(); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
 	glutFullScreen();
 	
 	/* Funciones por mensaje */
 	atexit(salir);
 	glutReshapeFunc(resize);
 	glutDisplayFunc(display);
-	/*glutOverlayDisplayFunc(draw_HUD); /* NO IMPLEMENTADO AUN EN openGLUT!!!!! */
 	glutKeyboardFunc(key);
 	glutSpecialFunc(special_keys);
 	glutIdleFunc(idle);
@@ -417,7 +405,7 @@ void GLinit(void)
 	
 	glFogi(GL_FOG_MODE, GL_LINEAR);
 	glFogfv(GL_FOG_COLOR, fogColor);
-	glFogf(GL_FOG_DENSITY, 0.35f);
+	glFogf(GL_FOG_DENSITY, 0.32f);
 	glHint(GL_FOG_HINT, GL_DONT_CARE);
 	glFogf(GL_FOG_START, fogRange[0]);
 	glFogf(GL_FOG_END, fogRange[1]);
@@ -434,6 +422,7 @@ void GLinit(void)
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
     glEnable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 	
     glEnable(GL_LIGHT0);
@@ -488,10 +477,10 @@ int main(int argc, char *argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	ilutGLBuildMipmaps();
 	
-	
 	scr_init_printf ("Iniciando recursos...");
 	camera.pitch = 25;
 	camera.yaw = 0;
+	camera.pos_x=0;
 	camera.pos_z=10;
 	camera.pos_y=-4.5;
 	

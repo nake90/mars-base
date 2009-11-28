@@ -40,7 +40,7 @@
 #include "mars_base_private.h"
 
 //2*PI/360 = 0.017453292519943295769236907684886
-#define RAD(x) (float)x*0.01745329
+#define RAD(x) (float)((x)*0.01745329)
 
 
 /* Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */
@@ -122,5 +122,8 @@ VECTOR vsub(VECTOR vec1, VECTOR vec2);
 
 float nabs(float val);
 int nround(float val);
+
+void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
+void draw_sprite (float x, float y, float z, t_texture textura, float size);
 
 #endif

@@ -84,7 +84,7 @@ void scr_init_printf (const char *fmt, ...)
 		hud_printf (1, pos, scr_messages[i]);
 		pos++;
 	}
-	glFlush();
+	glFinish();
 	glutSwapBuffers();
 }
 
@@ -109,7 +109,7 @@ void scr_init_reprintf (const char *fmt, ...)
 		hud_printf (1, pos, scr_messages[i]);
 		pos++;
 	}
-	glFlush();
+	glFinish();
 	glutSwapBuffers();
 }
 
@@ -433,4 +433,45 @@ void use_texture(t_texture texture)
 	glMaterialfv(GL_FRONT, GL_SPECULAR,  texture.specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, texture.shininess);
 	glBindTexture(GL_TEXTURE_2D, texture.texture[0] );
+}
+
+/*! \fn void draw_sprite (float x, float y, float z, t_texture textura, float size)
+ *  \brief Dibuja una textura en el mundo siempre orientada al jugador.
+ *  \param x,y,z Coordenadas donde se dibuja el objeto
+ *  \param textura Material a dibujar
+ *  \param size Tamaño del objeto (Radio del objeto o mitad de su lado)
+*/
+void draw_sprite (float x, float y, float z, t_texture textura, float size)
+{
+	float proy_x, proy_y, proy_z, mod;
+	mod = sqrt((x-camera.pos_x)*(x-camera.pos_x)+(y-camera.pos_y)*(y-camera.pos_y)+(z-camera.pos_z)*(z-camera.pos_z));
+	if (mod==0)return;
+	proy_x = (x-camera.pos_x)/mod;
+	proy_y = (y-camera.pos_y)/mod;
+	proy_z = (z-camera.pos_z)/mod;
+	
+	use_texture(textura);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(x-size*proy_y, y+size*proy_x, z-size);// Bottom Left
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*proy_y, y-size*proy_x, z-size);// Bottom Right
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+size*proy_y, y-size*proy_x, z+size);// Top Right
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(x-size*proy_y, y+size*proy_x, z+size);// Top Left
+	glEnd();
+}
+
+/*! \fn void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
+ *  \brief Dibuja una textura en el mundo siempre orientada al jugador pero fija (como por ejemplo el Sol).
+ *  \param x,y,z Coordenadas donde se dibuja el objeto
+ *  \param textura Material a dibujar
+ *  \param size Tamaño del objeto (Radio del objeto o mitad de su lado)
+*/
+void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
+{
+	use_texture(textura);
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(x-size*(sin(RAD(camera.yaw+90))), y+size*(cos(RAD(camera.yaw+90))-cos(RAD(camera.pitch))), z-size*sin(RAD(camera.pitch)));// Bottom Left
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*(sin(RAD(camera.yaw+90))), y-size*(cos(RAD(camera.yaw+90))+cos(RAD(camera.pitch))), z-size*sin(RAD(camera.pitch)));// Bottom Right
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+size*(sin(RAD(camera.yaw+90))), y-size*(cos(RAD(camera.yaw+90))-cos(RAD(camera.pitch))), z+size*sin(RAD(camera.pitch)));// Top Right
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(x-size*(sin(RAD(camera.yaw+90))), y+size*(cos(RAD(camera.yaw+90))+cos(RAD(camera.pitch))), z+size*sin(RAD(camera.pitch)));// Top Left
+	glEnd();
 }

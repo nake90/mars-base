@@ -242,7 +242,8 @@ int load_3DS (t_model_ptr data, char *filename)
                     string[i]=(char)l_char;
 					i++;
                 }while(l_char != '\0' && i<80);
-                str_append(string,".tga");
+                if(i==80){debug_printf("ALERTA: Nombre de textura cortado. (No debería de haber pasado nunca, probablemente sea por un archivo corrupto)\n",string);}
+                //str_append(string,".tga");
                 str_cpy(string2,app_path);
                 str_append(string2,"materials\\");
                 str_append(string2,string);
@@ -288,6 +289,8 @@ void object_predraw(t_obj_base_ptr object)
 	object->modelo->draw_lists=1;
 	glNewList(object->modelo->draw_list,GL_COMPILE);
 	
+    glDisable(GL_CULL_FACE);
+    
 	glColor3f(1.0f,1.0f,1.0f);
 	glEnable(GL_TEXTURE_2D);
 	
@@ -317,6 +320,7 @@ void object_predraw(t_obj_base_ptr object)
 	                    object->modelo->vertex[ object->modelo->polygon[l_index].c ].z *object->modelo->size);
 	    glEnd();
     }
+    glEnable(GL_CULL_FACE);
 	glEndList();
 	l_index=glGetError();
 	if (l_index){debug_printf("ERROR: OpenGL ha retornado %i al llamar a object_predraw() - Esto no debería de haber pasado nunca, que raro...\n",l_index);}

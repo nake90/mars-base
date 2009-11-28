@@ -1,9 +1,10 @@
-!!!	Acabar el Sol (SKYBOX)	<--(ON IT)
 !!!!TRACES (+Altura, ....)
+!!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
+!!	Menú para el spawn de objetos
+!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
+!	Control de nodos
 !	Presión atmosférica
 !	Temperatura atmosférica
 !	Funciones de transferencia de calor, gases y presión
-!!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
-!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
-!	Control de nodos
 !	Console
+!	Acabar el Sol (Es un poco cutre)
