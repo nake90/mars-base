@@ -40,12 +40,15 @@
 #include "shared.h"
 /* Dynamic Pressure: q(Pa) = 1/2 * densidad(kg/m3) * v^2(m/s) */
 
-#define SUN_SIZE 500.0f
+#define SUN_SIZE 2000.0f
 
 /* Presión media en Pascales */
 #define PRESION_MEDIA 800
 #define PRESION_MAX  1000
 #define PRESION_MIN   600
+
+//#define SKYBOX_DISTANCE   55000 /* 50000 es el máximo de niebla... */
+//GLint skybox[5]; /*!< Texturas del skybox. 0->Front; 1->Right; 2-> Back; 3-> Left; 4->Top*/
 
 typedef struct
 {
