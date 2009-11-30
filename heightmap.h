@@ -66,6 +66,8 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture);
 float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente);
 void list_compile_map(t_heightmap* obj, t_texture texture);
 
-float get_real_height(float coord_x, float coord_y);
+float get_real_height(t_heightmap obj, float coord_x, float coord_y);
+float z_to_real_height (t_heightmap obj, int z);
+float coord_to_real_height(t_heightmap obj, float z);
 
 #endif

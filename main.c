@@ -190,6 +190,7 @@ void display(void)
     
 	/* Dibujamos el HUD */
 	draw_HUD();
+	hud_printf (0, 8, "Altura hasta el suelo: %f",coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y));
 	glutSwapBuffers();
 }
 
@@ -248,6 +249,11 @@ key(unsigned char key, int x, int y)
     case 'n':
 		show_presion=0;
 		break;
+		
+    case 't': /* Funciones de test */
+		
+		break;
+		
 
     default:
         break;
@@ -260,6 +266,9 @@ static void
 special_keys(int key, int x, int y)
 {
     float speed=0.5f;
+    float last_x=camera.pos_x;
+    float last_y=camera.pos_y;
+    float last_z=camera.pos_z;
     if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){speed=200.0f;}
 	
 	switch (key)
@@ -290,13 +299,18 @@ special_keys(int key, int x, int y)
     default:
         break;
     }
-
+	
+	/* Evitamos el estar bajo la tierra */
+	if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_x=last_x;camera.pos_y=last_y;camera.pos_z=last_z;}
+	
     glutPostRedisplay();
 }
 
 static void
 idle(void)
 {
+	/* ¿Aún bajo tierra? Enseguida lo arreglamos... *//* O no... xD*/
+	//if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_z=-coord_to_real_height(marte,0);}
 	glutPostRedisplay();
 }
 
@@ -326,7 +340,8 @@ void mouse_move_but(int x, int y)
 	int w=glutGet(GLUT_WINDOW_WIDTH);
 	int h=glutGet(GLUT_WINDOW_HEIGHT);
 	int val;
-	float altura_real=camera.pos_z;
+	float altura_real = coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y);
+	//debug_printf("Altura real: %f; z2real: %f; get_real: %f \n",altura_real,coord_to_real_height(marte,camera.pos_z),get_real_height(marte, camera.pos_x, camera.pos_y));
 	
 	if (b_raton[B_DER_RATON] && !b_raton[B_IZQ_RATON])/* Desplazamiento por la pantalla */
 	{

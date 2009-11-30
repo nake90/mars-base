@@ -164,7 +164,6 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 			{
 				color=obj->shadow[x+y*obj->tam_x];
 				if(color>=0){glColor3f(color,color,color);}else{glColor3f(1.0,0,1.0);}
-				if(y==0 && x==0){glColor3f(0.0,1,0.0);}
 				/* Dibujamos el primer triángulo */
 				// Lo de obj->tam_x-x+1 es porque sale todo como en un espejo en las x's
 				glTexCoord2i( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale);
@@ -172,7 +171,6 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 				
 				color=obj->shadow[x+(y+1)*obj->tam_x];
 				if(color>=0){glColor3f(color,color,color);}else{glColor3f(1.0,0,1.0);}
-				if(y==0 && x==0){glColor3f(0.0,1,0.0);}
 				/* Dibujamos el segundo triángulo */
 				glTexCoord2i( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale);
 				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale, (obj->data[x+(y+1)*obj->tam_x]-obj->zero_h)*v_scale+v_add);
@@ -344,11 +342,27 @@ void destroy_heightmap(t_heightmap* obj)
 
 /* --- */
 
-/*static float _get_real_height (int z, t_heightmap obj)/* Transforma una z (0-255) a su altura real *//*
+float z_to_real_height(t_heightmap obj, int z)/* Transforma una z (0-255) a su altura real */
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
 }
+
+float coord_to_real_height(t_heightmap obj, float z)/* Transforma una coordenada z (como el de la cámara) a su altura real */
+{
+	float v_scale = (obj.max_h-obj.min_h)/255.0f;
+	return -((128-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale+obj.ini_z+z+23;
+	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
+}
+
+float real_height_to_coord(t_heightmap obj, float z)/* Transforma una coordenada z (como el de la cámara) a su altura real */
+{
+	float v_scale = (obj.max_h-obj.min_h)/255.0f;
+	return -((128-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale+obj.ini_z+z+23;
+	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
+}
+
+/*
 float get_real_height (int x, int y, t_heightmap obj)/* Obtiene el valor de la altura real de una casilla no centrada (0->tamaño_mapa) */
 /*{
 	if (x<0 || x>obj.tam_x || y<0 || y>obj.tam_y){return 0;}
@@ -382,11 +396,9 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	/* Primero calculamos las sombras y las normales */
 	/* 'x' e 'y' NUNCA = 0 */
 	for (y=1;y<obj->tam_y; y++)
-	//for (y=300;y<500; y++)
 	{
 		if(y%64)scr_init_reprintf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
 		for (x=1;x<obj->tam_x; x++)
-		//for (x=400;x<600; x++)
 		{
 				vec1.x=-1;//pos1.x-x;
 				vec1.y=0;//pos1.y-y;
@@ -446,4 +458,45 @@ float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float amb
 	return resultado;
 }
 
-float get_real_height(float coord_x, float coord_y);
+/*! \fn float get_real_height(t_heightmap obj, float coord_x, float coord_y)
+ *  \brief Función que retorna el valor exacto y real de altura en las coordenadas reales (coord_x,coord_y)
+ *  \param obj Mapa del terreno
+ *  \param coord_x,coord_y Coordenadas reales del punto a medir
+ *  \return Altura real del punto
+ *  \return 0 si fuera del mapa
+ *
+*/
+float get_real_height(t_heightmap obj, float coord_x, float coord_y)
+{
+	float v_scale = (obj.max_h-obj.min_h)/255.0f;
+	int x, y; /* Coordenadas (x,y) de la matriz de alturas */
+	float h1,h2,h3,h4,h; /* Alturas de los vértices y final */
+	float a,b; /* Son los incrementos de posición en cada eje */
+	
+	/* h1  h2
+	   0->/|
+	   |1/ |
+	   v/_2|
+	   h3  h4
+	*/
+	a=obj.tam_x -(obj.tam_x -(obj.tam_x/2) -(coord_x+obj.ini_x)/obj.scale)+1;
+	b=obj.tam_y -((obj.tam_y/2) +(coord_y+obj.ini_y)/obj.scale) -1;
+	x=(int)a;
+	y=(int)b;
+	a-=x; b-=y; /* Transformamos 'a' y 'b' en los incrementos, van de [0-1) respecto la dist. relativa en el eje 'x' e 'y' respect. */
+	if (x<0 || x>obj.tam_x-1 || y<0 || y>obj.tam_y-1){return 0.0f;}
+	h1=obj.data[x+y*obj.tam_x]*v_scale+obj.min_h;
+	h2=obj.data[(x+1)+y*obj.tam_x]*v_scale+obj.min_h;
+	h3=obj.data[x+(y+1)*obj.tam_x]*v_scale+obj.min_h;
+	h4=obj.data[(x+1)+(y+1)*obj.tam_x]*v_scale+obj.min_h;
+	
+	if(a+b<1)/* Primer triángulo h1,h2,h3 */
+	{
+		h=h1+(a*(h2-h1))+(b*(h3-h1));
+	}
+	else/* Segundo triángulo h4,h3,h2 */
+	{
+	 	h=h4+((1-b)*(h2-h4))+((1-a)*(h3-h4));
+	}
+	return h;
+}

@@ -1,4 +1,4 @@
-!!!!TRACES (+Altura, ....)
+!!	TRACES
 !!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
 !!	Menú para el spawn de objetos
 !!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
