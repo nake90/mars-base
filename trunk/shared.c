@@ -380,7 +380,10 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
 */
 void hud_printf(int col, int row, const char *fmt, ...)
 {
-    glDisable(GL_TEXTURE_2D);
+    
+	glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
+	glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
 	static char buf[256];
     int viewport[4];
@@ -417,6 +420,8 @@ void hud_printf(int col, int row, const char *fmt, ...)
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_FOG);
 }
 
 /* - Other - */
