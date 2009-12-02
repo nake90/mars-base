@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -44,43 +85,250 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
   </div>
 </div>
 <div class="contents">
-<h1>Referencia de la Estructura t_heightmap</h1><!-- doxytag: class="t_heightmap" --><table border="0" cellpadding="0" cellspacing="0">
+<h1>Referencia de la Estructura t_heightmap</h1><!-- doxytag: class="t_heightmap" -->
+<p><code>#include &lt;<a class="el" href="heightmap_8h_source.html">heightmap.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Campos de datos</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b04984c98cb174582db6a4a82a7aaf9"></a><!-- doxytag: member="t_heightmap::list" ref="a9b04984c98cb174582db6a4a82a7aaf9" args="" -->
-GLuint&nbsp;</td><td class="memItemRight" valign="bottom"><b>list</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a843f6d5026240145775f5cc674e5fc0c"></a><!-- doxytag: member="t_heightmap::tam_x" ref="a843f6d5026240145775f5cc674e5fc0c" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>tam_x</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afab11b6d0545e3d37c1e60ca6560a4a1"></a><!-- doxytag: member="t_heightmap::tam_y" ref="afab11b6d0545e3d37c1e60ca6560a4a1" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>tam_y</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1d28dec57cce925ad92342891bd71e7c"></a><!-- doxytag: member="t_heightmap::scale" ref="a1d28dec57cce925ad92342891bd71e7c" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>scale</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a57c6b1082beb440a43db97905bc6eba6"></a><!-- doxytag: member="t_heightmap::zero_h" ref="a57c6b1082beb440a43db97905bc6eba6" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>zero_h</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6c4880de408e974aca3fec7a1be1f64"></a><!-- doxytag: member="t_heightmap::min_h" ref="aa6c4880de408e974aca3fec7a1be1f64" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>min_h</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d41cf2176a047cfb27676651e527a14"></a><!-- doxytag: member="t_heightmap::max_h" ref="a3d41cf2176a047cfb27676651e527a14" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>max_h</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d1a68e1994a98e1580f28cbc9989c99"></a><!-- doxytag: member="t_heightmap::north" ref="a0d1a68e1994a98e1580f28cbc9989c99" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>north</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd6097e69d0b866c7e339db4fde743b7"></a><!-- doxytag: member="t_heightmap::south" ref="abd6097e69d0b866c7e339db4fde743b7" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>south</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6bfd19622a0669e50f8b27d153eb0dd1"></a><!-- doxytag: member="t_heightmap::east" ref="a6bfd19622a0669e50f8b27d153eb0dd1" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>east</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa40092be3bf97498295d5db5efbaa5fa"></a><!-- doxytag: member="t_heightmap::west" ref="aa40092be3bf97498295d5db5efbaa5fa" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>west</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac69fe3898468404799eac7f7991d852b"></a><!-- doxytag: member="t_heightmap::ini_x" ref="ac69fe3898468404799eac7f7991d852b" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>ini_x</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1734dbed3bb23318c015d0120c69b1ed"></a><!-- doxytag: member="t_heightmap::ini_y" ref="a1734dbed3bb23318c015d0120c69b1ed" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>ini_y</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e949dfc21e0a8fa1472ed207bdc696e"></a><!-- doxytag: member="t_heightmap::ini_z" ref="a4e949dfc21e0a8fa1472ed207bdc696e" args="" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>ini_z</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a55d443963a7d50b77d04d1a4c1bb91c4"></a><!-- doxytag: member="t_heightmap::normal" ref="a55d443963a7d50b77d04d1a4c1bb91c4" args="" -->
-<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><b>normal</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d2b2140e8d2b3b2f74e5a3101ce56b5"></a><!-- doxytag: member="t_heightmap::shadow" ref="a7d2b2140e8d2b3b2f74e5a3101ce56b5" args="" -->
-float *&nbsp;</td><td class="memItemRight" valign="bottom"><b>shadow</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac24cea2bfcc927fd29bc74d1086707d8"></a><!-- doxytag: member="t_heightmap::data" ref="ac24cea2bfcc927fd29bc74d1086707d8" args="" -->
-unsigned char *&nbsp;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">GLuint&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a9b04984c98cb174582db6a4a82a7aaf9">list</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a843f6d5026240145775f5cc674e5fc0c">tam_x</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#afab11b6d0545e3d37c1e60ca6560a4a1">tam_y</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a1d28dec57cce925ad92342891bd71e7c">scale</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a57c6b1082beb440a43db97905bc6eba6">zero_h</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#aa6c4880de408e974aca3fec7a1be1f64">min_h</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a3d41cf2176a047cfb27676651e527a14">max_h</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a0d1a68e1994a98e1580f28cbc9989c99">north</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#abd6097e69d0b866c7e339db4fde743b7">south</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a6bfd19622a0669e50f8b27d153eb0dd1">east</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#aa40092be3bf97498295d5db5efbaa5fa">west</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#ac69fe3898468404799eac7f7991d852b">ini_x</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a1734dbed3bb23318c015d0120c69b1ed">ini_y</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a4e949dfc21e0a8fa1472ed207bdc696e">ini_z</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a55d443963a7d50b77d04d1a4c1bb91c4">normal</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#a7d2b2140e8d2b3b2f74e5a3101ce56b5">shadow</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__heightmap.html#ac24cea2bfcc927fd29bc74d1086707d8">data</a></td></tr>
 </table>
+<hr/><h2>Documentación de los campos</h2>
+<a class="anchor" id="ac24cea2bfcc927fd29bc74d1086707d8"></a><!-- doxytag: member="t_heightmap::data" ref="ac24cea2bfcc927fd29bc74d1086707d8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char* <a class="el" href="structt__heightmap.html#ac24cea2bfcc927fd29bc74d1086707d8">data</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6bfd19622a0669e50f8b27d153eb0dd1"></a><!-- doxytag: member="t_heightmap::east" ref="a6bfd19622a0669e50f8b27d153eb0dd1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__heightmap.html#a6bfd19622a0669e50f8b27d153eb0dd1">east</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac69fe3898468404799eac7f7991d852b"></a><!-- doxytag: member="t_heightmap::ini_x" ref="ac69fe3898468404799eac7f7991d852b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#ac69fe3898468404799eac7f7991d852b">ini_x</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1734dbed3bb23318c015d0120c69b1ed"></a><!-- doxytag: member="t_heightmap::ini_y" ref="a1734dbed3bb23318c015d0120c69b1ed" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#a1734dbed3bb23318c015d0120c69b1ed">ini_y</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4e949dfc21e0a8fa1472ed207bdc696e"></a><!-- doxytag: member="t_heightmap::ini_z" ref="a4e949dfc21e0a8fa1472ed207bdc696e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#a4e949dfc21e0a8fa1472ed207bdc696e">ini_z</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9b04984c98cb174582db6a4a82a7aaf9"></a><!-- doxytag: member="t_heightmap::list" ref="a9b04984c98cb174582db6a4a82a7aaf9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint <a class="el" href="structt__heightmap.html#a9b04984c98cb174582db6a4a82a7aaf9">list</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3d41cf2176a047cfb27676651e527a14"></a><!-- doxytag: member="t_heightmap::max_h" ref="a3d41cf2176a047cfb27676651e527a14" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#a3d41cf2176a047cfb27676651e527a14">max_h</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa6c4880de408e974aca3fec7a1be1f64"></a><!-- doxytag: member="t_heightmap::min_h" ref="aa6c4880de408e974aca3fec7a1be1f64" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#aa6c4880de408e974aca3fec7a1be1f64">min_h</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a55d443963a7d50b77d04d1a4c1bb91c4"></a><!-- doxytag: member="t_heightmap::normal" ref="a55d443963a7d50b77d04d1a4c1bb91c4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>* <a class="el" href="structt__heightmap.html#a55d443963a7d50b77d04d1a4c1bb91c4">normal</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0d1a68e1994a98e1580f28cbc9989c99"></a><!-- doxytag: member="t_heightmap::north" ref="a0d1a68e1994a98e1580f28cbc9989c99" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__heightmap.html#a0d1a68e1994a98e1580f28cbc9989c99">north</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1d28dec57cce925ad92342891bd71e7c"></a><!-- doxytag: member="t_heightmap::scale" ref="a1d28dec57cce925ad92342891bd71e7c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__heightmap.html#a1d28dec57cce925ad92342891bd71e7c">scale</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7d2b2140e8d2b3b2f74e5a3101ce56b5"></a><!-- doxytag: member="t_heightmap::shadow" ref="a7d2b2140e8d2b3b2f74e5a3101ce56b5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float* <a class="el" href="structt__heightmap.html#a7d2b2140e8d2b3b2f74e5a3101ce56b5">shadow</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abd6097e69d0b866c7e339db4fde743b7"></a><!-- doxytag: member="t_heightmap::south" ref="abd6097e69d0b866c7e339db4fde743b7" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__heightmap.html#abd6097e69d0b866c7e339db4fde743b7">south</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a843f6d5026240145775f5cc674e5fc0c"></a><!-- doxytag: member="t_heightmap::tam_x" ref="a843f6d5026240145775f5cc674e5fc0c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#a843f6d5026240145775f5cc674e5fc0c">tam_x</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="afab11b6d0545e3d37c1e60ca6560a4a1"></a><!-- doxytag: member="t_heightmap::tam_y" ref="afab11b6d0545e3d37c1e60ca6560a4a1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#afab11b6d0545e3d37c1e60ca6560a4a1">tam_y</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa40092be3bf97498295d5db5efbaa5fa"></a><!-- doxytag: member="t_heightmap::west" ref="aa40092be3bf97498295d5db5efbaa5fa" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__heightmap.html#aa40092be3bf97498295d5db5efbaa5fa">west</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a57c6b1082beb440a43db97905bc6eba6"></a><!-- doxytag: member="t_heightmap::zero_h" ref="a57c6b1082beb440a43db97905bc6eba6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__heightmap.html#a57c6b1082beb440a43db97905bc6eba6">zero_h</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/>La documentación para esta estructura fue generada a partir del siguiente fichero:<ul>
 <li>C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/<a class="el" href="heightmap_8h_source.html">heightmap.h</a></li>
 </ul>
@@ -90,7 +338,7 @@ unsigned char *&nbsp;</td><td class="memItemRight" valign="bottom"><b>data</b></
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -99,7 +347,7 @@ unsigned char *&nbsp;</td><td class="memItemRight" valign="bottom"><b>data</b></
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

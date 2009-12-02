@@ -89,7 +89,6 @@ static void resize(int width, int height)
 {
 	const float ar = (float) width / (float) height;
 	/* NORMAL */
-	glutUseLayer(GLUT_NORMAL);
 	glViewport(0, 0, width, height);
 	
 	glMatrixMode(GL_PROJECTION);
@@ -98,19 +97,31 @@ static void resize(int width, int height)
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+}
+
+void draw_grid(t_heightmap map, int x, int y)
+{
+	if (x<0 || y<0 || x>=map.tam_x || y>=map.tam_y)return;
+	int i;
+	int half_x, half_y;
+	half_x = map.tam_x/2;
+	half_y = map.tam_y/2;
 	
-	/* OVERLAY */
-	glutUseLayer(GLUT_OVERLAY);
-	glViewport(0, 0, width, height);
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,fogRange[1]+100.0f);
-	
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-	glutUseLayer(GLUT_NORMAL);
+	glDisable(GL_TEXTURE_2D);
+	glLineWidth(1.0f);
+	for (i=0; i<=map.scale; i++)
+	{
+		if(i!=0){glColor3d(0.7f,0.7f,1.0f);}else{glColor3d(0.0f,0.0f,1.0f);}
+		glBegin(GL_LINES);
+			/* Horizontal */
+			glVertex3f( (map.tam_x-x+1 - half_x)*map.scale+i, (y   - half_y)*map.scale, 0.0f);
+			glVertex3f( (map.tam_x-x+1 - half_x)*map.scale+i, (y+1 - half_y)*map.scale, 0.0f);
+			/* Vertical */
+			//glVertex3f( TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
+			//glVertex3f(-TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
+		glEnd();
+	}
 }
 
 void display(void)
@@ -158,19 +169,9 @@ void display(void)
 	/* - Display Casillas - FIXME!!!!! (casillas solo de la zona actual, de 1x1m^2) */
    	/*if (show_grid)
 	{*/
-		glDisable(GL_TEXTURE_2D);
-		glLineWidth(1.5f);
-		for (i=-TERR_SIZE; i<=TERR_SIZE; i++)
-		{
-			if(i!=0){glColor3d(0.7f,0.7f,1.0f);}else{glColor3d(0.0f,0.0f,1.0f);}
-			glBegin(GL_LINES);
-				glVertex3f( i * 1.0f, TERR_SIZE * 1.0f, 0.0f);
-				glVertex3f( i * 1.0f,-TERR_SIZE * 1.0f, 0.0f);
-				glVertex3f( TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
-				glVertex3f(-TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
-			glEnd();
-		}/*
-	}*/
+		//draw_grid(marte, ((int)(camera.pos_x/marte.scale))-marte.ini_x, ((int)(camera.pos_y/marte.scale))-marte.ini_y);
+		//hud_printf (0, 9, "(%i,%i)",((int)((camera.pos_x-(marte.ini_x*marte.scale))/marte.scale)+marte.ini_x/2), ((int)((camera.pos_y-(marte.ini_y*marte.scale))/marte.scale)+marte.tam_y/2));
+	/*}*/
 	glColor3d(1.0,1.0,1.0);
 	
 	if (show_grid) /* Ahora muestra la cuadrícula */
@@ -477,14 +478,10 @@ int main(int argc, char *argv[])
 	scr_init_reset(0);
 
 	/* - POSINICIALIZACIÓN (Carga elementos) - */
+	scr_init_printf ("Cargando materiales...");
 	
 	i=load_material(&sand, "materials\\sand_default");
 	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); return(-1);}
-	/*sand.texture[0]=ilutGLLoadImage("mars_sand_rocks_2.tga");
-	if(!sand.texture[0]){exit(0);}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	ilutGLBuildMipmaps();*/
 	
 	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
 	if(!sun_texture.texture[0]){exit(0);}
@@ -492,17 +489,13 @@ int main(int argc, char *argv[])
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	ilutGLBuildMipmaps();
 	
-	scr_init_printf ("Iniciando recursos...");
+	
+	scr_init_printf ("Iniciando variables...");
 	camera.pitch = 25;
 	camera.yaw = 0;
 	camera.pos_x=0;
 	camera.pos_z=10;
 	camera.pos_y=-4.5;
-	
-	/* Cargamos el sol */
-	//sun.texture[0]=ilutGLLoadImage("materials\\sun.tga");
-	//sun.texture[1]=ilutGLLoadImage("materials\\sun_mask.tga");
-	//if(!sun.texture[0] /*|| !sun.texture[1]*/){return 1;}
 	
 	scr_init_printf ("Cargando modelos...");
 	test.modelo=&test_data;

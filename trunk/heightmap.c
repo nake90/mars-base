@@ -500,3 +500,41 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 	}
 	return h;
 }
+
+#if(0)
+float get_real_height_nc(t_heightmap obj, float coord_x, float coord_y)
+{
+	float v_scale = (obj.max_h-obj.min_h)/255.0f;
+	int x, y; /* Coordenadas (x,y) de la matriz de alturas */
+	float h1,h2,h3,h4,h; /* Alturas de los vértices y final */
+	float a,b; /* Son los incrementos de posición en cada eje */
+	
+	/* h1  h2
+	   0->/|
+	   |1/ |
+	   v/_2|
+	   h3  h4
+	*/
+	(map->tam_x-x+1 - half_x)*map->scale+i, (y+1 - half_y)*map->scale
+	a=obj.tam_x -(obj.tam_x -coord_x+1 -(obj.tam_x/2) -(coord_x+obj.ini_x)/obj.scale)+1;
+	b=obj.tam_y -((obj.tam_y/2) +(coord_y+obj.ini_y)/obj.scale) -1;
+	x=(int)a;
+	y=(int)b;
+	a-=x; b-=y; /* Transformamos 'a' y 'b' en los incrementos, van de [0-1) respecto la dist. relativa en el eje 'x' e 'y' respect. */
+	if (x<0 || x>obj.tam_x-1 || y<0 || y>obj.tam_y-1){return 0.0f;}
+	h1=obj.data[x+y*obj.tam_x]*v_scale+obj.min_h;
+	h2=obj.data[(x+1)+y*obj.tam_x]*v_scale+obj.min_h;
+	h3=obj.data[x+(y+1)*obj.tam_x]*v_scale+obj.min_h;
+	h4=obj.data[(x+1)+(y+1)*obj.tam_x]*v_scale+obj.min_h;
+	
+	if(a+b<1)/* Primer triángulo h1,h2,h3 */
+	{
+		h=h1+(a*(h2-h1))+(b*(h3-h1));
+	}
+	else/* Segundo triángulo h4,h3,h2 */
+	{
+	 	h=h4+((1-b)*(h2-h4))+((1-a)*(h3-h4));
+	}
+	return h;
+}
+#endif

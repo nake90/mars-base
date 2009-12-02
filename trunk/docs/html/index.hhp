@@ -26,6 +26,7 @@ atmosferico_8h.html
 heightmap_8c.html
 heightmap_8h.html
 main_8c.html
+mars__base__private_8h.html
 materiales_8c.html
 materiales_8h.html
 objetos_8c.html
@@ -34,11 +35,14 @@ overlay_8c.html
 overlay_8h.html
 shared_8c.html
 shared_8h.html
+deprecated.html
 bug.html
 annotated.html
 classes.html
 functions.html
 functions_vars.html
+struct_c_o_l_o_rf.html
+struct_d_i_a_l_o_g.html
 structt__camera.html
 structt__heightmap.html
 structt__mapcoord.html
@@ -52,8 +56,12 @@ files.html
 globals.html
 globals_func.html
 globals_vars.html
-globals_defs.html
+globals_type.html
+globals_enum.html
+globals_eval.html
 tabs.css
 tab_b.gif
 tab_l.gif
 tab_r.gif
+open.gif
+closed.gif

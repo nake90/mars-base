@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -47,28 +88,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <h1>Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/atmosferico.h</h1>
 <p>Header sobre todos los fenómenos atmosféricos y físicos del exterior.  
 <a href="#_details">Más...</a></p>
-<code>#include &quot;GL/openglut.h&quot;</code><br/>
-<code>#include &quot;IL/ilut.h&quot;</code><br/>
-<code>#include &quot;<a class="el" href="heightmap_8h_source.html">heightmap.h</a>&quot;</code><br/>
-<code>#include &lt;stdio.h&gt;</code><br/>
-<code>#include &lt;stdarg.h&gt;</code><br/>
-<code>#include &lt;math.h&gt;</code><br/>
-<code>#include &lt;time.h&gt;</code><br/>
-<code>#include &quot;<a class="el" href="shared_8h_source.html">shared.h</a>&quot;</code><br/>
 
 <p><a href="atmosferico_8h_source.html">Ir al código fuente de este archivo.</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Estructuras de datos</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html">t_sun</a></td></tr>
-<tr><td colspan="2"><h2>Definiciones</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9a4efb5e578b47c170d4b920cf7b475b"></a><!-- doxytag: member="atmosferico.h::SUN_SIZE" ref="a9a4efb5e578b47c170d4b920cf7b475b" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SUN_SIZE</b>&nbsp;&nbsp;&nbsp;500.0f</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80b47b9e532443dfec1c5a4098bf6460"></a><!-- doxytag: member="atmosferico.h::PRESION_MEDIA" ref="a80b47b9e532443dfec1c5a4098bf6460" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>PRESION_MEDIA</b>&nbsp;&nbsp;&nbsp;800</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a478eb09f11dae51a6b1bc222c60d575b"></a><!-- doxytag: member="atmosferico.h::PRESION_MAX" ref="a478eb09f11dae51a6b1bc222c60d575b" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>PRESION_MAX</b>&nbsp;&nbsp;&nbsp;1000</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af932812b2d7f06ea270b624272e4a496"></a><!-- doxytag: member="atmosferico.h::PRESION_MIN" ref="af932812b2d7f06ea270b624272e4a496" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>PRESION_MIN</b>&nbsp;&nbsp;&nbsp;600</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Descripción detallada</h2>
 <p>Header sobre todos los fenómenos atmosféricos y físicos del exterior. </p>
@@ -79,7 +103,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,7 +112,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

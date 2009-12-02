@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -44,15 +85,54 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
   </div>
 </div>
 <div class="contents">
-<h1>Referencia de la Estructura VECTOR</h1><!-- doxytag: class="VECTOR" --><table border="0" cellpadding="0" cellspacing="0">
+<h1>Referencia de la Estructura VECTOR</h1><!-- doxytag: class="VECTOR" -->
+<p><code>#include &lt;<a class="el" href="shared_8h_source.html">shared.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Campos de datos</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad0da36b2558901e21e7a30f6c227a45e"></a><!-- doxytag: member="VECTOR::x" ref="ad0da36b2558901e21e7a30f6c227a45e" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>x</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa4f0d3eebc3c443f9be81bf48561a217"></a><!-- doxytag: member="VECTOR::y" ref="aa4f0d3eebc3c443f9be81bf48561a217" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>y</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af73583b1e980b0aa03f9884812e9fd4d"></a><!-- doxytag: member="VECTOR::z" ref="af73583b1e980b0aa03f9884812e9fd4d" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>z</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_v_e_c_t_o_r.html#ad0da36b2558901e21e7a30f6c227a45e">x</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_v_e_c_t_o_r.html#aa4f0d3eebc3c443f9be81bf48561a217">y</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_v_e_c_t_o_r.html#af73583b1e980b0aa03f9884812e9fd4d">z</a></td></tr>
 </table>
+<hr/><h2>Documentación de los campos</h2>
+<a class="anchor" id="ad0da36b2558901e21e7a30f6c227a45e"></a><!-- doxytag: member="VECTOR::x" ref="ad0da36b2558901e21e7a30f6c227a45e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="struct_v_e_c_t_o_r.html#ad0da36b2558901e21e7a30f6c227a45e">x</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa4f0d3eebc3c443f9be81bf48561a217"></a><!-- doxytag: member="VECTOR::y" ref="aa4f0d3eebc3c443f9be81bf48561a217" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="struct_v_e_c_t_o_r.html#aa4f0d3eebc3c443f9be81bf48561a217">y</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af73583b1e980b0aa03f9884812e9fd4d"></a><!-- doxytag: member="VECTOR::z" ref="af73583b1e980b0aa03f9884812e9fd4d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="struct_v_e_c_t_o_r.html#af73583b1e980b0aa03f9884812e9fd4d">z</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/>La documentación para esta estructura fue generada a partir del siguiente fichero:<ul>
 <li>C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/<a class="el" href="shared_8h_source.html">shared.h</a></li>
 </ul>
@@ -62,7 +142,7 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><b>z</b></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -71,7 +151,7 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><b>z</b></td></tr>
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

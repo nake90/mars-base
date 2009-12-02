@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -47,22 +88,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <h1>Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/materiales.c</h1>
 <p>Header que controla los materiales (texturas).  
 <a href="#_details">Más...</a></p>
-<code>#include &quot;<a class="el" href="materiales_8h_source.html">materiales.h</a>&quot;</code><br/>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Funciones</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af92acd8f558230e1d94175ee20f6c432"></a><!-- doxytag: member="materiales.c::load_material" ref="af92acd8f558230e1d94175ee20f6c432" args="(t_texture *texture, const char *ruta_)" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>load_material</b> (<a class="el" href="structt__texture.html">t_texture</a> *texture, const char *ruta_)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="materiales_8c.html#af92acd8f558230e1d94175ee20f6c432">load_material</a> (<a class="el" href="structt__texture.html">t_texture</a> *texture, const char *ruta_)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Descripción detallada</h2>
 <p>Header que controla los materiales (texturas). </p>
 <dl class="author"><dt><b>Autor:</b></dt><dd>Alfonso Arbona Gimeno </dd></dl>
+<hr/><h2>Documentación de las funciones</h2>
+<a class="anchor" id="af92acd8f558230e1d94175ee20f6c432"></a><!-- doxytag: member="materiales.c::load_material" ref="af92acd8f558230e1d94175ee20f6c432" args="(t_texture *texture, const char *ruta_)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int load_material </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structt__texture.html">t_texture</a> *&nbsp;</td>
+          <td class="paramname"> <em>texture</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>ruta_</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 </div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -71,7 +138,7 @@ int&nbsp;</td><td class="memItemRight" valign="bottom"><b>load_material</b> (<a 
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
