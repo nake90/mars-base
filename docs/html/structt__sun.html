@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -44,21 +85,96 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
   </div>
 </div>
 <div class="contents">
-<h1>Referencia de la Estructura t_sun</h1><!-- doxytag: class="t_sun" --><table border="0" cellpadding="0" cellspacing="0">
+<h1>Referencia de la Estructura t_sun</h1><!-- doxytag: class="t_sun" -->
+<p><code>#include &lt;<a class="el" href="atmosferico_8h_source.html">atmosferico.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Campos de datos</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06833ed5cacd5df6bbaca06aaae76351"></a><!-- doxytag: member="t_sun::ambient" ref="a06833ed5cacd5df6bbaca06aaae76351" args="[4]" -->
-GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><b>ambient</b> [4]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98b71067a69a63e35816188857acd3be"></a><!-- doxytag: member="t_sun::diffuse" ref="a98b71067a69a63e35816188857acd3be" args="[4]" -->
-GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><b>diffuse</b> [4]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a600ea59cda5d0bb3812fc6787287728c"></a><!-- doxytag: member="t_sun::specular" ref="a600ea59cda5d0bb3812fc6787287728c" args="[4]" -->
-GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><b>specular</b> [4]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b230fb96d8ac7118f5b81e9c4665f03"></a><!-- doxytag: member="t_sun::position" ref="a0b230fb96d8ac7118f5b81e9c4665f03" args="[3]" -->
-GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><b>position</b> [3]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a75d8e4a3735a69673d7c57560ffcd02d"></a><!-- doxytag: member="t_sun::hora" ref="a75d8e4a3735a69673d7c57560ffcd02d" args="[1]" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>hora</b> [1]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa147b258ec247111609ae4026ef17b75"></a><!-- doxytag: member="t_sun::texture" ref="aa147b258ec247111609ae4026ef17b75" args="[2]" -->
-GLint&nbsp;</td><td class="memItemRight" valign="bottom"><b>texture</b> [2]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html#a06833ed5cacd5df6bbaca06aaae76351">ambient</a> [4]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html#a98b71067a69a63e35816188857acd3be">diffuse</a> [4]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html#a600ea59cda5d0bb3812fc6787287728c">specular</a> [4]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">GLfloat&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html#a0b230fb96d8ac7118f5b81e9c4665f03">position</a> [3]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html#a75d8e4a3735a69673d7c57560ffcd02d">hora</a> [1]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">GLint&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__sun.html#aa147b258ec247111609ae4026ef17b75">texture</a> [2]</td></tr>
 </table>
+<hr/><h2>Documentación de los campos</h2>
+<a class="anchor" id="a06833ed5cacd5df6bbaca06aaae76351"></a><!-- doxytag: member="t_sun::ambient" ref="a06833ed5cacd5df6bbaca06aaae76351" args="[4]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLfloat <a class="el" href="structt__sun.html#a06833ed5cacd5df6bbaca06aaae76351">ambient</a>[4]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a98b71067a69a63e35816188857acd3be"></a><!-- doxytag: member="t_sun::diffuse" ref="a98b71067a69a63e35816188857acd3be" args="[4]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLfloat <a class="el" href="structt__sun.html#a98b71067a69a63e35816188857acd3be">diffuse</a>[4]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a75d8e4a3735a69673d7c57560ffcd02d"></a><!-- doxytag: member="t_sun::hora" ref="a75d8e4a3735a69673d7c57560ffcd02d" args="[1]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__sun.html#a75d8e4a3735a69673d7c57560ffcd02d">hora</a>[1]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0b230fb96d8ac7118f5b81e9c4665f03"></a><!-- doxytag: member="t_sun::position" ref="a0b230fb96d8ac7118f5b81e9c4665f03" args="[3]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLfloat <a class="el" href="structt__sun.html#a0b230fb96d8ac7118f5b81e9c4665f03">position</a>[3]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a600ea59cda5d0bb3812fc6787287728c"></a><!-- doxytag: member="t_sun::specular" ref="a600ea59cda5d0bb3812fc6787287728c" args="[4]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLfloat <a class="el" href="structt__sun.html#a600ea59cda5d0bb3812fc6787287728c">specular</a>[4]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa147b258ec247111609ae4026ef17b75"></a><!-- doxytag: member="t_sun::texture" ref="aa147b258ec247111609ae4026ef17b75" args="[2]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLint <a class="el" href="structt__sun.html#aa147b258ec247111609ae4026ef17b75">texture</a>[2]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/>La documentación para esta estructura fue generada a partir del siguiente fichero:<ul>
 <li>C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/<a class="el" href="atmosferico_8h_source.html">atmosferico.h</a></li>
 </ul>
@@ -68,7 +184,7 @@ GLint&nbsp;</td><td class="memItemRight" valign="bottom"><b>texture</b> [2]</td>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -77,7 +193,7 @@ GLint&nbsp;</td><td class="memItemRight" valign="bottom"><b>texture</b> [2]</td>
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

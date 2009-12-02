@@ -1,3 +1,5 @@
+!!!!GRID	<-OnIt
+!!!	Botones, menus, iconos, y todos sus correspondientes elementos de control	<-OnIt
 !!	TRACES
 !!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
 !!	Menú para el spawn de objetos

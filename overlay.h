@@ -29,9 +29,23 @@
 #define OVERLAY_H
 #include "shared.h"
 
+typedef struct
+{
+	//void (*df)(DIALOG * d);
+	int x, y;
+	int w, h;
+	COLORf fg, bg;
+	int key;
+	int flag;
+	int d1, d2;
+	void *dp, *dp2, *dp3;
+}DIALOG;
+
 void draw_minimap(GLuint minimap);
 void draw_HUD(void);
 
+int draw_element(DIALOG d);
+void FRAME(void);
 /*
 glMatrixMode (GL_PROJECTION);
 glLoadIdentity ();

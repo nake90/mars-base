@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -47,9 +88,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <h1>Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/objetos.h</h1>
 <p>Header sobre objetos Este archivo se encarga de todo lo relacionado con los objetos. (Carga, dibujo, control, ...).  
 <a href="#_details">Más...</a></p>
-<code>#include &quot;<a class="el" href="shared_8h_source.html">shared.h</a>&quot;</code><br/>
-<code>#include &quot;GL/openglut.h&quot;</code><br/>
-<code>#include &quot;IL/ilut.h&quot;</code><br/>
 
 <p><a href="objetos_8h_source.html">Ir al código fuente de este archivo.</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
@@ -58,266 +96,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__mapcoord.html">t_mapcoord</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html">t_model</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html">t_obj_base</a></td></tr>
-<tr><td colspan="2"><h2>Definiciones</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">MAX_VERTICES</a>&nbsp;&nbsp;&nbsp;65536</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a0aaa578e910c66db37a344dcfc514f3b">MAX_POLYGONS</a>&nbsp;&nbsp;&nbsp;65536</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a989e0563d45aaff3ba8d7e4c0a740d39">MAIN3DS</a>&nbsp;&nbsp;&nbsp;0x4D4D</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#adc62d551c5959780c87369cdad3ec29c">EDIT_MATERIAL</a>&nbsp;&nbsp;&nbsp;0xAFFF</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#af00ff38c2ca2f5278a135bc4302f23ce">EDIT3DS</a>&nbsp;&nbsp;&nbsp;0x3D3D</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a3382608a5f7d73fc7e5539160aaa4b38">EDIT_OBJECT</a>&nbsp;&nbsp;&nbsp;0x4000</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a4925d3d641bec11ca0c49ba3d636393c">OBJ_TRIMESH</a>&nbsp;&nbsp;&nbsp;0x4100</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#aa2ed62aba74d2ee70c828600be3105f1">TRI_VERTEXL</a>&nbsp;&nbsp;&nbsp;0x4110</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a5b77b286ad52d41568fccdac45942765">TRI_VERTEXOPTIONS</a>&nbsp;&nbsp;&nbsp;0x4111</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a13512db294c63f8477e47aeefcc7697a">TRI_FACEL1</a>&nbsp;&nbsp;&nbsp;0x4120</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#adf958945f9ca6a11dd6dc9900b038523">TRI_MATERIAL</a>&nbsp;&nbsp;&nbsp;0x4130</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a6d9396a66d6d3690152ebff37cab8e2a">TRI_MAPPINGCOORS</a>&nbsp;&nbsp;&nbsp;0x4140</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#ae37eb990650413fcfd3281ff25f89e32">TRI_SMOOTH</a>&nbsp;&nbsp;&nbsp;0x4150</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a269b0df4388c015cae6ba837d499dfd5">TRI_LOCAL</a>&nbsp;&nbsp;&nbsp;0x4160</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#afbee9cf3b965e943dd07b07fd032adff">TRI_VISIBLE</a>&nbsp;&nbsp;&nbsp;0x4165</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#ae245ca6e00ec7bea4d75d9f9d27d44cb">TRI_MAPPINGSTANDARD</a>&nbsp;&nbsp;&nbsp;0x4170</td></tr>
 <tr><td colspan="2"><h2>Tipos definidos</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6108708a375b94261d76f8f0bf603b79"></a><!-- doxytag: member="objetos.h::t_model_ptr" ref="a6108708a375b94261d76f8f0bf603b79" args="" -->
-typedef struct <a class="el" href="structt__model.html">t_model</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><b>t_model_ptr</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab9022bdf7383ef095d59a852a3bd78c2"></a><!-- doxytag: member="objetos.h::t_obj_base_ptr" ref="ab9022bdf7383ef095d59a852a3bd78c2" args="" -->
-typedef struct <a class="el" href="structt__obj__base.html">t_obj_base</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><b>t_obj_base_ptr</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structt__model.html">t_model</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a6108708a375b94261d76f8f0bf603b79">t_model_ptr</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structt__obj__base.html">t_obj_base</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#ab9022bdf7383ef095d59a852a3bd78c2">t_obj_base_ptr</a></td></tr>
 <tr><td colspan="2"><h2>Funciones</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a191f00b4d95e50b73000ed459c27ee37">load_3DS</a> (<a class="el" href="structt__model.html">t_model_ptr</a> data, char *filename)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Carga los datos básicos de un objeto desde un archivo 3ds.  <a href="#a191f00b4d95e50b73000ed459c27ee37"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a61bf4c34c43ed31fbf6befa77c832c5d">object_predraw</a> (<a class="el" href="structt__obj__base.html">t_obj_base_ptr</a> object)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#a0ac96b56eb1c63648a05e7c1fc4a857b">object_draw</a> (<a class="el" href="structt__obj__base.html">t_obj_base</a> object)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Dibuja un objeto mediante OpenGL en las coordenadas correspondientes.  <a href="#a0ac96b56eb1c63648a05e7c1fc4a857b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="objetos_8h.html#abe5991ccae962bce117d31065fe2432b">object_draw_l</a> (<a class="el" href="structt__obj__base.html">t_obj_base_ptr</a> object)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Descripción detallada</h2>
 <p>Header sobre objetos Este archivo se encarga de todo lo relacionado con los objetos. (Carga, dibujo, control, ...). </p>
 <dl class="author"><dt><b>Autor:</b></dt><dd>Alfonso Arbona Gimeno </dd></dl>
-<hr/><h2>Documentación de las definiciones</h2>
-<a class="anchor" id="af00ff38c2ca2f5278a135bc4302f23ce"></a><!-- doxytag: member="objetos.h::EDIT3DS" ref="af00ff38c2ca2f5278a135bc4302f23ce" args="" -->
+<hr/><h2>Documentación de los tipos definidos</h2>
+<a class="anchor" id="a6108708a375b94261d76f8f0bf603b79"></a><!-- doxytag: member="objetos.h::t_model_ptr" ref="a6108708a375b94261d76f8f0bf603b79" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define EDIT3DS&nbsp;&nbsp;&nbsp;0x3D3D</td>
+          <td class="memname">typedef  struct <a class="el" href="structt__model.html">t_model</a> * <a class="el" href="structt__model.html">t_model_ptr</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>OBJECT OK# 3D Editor chunk </p>
 
 </div>
 </div>
-<a class="anchor" id="adc62d551c5959780c87369cdad3ec29c"></a><!-- doxytag: member="objetos.h::EDIT_MATERIAL" ref="adc62d551c5959780c87369cdad3ec29c" args="" -->
+<a class="anchor" id="ab9022bdf7383ef095d59a852a3bd78c2"></a><!-- doxytag: member="objetos.h::t_obj_base_ptr" ref="ab9022bdf7383ef095d59a852a3bd78c2" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define EDIT_MATERIAL&nbsp;&nbsp;&nbsp;0xAFFF</td>
+          <td class="memname">typedef  struct <a class="el" href="structt__obj__base.html">t_obj_base</a> * <a class="el" href="structt__obj__base.html">t_obj_base_ptr</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>MATERIAL FALTA# 3D Material chunk </p>
-
-</div>
-</div>
-<a class="anchor" id="a3382608a5f7d73fc7e5539160aaa4b38"></a><!-- doxytag: member="objetos.h::EDIT_OBJECT" ref="a3382608a5f7d73fc7e5539160aaa4b38" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EDIT_OBJECT&nbsp;&nbsp;&nbsp;0x4000</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>OK# Object block </p>
-
-</div>
-</div>
-<a class="anchor" id="a989e0563d45aaff3ba8d7e4c0a740d39"></a><!-- doxytag: member="objetos.h::MAIN3DS" ref="a989e0563d45aaff3ba8d7e4c0a740d39" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAIN3DS&nbsp;&nbsp;&nbsp;0x4D4D</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"</p>
-<ul>
-<li>OK# -&gt; Implementado y funcionando</li>
-<li>FALTA# -&gt; Aun no implementado</li>
-<li>UNK# -&gt; No tengo claro para qué funciona ni si lo implementaré</li>
-<li>POSIBLE# -&gt; Posiblemente lo implementaré; aun por decidir</li>
-</ul>
-<p>MAIN OK# Main chunk </p>
-
-</div>
-</div>
-<a class="anchor" id="a0aaa578e910c66db37a344dcfc514f3b"></a><!-- doxytag: member="objetos.h::MAX_POLYGONS" ref="a0aaa578e910c66db37a344dcfc514f3b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAX_POLYGONS&nbsp;&nbsp;&nbsp;65536</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) </p>
-
-</div>
-</div>
-<a class="anchor" id="a0fdb7b933ef091574ff57d1f36dd4167"></a><!-- doxytag: member="objetos.h::MAX_VERTICES" ref="a0fdb7b933ef091574ff57d1f36dd4167" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAX_VERTICES&nbsp;&nbsp;&nbsp;65536</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) </p>
-
-</div>
-</div>
-<a class="anchor" id="a4925d3d641bec11ca0c49ba3d636393c"></a><!-- doxytag: member="objetos.h::OBJ_TRIMESH" ref="a4925d3d641bec11ca0c49ba3d636393c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define OBJ_TRIMESH&nbsp;&nbsp;&nbsp;0x4100</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>OK# Triangular mesh </p>
-
-</div>
-</div>
-<a class="anchor" id="a13512db294c63f8477e47aeefcc7697a"></a><!-- doxytag: member="objetos.h::TRI_FACEL1" ref="a13512db294c63f8477e47aeefcc7697a" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_FACEL1&nbsp;&nbsp;&nbsp;0x4120</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>OK# Polygons (faces) list </p>
-
-</div>
-</div>
-<a class="anchor" id="a269b0df4388c015cae6ba837d499dfd5"></a><!-- doxytag: member="objetos.h::TRI_LOCAL" ref="a269b0df4388c015cae6ba837d499dfd5" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_LOCAL&nbsp;&nbsp;&nbsp;0x4160</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>POSIBLE# MESH_MATRIX </p>
-
-</div>
-</div>
-<a class="anchor" id="a6d9396a66d6d3690152ebff37cab8e2a"></a><!-- doxytag: member="objetos.h::TRI_MAPPINGCOORS" ref="a6d9396a66d6d3690152ebff37cab8e2a" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_MAPPINGCOORS&nbsp;&nbsp;&nbsp;0x4140</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>OK# Vertices list </p>
-
-</div>
-</div>
-<a class="anchor" id="ae245ca6e00ec7bea4d75d9f9d27d44cb"></a><!-- doxytag: member="objetos.h::TRI_MAPPINGSTANDARD" ref="ae245ca6e00ec7bea4d75d9f9d27d44cb" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_MAPPINGSTANDARD&nbsp;&nbsp;&nbsp;0x4170</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>UNK# MESH_TEXTURE_INFO </p>
-
-</div>
-</div>
-<a class="anchor" id="adf958945f9ca6a11dd6dc9900b038523"></a><!-- doxytag: member="objetos.h::TRI_MATERIAL" ref="adf958945f9ca6a11dd6dc9900b038523" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_MATERIAL&nbsp;&nbsp;&nbsp;0x4130</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>FALTA# MSH_MAT_GROUP mesh_material_group </p>
-
-</div>
-</div>
-<a class="anchor" id="ae37eb990650413fcfd3281ff25f89e32"></a><!-- doxytag: member="objetos.h::TRI_SMOOTH" ref="ae37eb990650413fcfd3281ff25f89e32" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_SMOOTH&nbsp;&nbsp;&nbsp;0x4150</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>POSIBLE# SMOOTH_GROUP </p>
-
-</div>
-</div>
-<a class="anchor" id="aa2ed62aba74d2ee70c828600be3105f1"></a><!-- doxytag: member="objetos.h::TRI_VERTEXL" ref="aa2ed62aba74d2ee70c828600be3105f1" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_VERTEXL&nbsp;&nbsp;&nbsp;0x4110</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>OK# Vertices list </p>
-
-</div>
-</div>
-<a class="anchor" id="a5b77b286ad52d41568fccdac45942765"></a><!-- doxytag: member="objetos.h::TRI_VERTEXOPTIONS" ref="a5b77b286ad52d41568fccdac45942765" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_VERTEXOPTIONS&nbsp;&nbsp;&nbsp;0x4111</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>UNK# POINT_FLAG_ARRAY </p>
-
-</div>
-</div>
-<a class="anchor" id="afbee9cf3b965e943dd07b07fd032adff"></a><!-- doxytag: member="objetos.h::TRI_VISIBLE" ref="afbee9cf3b965e943dd07b07fd032adff" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRI_VISIBLE&nbsp;&nbsp;&nbsp;0x4165</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>POSIBLE# MESH_COLOR </p>
 
 </div>
 </div>
@@ -355,7 +169,7 @@ typedef struct <a class="el" href="structt__obj__base.html">t_obj_base</a> *&nbs
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Devuelve:</b></dt><dd>0 -&gt; Ok; 1 -&gt; Archivo no encontrado </dd></dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>0 -&gt; Ok; 1 -&gt; Archivo no encontrado; -1 -&gt; Error interno </dd></dl>
 
 </div>
 </div>
@@ -382,7 +196,63 @@ typedef struct <a class="el" href="structt__obj__base.html">t_obj_base</a> *&nbs
   </table>
   </dd>
 </dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000002">Bug:</a></b></dt><dd>Falta el roll del objeto </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Obsoleto:</a></b></dt><dd>Mejor usar listas que esta función </dd></dl>
+<dl class="see"><dt><b>Ver también:</b></dt><dd><a class="el" href="objetos_8h.html#abe5991ccae962bce117d31065fe2432b" title="Dibuja un objeto mediante listas de OpenGL en las coordenadas correspondientes.">object_draw_l</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="abe5991ccae962bce117d31065fe2432b"></a><!-- doxytag: member="objetos.h::object_draw_l" ref="abe5991ccae962bce117d31065fe2432b" args="(t_obj_base_ptr object)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void object_draw_l </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structt__obj__base.html">t_obj_base_ptr</a>&nbsp;</td>
+          <td class="paramname"> <em>object</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Dibuja un objeto mediante listas de OpenGL en las coordenadas correspondientes. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>object</em>&nbsp;</td><td>Objeto a dibujar </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug:</a></b></dt><dd>Falta el roll del objeto </dd></dl>
+<dl class="see"><dt><b>Ver también:</b></dt><dd><a class="el" href="objetos_8h.html#a61bf4c34c43ed31fbf6befa77c832c5d" title="Dibuja un objeto mediante OpenGL en la lista correspondiente.">object_predraw</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a61bf4c34c43ed31fbf6befa77c832c5d"></a><!-- doxytag: member="objetos.h::object_predraw" ref="a61bf4c34c43ed31fbf6befa77c832c5d" args="(t_obj_base_ptr object)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void object_predraw </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structt__obj__base.html">t_obj_base_ptr</a>&nbsp;</td>
+          <td class="paramname"> <em>object</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Dibuja un objeto mediante OpenGL en la lista correspondiente. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>object</em>&nbsp;</td><td>Objeto a dibujar </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -392,7 +262,7 @@ typedef struct <a class="el" href="structt__obj__base.html">t_obj_base</a> *&nbs
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -401,7 +271,7 @@ typedef struct <a class="el" href="structt__obj__base.html">t_obj_base</a> *&nbs
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

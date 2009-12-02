@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -74,94 +115,106 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <a name="l00037"></a>00037 <span class="preprocessor">#include &lt;stdarg.h&gt;</span>
 <a name="l00038"></a>00038 <span class="preprocessor">#include &lt;math.h&gt;</span>
 <a name="l00039"></a>00039 <span class="preprocessor">#include &lt;time.h&gt;</span>
-<a name="l00040"></a>00040 <span class="preprocessor">#include &quot;mars_base_private.h&quot;</span>
+<a name="l00040"></a>00040 <span class="preprocessor">#include &quot;<a class="code" href="mars__base__private_8h.html">mars_base_private.h</a>&quot;</span>
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042 <span class="comment">//2*PI/360 = 0.017453292519943295769236907684886</span>
-<a name="l00043"></a>00043 <span class="preprocessor">#define RAD(x) (float)x*0.01745329</span>
+<a name="l00043"></a>00043 <span class="preprocessor">#define RAD(x) (float)((x)*0.01745329)</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 
 <a name="l00046"></a>00046 <span class="comment">/* Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */</span>
 <a name="l00047"></a>00047 <span class="preprocessor">#define TERR_SIZE 100</span>
 <a name="l00048"></a>00048 <span class="preprocessor"></span>
-<a name="l00049"></a>00049 <span class="keywordtype">int</span> tam_mapa_x;
-<a name="l00050"></a>00050 <span class="keywordtype">int</span> tam_mapa_y;
+<a name="l00049"></a><a class="code" href="shared_8h.html#a5f111a2e818fc0b015804daaaf59a1a8">00049</a> <span class="keywordtype">int</span> <a class="code" href="shared_8h.html#a5f111a2e818fc0b015804daaaf59a1a8">tam_mapa_x</a>;
+<a name="l00050"></a><a class="code" href="shared_8h.html#aa7a1c3df166a0892285c844dad55891e">00050</a> <span class="keywordtype">int</span> <a class="code" href="shared_8h.html#aa7a1c3df166a0892285c844dad55891e">tam_mapa_y</a>;
 <a name="l00051"></a>00051 
 <a name="l00052"></a>00052 <span class="preprocessor">#define MAX_SCREEN_MESSAGES 80</span>
 <a name="l00053"></a>00053 <span class="preprocessor"></span><span class="preprocessor">#define MAX_SCREEN_MESSAGES_LEN 256</span>
-<a name="l00054"></a>00054 <span class="preprocessor"></span><span class="keywordtype">char</span> scr_messages[80][255];
-<a name="l00055"></a>00055 <span class="keywordtype">int</span> scr_message_index;
-<a name="l00056"></a>00056 <span class="keywordtype">int</span> scr_message_debug;
+<a name="l00054"></a><a class="code" href="shared_8h.html#a3c483bb038fb856af535963feabe83a9">00054</a> <span class="preprocessor"></span><span class="keywordtype">char</span> <a class="code" href="shared_8h.html#a3c483bb038fb856af535963feabe83a9">scr_messages</a>[80][255];
+<a name="l00055"></a><a class="code" href="shared_8h.html#a658176b18907987cb0b88de35246af4f">00055</a> <span class="keywordtype">int</span> <a class="code" href="shared_8h.html#a658176b18907987cb0b88de35246af4f">scr_message_index</a>;
+<a name="l00056"></a><a class="code" href="shared_8h.html#aea2b055db902f3a5ce37d2dda4f2cfc6">00056</a> <span class="keywordtype">int</span> <a class="code" href="shared_8h.html#aea2b055db902f3a5ce37d2dda4f2cfc6">scr_message_debug</a>;
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058 GLuint minimapa;
+<a name="l00058"></a><a class="code" href="shared_8h.html#a730a239cd17a1935ae244f28b7fdd897">00058</a> <span class="keywordtype">char</span> <a class="code" href="shared_8h.html#a730a239cd17a1935ae244f28b7fdd897">app_path</a>[256];
 <a name="l00059"></a>00059 
-<a name="l00060"></a><a class="code" href="struct_v_e_c_t_o_r.html">00060</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">float</span> x; <span class="keywordtype">float</span> y; <span class="keywordtype">float</span> z;}<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a>;
+<a name="l00060"></a><a class="code" href="shared_8h.html#a88bffff717ae9fb28c40ada04449cd4f">00060</a> GLuint <a class="code" href="shared_8h.html#a88bffff717ae9fb28c40ada04449cd4f">minimapa</a>;
 <a name="l00061"></a>00061 
-<a name="l00062"></a><a class="code" href="structt__camera.html">00062</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00063"></a>00063 {
-<a name="l00064"></a>00064         GLfloat pos_x;
-<a name="l00065"></a>00065         GLfloat pos_y;
-<a name="l00066"></a>00066         GLfloat pos_z;
-<a name="l00067"></a>00067         
-<a name="l00068"></a>00068         GLfloat pitch;
-<a name="l00069"></a>00069         GLfloat yaw;
-<a name="l00070"></a>00070         GLfloat roll;
-<a name="l00071"></a>00071 }<a class="code" href="structt__camera.html">t_camera</a>;
-<a name="l00072"></a>00072 <a class="code" href="structt__camera.html">t_camera</a> camera;
-<a name="l00073"></a>00073 
-<a name="l00074"></a><a class="code" href="structt__texture.html">00074</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00075"></a>00075 {
-<a name="l00076"></a>00076         GLfloat ambient[4];
-<a name="l00077"></a>00077         GLfloat diffuse[4];
-<a name="l00078"></a>00078         GLfloat specular[4];
-<a name="l00079"></a>00079         GLfloat shininess[1];
-<a name="l00080"></a>00080         GLint texture[1];
-<a name="l00081"></a>00081 }<a class="code" href="structt__texture.html">t_texture</a>;
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a71e93946e87040aa68fbafeff1477829" title="Resetea el archivo debug.log Se debe llamar a esta función antes de usar las funciones...">debug_reset</a> (<span class="keywordtype">void</span>);
-<a name="l00084"></a>00084 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a8fa97b2140c7e193969379b988ac38d1" title="Escribe en el archivo debug.log como un fprintf.">debug_printf</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
-<a name="l00085"></a>00085 <span class="keywordtype">void</span> scr_init_reset (<span class="keywordtype">int</span> debug_too);
-<a name="l00086"></a>00086 <span class="keywordtype">void</span> scr_init_printf (<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
-<a name="l00087"></a>00087 <span class="keywordtype">void</span> scr_init_reprintf (<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);<span class="comment">/* Como scr_init_printf pero sobre la última línea */</span>
-<a name="l00088"></a>00088 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a8a430e17c06343b809cf16e97f469474" title="Muestra texto en el mundo en 3D al estilo de printf.">position_printf</a> (<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
-<a name="l00089"></a>00089 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a5809496d95aae26ae7808efc177b2c87" title="Muestra texto en el HUD (2D) al estilo de printf.">hud_printf</a> (<span class="keywordtype">int</span> col, <span class="keywordtype">int</span> row, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a4b54c5c6a75ae41b8bf6066b62015f6d" title="glBindTexture para materiales">use_texture</a> (<a class="code" href="structt__texture.html">t_texture</a> texture);
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093 <span class="comment">/* Trace */</span><span class="comment">/*</span>
-<a name="l00094"></a>00094 <span class="comment">VECTOR trace_camera(float x, float y, float z)</span>
-<a name="l00095"></a>00095 <span class="comment">{</span>
-<a name="l00096"></a>00096 <span class="comment">        VECTOR vec={0,0,0};</span>
-<a name="l00097"></a>00097 <span class="comment">        float d;</span>
-<a name="l00098"></a>00098 <span class="comment">        if (camera.pitch&gt;=80 || camera.pitch&lt;=-80){return vec;}</span>
-<a name="l00099"></a>00099 <span class="comment">        d=tan(RAD(camera.pitch))*z;</span>
-<a name="l00100"></a>00100 <span class="comment">        vec.y=d*cos(RAD(-camera.yaw))+y;</span>
-<a name="l00101"></a>00101 <span class="comment">        vec.x=d*sin(RAD(-camera.yaw))+x;</span>
-<a name="l00102"></a>00102 <span class="comment">        return vec;</span>
-<a name="l00103"></a>00103 <span class="comment">}*/</span>
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#af1b3e96262f2890780ba531ce601e441" title="Obtiene el número de carácteres de un string.">str_size</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keywordtype">string</span>);
-<a name="l00106"></a>00106 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#aeb8c879725389c8b511d4bb92be6643d" title="Copia el contenido de string2 a string1.">str_cpy</a>(<span class="keywordtype">char</span>* string1,<span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
-<a name="l00107"></a>00107 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a138759ac4537dfa9c9e586b7e4615050" title="Copia el contenido de string2 a string1 con un máximo de &amp;#39;len&amp;#39; carácteres...">str_cpyl</a>(<span class="keywordtype">char</span>* string1, <span class="keywordtype">int</span> len, <span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
-<a name="l00108"></a>00108 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a7e414c202836295c85110a0118932a63" title="Añade el contenido de string2 a string1 Hay que asegurarse de que hay suficiente...">str_append</a>(<span class="keywordtype">char</span>* string1,<span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
-<a name="l00109"></a>00109 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#a6b6c77ab6719496032ac8ec75864b0ee" title="Compara el contenido de ambos strings.">str_cmp</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* string1,<span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111 <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="code" href="shared_8c.html#a788f3e70c833452f1dcda4f711d3d602" title="Calcula el producto vectorial de dos vectores.">p_vect</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1,<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
-<a name="l00112"></a>00112 <span class="keywordtype">float</span> <a class="code" href="shared_8c.html#a34b3d67340cf48c26a2e7fd08fb9dbb1" title="Calcula el producto escalar de dos vectores.">p_escalar</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1,<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
-<a name="l00113"></a>00113 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a9664162086bf7ceed30b5e59a02e1658" title="Normaliza el vector. (Unitario).">normalize</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a>* vec1);
-<a name="l00114"></a>00114 <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="code" href="shared_8c.html#a9854afbfc6c00356253ac9ec23e9de8f" title="Calcula la suma de dos vectores.">vadd</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
-<a name="l00115"></a>00115 <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="code" href="shared_8c.html#a51c420eb6056f6181d6bfe1daa5d2e8d" title="Calcula la resta de dos vectores.">vsub</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 <span class="keywordtype">float</span> nabs(<span class="keywordtype">float</span> val);
-<a name="l00118"></a>00118 <span class="keywordtype">int</span> nround(<span class="keywordtype">float</span> val);
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120 <span class="preprocessor">#endif</span>
+<a name="l00062"></a><a class="code" href="struct_v_e_c_t_o_r.html#af73583b1e980b0aa03f9884812e9fd4d">00062</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">float</span> x; <span class="keywordtype">float</span> y; <span class="keywordtype">float</span> z;}<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a>;
+<a name="l00063"></a><a class="code" href="struct_c_o_l_o_rf.html#a4788d82c901b9367dd5c0daff8a7616b">00063</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">float</span> r; <span class="keywordtype">float</span> g; <span class="keywordtype">float</span> b; <span class="keywordtype">float</span> a;}<a class="code" href="struct_c_o_l_o_rf.html">COLORf</a>;
+<a name="l00064"></a>00064 
+<a name="l00065"></a><a class="code" href="structt__camera.html">00065</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00066"></a>00066 {
+<a name="l00067"></a><a class="code" href="structt__camera.html#acf5bd6264eb4cf2fc289e45463ec7b7e">00067</a>         GLfloat pos_x;
+<a name="l00068"></a><a class="code" href="structt__camera.html#a3e46f59d3bc9ecd53f8e9619ba5656f9">00068</a>         GLfloat pos_y;
+<a name="l00069"></a><a class="code" href="structt__camera.html#a243cc20cbd2103082138ca29fe4c171e">00069</a>         GLfloat pos_z;
+<a name="l00070"></a>00070         
+<a name="l00071"></a><a class="code" href="structt__camera.html#aa2c20d25f71a808e97164d98c4698cbe">00071</a>         GLfloat pitch;
+<a name="l00072"></a><a class="code" href="structt__camera.html#a0efaed02e035b5fa643166061b5b8ddf">00072</a>         GLfloat yaw;
+<a name="l00073"></a><a class="code" href="structt__camera.html#afe415f855bb7e02099c2d1906a4cd9cd">00073</a>         GLfloat roll;
+<a name="l00074"></a>00074 }<a class="code" href="structt__camera.html">t_camera</a>;
+<a name="l00075"></a><a class="code" href="shared_8h.html#a9761e9c7e886b6dfff1d7af2c74f8b71">00075</a> <a class="code" href="structt__camera.html">t_camera</a> <a class="code" href="shared_8h.html#a9761e9c7e886b6dfff1d7af2c74f8b71">camera</a>;
+<a name="l00076"></a>00076 
+<a name="l00077"></a><a class="code" href="structt__texture.html">00077</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00078"></a>00078 {
+<a name="l00079"></a><a class="code" href="structt__texture.html#a3777dbae63a15da001b2baa317a25149">00079</a>         <span class="keywordtype">char</span> name[80];
+<a name="l00080"></a><a class="code" href="structt__texture.html#a06833ed5cacd5df6bbaca06aaae76351">00080</a>         GLfloat ambient[4];
+<a name="l00081"></a><a class="code" href="structt__texture.html#a98b71067a69a63e35816188857acd3be">00081</a>         GLfloat diffuse[4];
+<a name="l00082"></a><a class="code" href="structt__texture.html#a600ea59cda5d0bb3812fc6787287728c">00082</a>         GLfloat specular[4];
+<a name="l00083"></a><a class="code" href="structt__texture.html#a25feb7d3d8b12a0a36a35c0adba9def3">00083</a>         GLfloat shininess[1];
+<a name="l00084"></a><a class="code" href="structt__texture.html#a0bc1ba0fe3f288fa09ab03afc776758b">00084</a>         GLfloat transparency[1];
+<a name="l00085"></a><a class="code" href="structt__texture.html#a8719ca4dca8e08a172615c978b6f8430">00085</a>         GLint texture[1];
+<a name="l00086"></a>00086 }<a class="code" href="structt__texture.html">t_texture</a>;
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a71e93946e87040aa68fbafeff1477829" title="Resetea el archivo debug.log Se debe llamar a esta función antes de usar las funciones...">debug_reset</a> (<span class="keywordtype">void</span>);
+<a name="l00089"></a>00089 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a8fa97b2140c7e193969379b988ac38d1" title="Escribe en el archivo debug.log como un fprintf.">debug_printf</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
+<a name="l00090"></a>00090 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a90119352be9b92eb8da0325943a49094">scr_init_reset</a> (<span class="keywordtype">int</span> debug_too);
+<a name="l00091"></a>00091 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a4111193fe1a73caba1ca094c1f97b673">scr_init_printf</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
+<a name="l00092"></a>00092 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a538b2a5e4f636167b5f829ba1993634b">scr_init_reprintf</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);<span class="comment">/* Como scr_init_printf pero sobre la última línea */</span>
+<a name="l00093"></a>00093 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a8a430e17c06343b809cf16e97f469474" title="Muestra texto en el mundo en 3D al estilo de printf.">position_printf</a> (<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
+<a name="l00094"></a>00094 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a5809496d95aae26ae7808efc177b2c87" title="Muestra texto en el HUD (2D) al estilo de printf.">hud_printf</a> (<span class="keywordtype">int</span> col, <span class="keywordtype">int</span> row, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a4b54c5c6a75ae41b8bf6066b62015f6d" title="glBindTexture para materiales">use_texture</a> (<a class="code" href="structt__texture.html">t_texture</a> texture);
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098 <span class="comment">/* Trace */</span><span class="comment">/*</span>
+<a name="l00099"></a>00099 <span class="comment">VECTOR trace_camera(float x, float y, float z)</span>
+<a name="l00100"></a>00100 <span class="comment">{</span>
+<a name="l00101"></a>00101 <span class="comment">        VECTOR vec={0,0,0};</span>
+<a name="l00102"></a>00102 <span class="comment">        float d;</span>
+<a name="l00103"></a>00103 <span class="comment">        if (camera.pitch&gt;=80 || camera.pitch&lt;=-80){return vec;}</span>
+<a name="l00104"></a>00104 <span class="comment">        d=tan(RAD(camera.pitch))*z;</span>
+<a name="l00105"></a>00105 <span class="comment">        vec.y=d*cos(RAD(-camera.yaw))+y;</span>
+<a name="l00106"></a>00106 <span class="comment">        vec.x=d*sin(RAD(-camera.yaw))+x;</span>
+<a name="l00107"></a>00107 <span class="comment">        return vec;</span>
+<a name="l00108"></a>00108 <span class="comment">}*/</span>
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#af1b3e96262f2890780ba531ce601e441" title="Obtiene el número de carácteres de un string.">str_size</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keywordtype">string</span>);
+<a name="l00111"></a>00111 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#aeb8c879725389c8b511d4bb92be6643d" title="Copia el contenido de string2 a string1.">str_cpy</a>(<span class="keywordtype">char</span>* string1,<span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
+<a name="l00112"></a>00112 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a138759ac4537dfa9c9e586b7e4615050" title="Copia el contenido de string2 a string1 con un máximo de &amp;#39;len&amp;#39; carácteres...">str_cpyl</a>(<span class="keywordtype">char</span>* string1, <span class="keywordtype">int</span> len, <span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
+<a name="l00113"></a>00113 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a7e414c202836295c85110a0118932a63" title="Añade el contenido de string2 a string1 Hay que asegurarse de que hay suficiente...">str_append</a>(<span class="keywordtype">char</span>* string1,<span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
+<a name="l00114"></a>00114 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#a6b6c77ab6719496032ac8ec75864b0ee" title="Compara el contenido de ambos strings.">str_cmp</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* string1,<span class="keyword">const</span> <span class="keywordtype">char</span>* string2);
+<a name="l00115"></a>00115 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a2307871fef88d974f217cdda6b8ad4c8" title="Borra el texto empezando desde el final hasta el primer &amp;#39;\&amp;#39; (El &amp;#39;\&amp;#39;...">str_ruta_back</a>(<span class="keywordtype">char</span>* ruta);
+<a name="l00116"></a>00116 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#a05a82c8ce0c465083f64058e818e8e79" title="Busca un string en una lista de strings y retorna la posición en la lista.">str_list_find</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* find,<span class="keyword">const</span> <span class="keywordtype">char</span>* table[], <span class="keywordtype">int</span> elementos);
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118 <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="code" href="shared_8c.html#a788f3e70c833452f1dcda4f711d3d602" title="Calcula el producto vectorial de dos vectores.">p_vect</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1,<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
+<a name="l00119"></a>00119 <span class="keywordtype">float</span> <a class="code" href="shared_8c.html#a34b3d67340cf48c26a2e7fd08fb9dbb1" title="Calcula el producto escalar de dos vectores.">p_escalar</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1,<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
+<a name="l00120"></a>00120 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a9664162086bf7ceed30b5e59a02e1658" title="Normaliza el vector. (Unitario).">normalize</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a>* vec1);
+<a name="l00121"></a>00121 <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="code" href="shared_8c.html#a9854afbfc6c00356253ac9ec23e9de8f" title="Calcula la suma de dos vectores.">vadd</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
+<a name="l00122"></a>00122 <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="code" href="shared_8c.html#a51c420eb6056f6181d6bfe1daa5d2e8d" title="Calcula la resta de dos vectores.">vsub</a>(<a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2);
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124 <span class="keywordtype">float</span> <a class="code" href="shared_8c.html#a86455097a5761d4bf48f581d3ef3bfb6">nabs</a>(<span class="keywordtype">float</span> val);
+<a name="l00125"></a>00125 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#aecb84b2c727c8af7c6a6b402f11f58f6">nround</a>(<span class="keywordtype">float</span> val);
+<a name="l00126"></a>00126 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#a624d87824bb1606985d9edba998c85d1">nfloor</a>(<span class="keywordtype">float</span> val);
+<a name="l00127"></a>00127 <span class="keywordtype">int</span> <a class="code" href="shared_8c.html#a42381bd0eb5143f7ea934183230deeb8">nceil</a>(<span class="keywordtype">float</span> val);
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#a3931fe6c26e825296b5fb69d5886155f" title="Dibuja una textura en el mundo siempre orientada al jugador pero fija (como por ejemplo...">draw_fixsprite</a> (<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <a class="code" href="structt__texture.html">t_texture</a> textura, <span class="keywordtype">float</span> size);
+<a name="l00130"></a>00130 <span class="keywordtype">void</span> <a class="code" href="shared_8c.html#aede12d8cbe4ebd1a91a0e6ce8f2bd0a3" title="Dibuja una textura en el mundo siempre orientada al jugador.">draw_sprite</a> (<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y, <span class="keywordtype">float</span> z, <a class="code" href="structt__texture.html">t_texture</a> textura, <span class="keywordtype">float</span> size);
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132 <span class="preprocessor">#endif</span>
 </pre></div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -170,7 +223,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

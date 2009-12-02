@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -49,12 +90,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Campos de datos</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">char&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a8e03167ce04350be901b028cc4cf1ce1">name</a> [256]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structt__model.html">t_model</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a7c3957c02c6d110a204adf63166cdcd6">modelo</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structt__model.html">t_model_ptr</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a46ccf22ee8aae5f242b6288522e83df7">modelo</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#adb75f132fa864de961fa8b900dda9c5e">icono</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a973f240c50caa6c6c6857e217853d193">pos</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#af9816f15b9da8a8a09b7afa3f0fe9c7e">rot</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a80773f7b73e38fc1936f65e8b102af4d">vel</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a1386555347bbe012a0440a4ba9578318">velang</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a632ec67d0d5e729150c992148cf0357a">sq_a</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__obj__base.html#a3eb37abb5eae00ddc82fe7c11ab6c7f1">sq_b</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Descripción detallada</h2>
 <p>Base -&gt; Modelo base para usar como ejemplo a la hora de crear más tipos de objetos </p>
@@ -73,12 +116,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 
 </div>
 </div>
-<a class="anchor" id="a7c3957c02c6d110a204adf63166cdcd6"></a><!-- doxytag: member="t_obj_base::modelo" ref="a7c3957c02c6d110a204adf63166cdcd6" args="" -->
+<a class="anchor" id="a46ccf22ee8aae5f242b6288522e83df7"></a><!-- doxytag: member="t_obj_base::modelo" ref="a46ccf22ee8aae5f242b6288522e83df7" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structt__model.html">t_model</a> <a class="el" href="structt__obj__base.html#a7c3957c02c6d110a204adf63166cdcd6">modelo</a></td>
+          <td class="memname"><a class="el" href="structt__model.html">t_model_ptr</a> <a class="el" href="structt__obj__base.html#a46ccf22ee8aae5f242b6288522e83df7">modelo</a></td>
         </tr>
       </table>
 </div>
@@ -129,6 +172,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 
 </div>
 </div>
+<a class="anchor" id="a632ec67d0d5e729150c992148cf0357a"></a><!-- doxytag: member="t_obj_base::sq_a" ref="a632ec67d0d5e729150c992148cf0357a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__obj__base.html#a632ec67d0d5e729150c992148cf0357a">sq_a</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3eb37abb5eae00ddc82fe7c11ab6c7f1"></a><!-- doxytag: member="t_obj_base::sq_b" ref="a3eb37abb5eae00ddc82fe7c11ab6c7f1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__obj__base.html#a3eb37abb5eae00ddc82fe7c11ab6c7f1">sq_b</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Ambos lados que definen la base rectangular de colisión del objeto </p>
+
+</div>
+</div>
 <a class="anchor" id="a80773f7b73e38fc1936f65e8b102af4d"></a><!-- doxytag: member="t_obj_base::vel" ref="a80773f7b73e38fc1936f65e8b102af4d" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -166,7 +236,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -175,7 +245,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

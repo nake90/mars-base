@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -47,49 +88,34 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <h1>Referencia del Archivo C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/shared.c</h1>
 <p>Funciones compartidas por todos los módulos Este archivo contiene todo el código de las funciones que son necesarias por todos los diferentes módulos del programa. Está formado por funciones de bajo nivel personalizadas para la aplicación.  
 <a href="#_details">Más...</a></p>
-<code>#include &quot;<a class="el" href="shared_8h_source.html">shared.h</a>&quot;</code><br/>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Funciones</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a86455097a5761d4bf48f581d3ef3bfb6"></a><!-- doxytag: member="shared.c::nabs" ref="a86455097a5761d4bf48f581d3ef3bfb6" args="(float val)" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>nabs</b> (float val)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecb84b2c727c8af7c6a6b402f11f58f6"></a><!-- doxytag: member="shared.c::nround" ref="aecb84b2c727c8af7c6a6b402f11f58f6" args="(float val)" -->
-int&nbsp;</td><td class="memItemRight" valign="bottom"><b>nround</b> (float val)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a90119352be9b92eb8da0325943a49094"></a><!-- doxytag: member="shared.c::scr_init_reset" ref="a90119352be9b92eb8da0325943a49094" args="(int debug_too)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reset</b> (int debug_too)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4111193fe1a73caba1ca094c1f97b673"></a><!-- doxytag: member="shared.c::scr_init_printf" ref="a4111193fe1a73caba1ca094c1f97b673" args="(const char *fmt,...)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_printf</b> (const char *fmt,...)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a538b2a5e4f636167b5f829ba1993634b"></a><!-- doxytag: member="shared.c::scr_init_reprintf" ref="a538b2a5e4f636167b5f829ba1993634b" args="(const char *fmt,...)" -->
-void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b> (const char *fmt,...)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a86455097a5761d4bf48f581d3ef3bfb6">nabs</a> (float val)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#aecb84b2c727c8af7c6a6b402f11f58f6">nround</a> (float val)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a624d87824bb1606985d9edba998c85d1">nfloor</a> (float val)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a42381bd0eb5143f7ea934183230deeb8">nceil</a> (float val)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a90119352be9b92eb8da0325943a49094">scr_init_reset</a> (int debug_too)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a4111193fe1a73caba1ca094c1f97b673">scr_init_printf</a> (const char *fmt,...)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a538b2a5e4f636167b5f829ba1993634b">scr_init_reprintf</a> (const char *fmt,...)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#af1b3e96262f2890780ba531ce601e441">str_size</a> (const char *string)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtiene el número de carácteres de un string.  <a href="#af1b3e96262f2890780ba531ce601e441"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#aeb8c879725389c8b511d4bb92be6643d">str_cpy</a> (char *string1, const char *string2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copia el contenido de string2 a string1.  <a href="#aeb8c879725389c8b511d4bb92be6643d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a138759ac4537dfa9c9e586b7e4615050">str_cpyl</a> (char *string1, int len, const char *string2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copia el contenido de string2 a string1 con un máximo de 'len' carácteres Es mucho más recomendable usar esta función para evitar salirnos del tamaño del string. Siempre acaba con \0, incluso cuando no hay espacio.  <a href="#a138759ac4537dfa9c9e586b7e4615050"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a7e414c202836295c85110a0118932a63">str_append</a> (char *string1, const char *string2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Añade el contenido de string2 a string1 Hay que asegurarse de que hay suficiente espacio en string1 para ambos strings.  <a href="#a7e414c202836295c85110a0118932a63"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a6b6c77ab6719496032ac8ec75864b0ee">str_cmp</a> (const char *string1, const char *string2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compara el contenido de ambos strings.  <a href="#a6b6c77ab6719496032ac8ec75864b0ee"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a2307871fef88d974f217cdda6b8ad4c8">str_ruta_back</a> (char *ruta)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a05a82c8ce0c465083f64058e818e8e79">str_list_find</a> (const char *find, const char *table[], int elementos)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a788f3e70c833452f1dcda4f711d3d602">p_vect</a> (<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calcula el producto vectorial de dos vectores.  <a href="#a788f3e70c833452f1dcda4f711d3d602"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a34b3d67340cf48c26a2e7fd08fb9dbb1">p_escalar</a> (<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calcula el producto escalar de dos vectores.  <a href="#a34b3d67340cf48c26a2e7fd08fb9dbb1"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a9664162086bf7ceed30b5e59a02e1658">normalize</a> (<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> *vec1)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Normaliza el vector. (Unitario).  <a href="#a9664162086bf7ceed30b5e59a02e1658"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a9854afbfc6c00356253ac9ec23e9de8f">vadd</a> (<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calcula la suma de dos vectores.  <a href="#a9854afbfc6c00356253ac9ec23e9de8f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a51c420eb6056f6181d6bfe1daa5d2e8d">vsub</a> (<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec1, <a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> vec2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calcula la resta de dos vectores.  <a href="#a51c420eb6056f6181d6bfe1daa5d2e8d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a71e93946e87040aa68fbafeff1477829">debug_reset</a> (void)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Resetea el archivo debug.log Se debe llamar a esta función antes de usar las funciones de debug. Si el archivo debug.log no existe lo crea. Escribe en el archivo: " --- DEBUG --- \\n\\n".  <a href="#a71e93946e87040aa68fbafeff1477829"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a8fa97b2140c7e193969379b988ac38d1">debug_printf</a> (const char *fmt,...)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Escribe en el archivo debug.log como un fprintf.  <a href="#a8fa97b2140c7e193969379b988ac38d1"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a8a430e17c06343b809cf16e97f469474">position_printf</a> (float x, float y, float z, const char *fmt,...)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Muestra texto en el mundo en 3D al estilo de printf.  <a href="#a8a430e17c06343b809cf16e97f469474"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a5809496d95aae26ae7808efc177b2c87">hud_printf</a> (int col, int row, const char *fmt,...)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Muestra texto en el HUD (2D) al estilo de printf.  <a href="#a5809496d95aae26ae7808efc177b2c87"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a4b54c5c6a75ae41b8bf6066b62015f6d">use_texture</a> (<a class="el" href="structt__texture.html">t_texture</a> texture)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">glBindTexture para materiales  <a href="#a4b54c5c6a75ae41b8bf6066b62015f6d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#aede12d8cbe4ebd1a91a0e6ce8f2bd0a3">draw_sprite</a> (float x, float y, float z, <a class="el" href="structt__texture.html">t_texture</a> textura, float size)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shared_8c.html#a3931fe6c26e825296b5fb69d5886155f">draw_fixsprite</a> (float x, float y, float z, <a class="el" href="structt__texture.html">t_texture</a> textura, float size)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Descripción detallada</h2>
 <p>Funciones compartidas por todos los módulos Este archivo contiene todo el código de las funciones que son necesarias por todos los diferentes módulos del programa. Está formado por funciones de bajo nivel personalizadas para la aplicación. </p>
@@ -144,6 +170,116 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
 
 </div>
 </div>
+<a class="anchor" id="a3931fe6c26e825296b5fb69d5886155f"></a><!-- doxytag: member="shared.c::draw_fixsprite" ref="a3931fe6c26e825296b5fb69d5886155f" args="(float x, float y, float z, t_texture textura, float size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void draw_fixsprite </td>
+          <td>(</td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structt__texture.html">t_texture</a>&nbsp;</td>
+          <td class="paramname"> <em>textura</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Dibuja una textura en el mundo siempre orientada al jugador pero fija (como por ejemplo el Sol). </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>x,y,z</em>&nbsp;</td><td>Coordenadas donde se dibuja el objeto </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>textura</em>&nbsp;</td><td>Material a dibujar </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>Tamaño del objeto (Radio del objeto o mitad de su lado) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aede12d8cbe4ebd1a91a0e6ce8f2bd0a3"></a><!-- doxytag: member="shared.c::draw_sprite" ref="aede12d8cbe4ebd1a91a0e6ce8f2bd0a3" args="(float x, float y, float z, t_texture textura, float size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void draw_sprite </td>
+          <td>(</td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structt__texture.html">t_texture</a>&nbsp;</td>
+          <td class="paramname"> <em>textura</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Dibuja una textura en el mundo siempre orientada al jugador. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>x,y,z</em>&nbsp;</td><td>Coordenadas donde se dibuja el objeto </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>textura</em>&nbsp;</td><td>Material a dibujar </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>size</em>&nbsp;</td><td>Tamaño del objeto (Radio del objeto o mitad de su lado) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a5809496d95aae26ae7808efc177b2c87"></a><!-- doxytag: member="shared.c::hud_printf" ref="a5809496d95aae26ae7808efc177b2c87" args="(int col, int row, const char *fmt,...)" -->
 <div class="memitem">
 <div class="memproto">
@@ -192,6 +328,60 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
 
 </div>
 </div>
+<a class="anchor" id="a86455097a5761d4bf48f581d3ef3bfb6"></a><!-- doxytag: member="shared.c::nabs" ref="a86455097a5761d4bf48f581d3ef3bfb6" args="(float val)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float nabs </td>
+          <td>(</td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>val</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a42381bd0eb5143f7ea934183230deeb8"></a><!-- doxytag: member="shared.c::nceil" ref="a42381bd0eb5143f7ea934183230deeb8" args="(float val)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int nceil </td>
+          <td>(</td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>val</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a624d87824bb1606985d9edba998c85d1"></a><!-- doxytag: member="shared.c::nfloor" ref="a624d87824bb1606985d9edba998c85d1" args="(float val)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int nfloor </td>
+          <td>(</td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>val</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a9664162086bf7ceed30b5e59a02e1658"></a><!-- doxytag: member="shared.c::normalize" ref="a9664162086bf7ceed30b5e59a02e1658" args="(VECTOR *vec1)" -->
 <div class="memitem">
 <div class="memproto">
@@ -215,6 +405,24 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="aecb84b2c727c8af7c6a6b402f11f58f6"></a><!-- doxytag: member="shared.c::nround" ref="aecb84b2c727c8af7c6a6b402f11f58f6" args="(float val)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int nround </td>
+          <td>(</td>
+          <td class="paramtype">float&nbsp;</td>
+          <td class="paramname"> <em>val</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -342,6 +550,78 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a4111193fe1a73caba1ca094c1f97b673"></a><!-- doxytag: member="shared.c::scr_init_printf" ref="a4111193fe1a73caba1ca094c1f97b673" args="(const char *fmt,...)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void scr_init_printf </td>
+          <td>(</td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>...</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a538b2a5e4f636167b5f829ba1993634b"></a><!-- doxytag: member="shared.c::scr_init_reprintf" ref="a538b2a5e4f636167b5f829ba1993634b" args="(const char *fmt,...)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void scr_init_reprintf </td>
+          <td>(</td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>...</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a90119352be9b92eb8da0325943a49094"></a><!-- doxytag: member="shared.c::scr_init_reset" ref="a90119352be9b92eb8da0325943a49094" args="(int debug_too)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void scr_init_reset </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>debug_too</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -499,6 +779,78 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
 
 </div>
 </div>
+<a class="anchor" id="a05a82c8ce0c465083f64058e818e8e79"></a><!-- doxytag: member="shared.c::str_list_find" ref="a05a82c8ce0c465083f64058e818e8e79" args="(const char *find, const char *table[], int elementos)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int str_list_find </td>
+          <td>(</td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>find</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>table</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>elementos</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Busca un string en una lista de strings y retorna la posición en la lista. </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>find</em>&nbsp;</td><td>Texto a encontrar </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>table</em>&nbsp;</td><td>Lista de strings donde se debe buscar el texto </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>elementos</em>&nbsp;</td><td>Número de elementos (o filas) en la lista 'table' </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Devuelve:</b></dt><dd>-1 si no se encuentra el texto </dd>
+<dd>
+La fila en la que se encuentra el texto. (Empezando por 0) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2307871fef88d974f217cdda6b8ad4c8"></a><!-- doxytag: member="shared.c::str_ruta_back" ref="a2307871fef88d974f217cdda6b8ad4c8" args="(char *ruta)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void str_ruta_back </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>ruta</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Borra el texto empezando desde el final hasta el primer '\' (El '\' se mantiene). </p>
+<dl><dt><b>Parámetros:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>ruta</em>&nbsp;</td><td>Ruta a la que se va a borrar el final </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="af1b3e96262f2890780ba531ce601e441"></a><!-- doxytag: member="shared.c::str_size" ref="af1b3e96262f2890780ba531ce601e441" args="(const char *string)" -->
 <div class="memitem">
 <div class="memproto">
@@ -632,7 +984,7 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -641,7 +993,7 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>scr_init_reprintf</b>
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

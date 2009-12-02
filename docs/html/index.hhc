@@ -5,11 +5,16 @@
 </OBJECT>
 <UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="Mars Base"><param name="Local" value="index.html"><param name="ImageNumber" value="11"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Lista de Desaprobados"><param name="Local" value="deprecated.html"><param name="ImageNumber" value="11"></OBJECT>
+  <UL>
+  </UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="Lista de Bugs"><param name="Local" value="bug.html"><param name="ImageNumber" value="11"></OBJECT>
   <UL>
   </UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="Estructura de datos"><param name="Local" value="annotated.html"><param name="ImageNumber" value="1"></OBJECT>
   <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="COLORf"><param name="Local" value="struct_c_o_l_o_rf.html"><param name="ImageNumber" value="11"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="DIALOG"><param name="Local" value="struct_d_i_a_l_o_g.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="t_camera"><param name="Local" value="structt__camera.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="t_heightmap"><param name="Local" value="structt__heightmap.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="t_mapcoord"><param name="Local" value="structt__mapcoord.html"><param name="ImageNumber" value="11"></OBJECT>
@@ -28,7 +33,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/heightmap.c"><param name="Local" value="heightmap_8c.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/heightmap.h"><param name="Local" value="heightmap_8h.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/main.c"><param name="Local" value="main_8c.html"><param name="ImageNumber" value="11"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/mars_base_private.h"><param name="ImageNumber" value="11"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/mars_base_private.h"><param name="Local" value="mars__base__private_8h.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/materiales.c"><param name="Local" value="materiales_8c.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/materiales.h"><param name="Local" value="materiales_8h.html"><param name="ImageNumber" value="11"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Name" value="C:/Documents and Settings/Nake/Mis documentos/Avanzado 2/mars_base/objetos.c"><param name="Local" value="objetos_8c.html"><param name="ImageNumber" value="11"></OBJECT>

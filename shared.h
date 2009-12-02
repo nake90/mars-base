@@ -60,6 +60,7 @@ char app_path[256];
 GLuint minimapa;
 
 typedef struct{float x; float y; float z;}VECTOR;
+typedef struct{float r; float g; float b; float a;}COLORf;
 
 typedef struct
 {
@@ -122,6 +123,8 @@ VECTOR vsub(VECTOR vec1, VECTOR vec2);
 
 float nabs(float val);
 int nround(float val);
+int nfloor(float val);
+int nceil(float val);
 
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
 void draw_sprite (float x, float y, float z, t_texture textura, float size);

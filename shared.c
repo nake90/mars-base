@@ -43,6 +43,18 @@ int nround(float val)
 	return buff;
 }
 
+int nfloor(float val)
+{
+	return (int)val;
+}
+
+int nceil(float val)
+{
+	int buff=(int)val;
+	if(val-buff!=0.0f){return (int)val+1;}
+	return val;
+}
+
 /* - SCREEN LIST PRINTF - */
 void scr_init_reset (int debug_too)
 {

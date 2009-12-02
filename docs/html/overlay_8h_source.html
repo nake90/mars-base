@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -68,17 +109,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#define OVERLAY_H</span>
 <a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">#include &quot;<a class="code" href="shared_8h.html" title="Definiciones compartidas por todos los módulos Este archivo se encarga de todas...">shared.h</a>&quot;</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="keywordtype">void</span> draw_minimap(GLuint minimap);
-<a name="l00033"></a>00033 <span class="keywordtype">void</span> draw_HUD(<span class="keywordtype">void</span>);
-<a name="l00034"></a>00034 
-<a name="l00035"></a>00035 <span class="preprocessor">#endif</span>
+<a name="l00032"></a><a class="code" href="struct_d_i_a_l_o_g.html">00032</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00033"></a>00033 {
+<a name="l00034"></a>00034         <span class="comment">//void* df(DIALOG*);</span>
+<a name="l00035"></a><a class="code" href="struct_d_i_a_l_o_g.html#a0a2f84ed7838f07779ae24c5a9086d33">00035</a>         <span class="keywordtype">int</span> x, y;
+<a name="l00036"></a><a class="code" href="struct_d_i_a_l_o_g.html#aac374e320caaadeca4874add33b62af2">00036</a>         <span class="keywordtype">int</span> w, h;
+<a name="l00037"></a><a class="code" href="struct_d_i_a_l_o_g.html#ab69ccc937e11d9fa1c4dcbfc8a5322c8">00037</a>         <a class="code" href="struct_c_o_l_o_rf.html">COLORf</a> fg, bg;
+<a name="l00038"></a><a class="code" href="struct_d_i_a_l_o_g.html#a35af0be900467fedbb610bd6ea65ed78">00038</a>         <span class="keywordtype">int</span> key;
+<a name="l00039"></a><a class="code" href="struct_d_i_a_l_o_g.html#adf916204820072417ed73a32de1cefcf">00039</a>         <span class="keywordtype">int</span> flag;
+<a name="l00040"></a><a class="code" href="struct_d_i_a_l_o_g.html#a2b4a6cee6fdab3774b13a4de14abfba3">00040</a>         <span class="keywordtype">int</span> d1, d2;
+<a name="l00041"></a><a class="code" href="struct_d_i_a_l_o_g.html#a9e88723fbd2c1d1d99e7242be5cb3563">00041</a>         <span class="keywordtype">void</span> *dp, *dp2, *dp3;
+<a name="l00042"></a>00042 }<a class="code" href="struct_d_i_a_l_o_g.html">DIALOG</a>;
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044 <span class="keywordtype">void</span> <a class="code" href="overlay_8c.html#acee6eec211829d1a95c5e77b61f84885">draw_minimap</a>(GLuint minimap);
+<a name="l00045"></a>00045 <span class="keywordtype">void</span> <a class="code" href="overlay_8c.html#a5aaa9b14296618d040f503e8cdcc029e">draw_HUD</a>(<span class="keywordtype">void</span>);
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 <span class="keywordtype">int</span> <a class="code" href="overlay_8h.html#aee6cc6a9f8c6569a9cc817b05078b62f">draw_element</a>(<a class="code" href="struct_d_i_a_l_o_g.html">DIALOG</a> d);
+<a name="l00048"></a>00048 <span class="keywordtype">void</span> <a class="code" href="overlay_8h.html#a1adb1279a76943db28357bfe9ddb724f">FRAME</a>(<span class="keywordtype">void</span>);
+<a name="l00049"></a>00049 <span class="comment">/*</span>
+<a name="l00050"></a>00050 <span class="comment">glMatrixMode (GL_PROJECTION);</span>
+<a name="l00051"></a>00051 <span class="comment">glLoadIdentity ();</span>
+<a name="l00052"></a>00052 <span class="comment">gluOrtho2D (0, windowWidth, 0, windowHeight);</span>
+<a name="l00053"></a>00053 <span class="comment">glDisable(GL_DEPTH_TEST);</span>
+<a name="l00054"></a>00054 <span class="comment"></span>
+<a name="l00055"></a>00055 <span class="comment">*/</span>
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057 <span class="preprocessor">#endif</span>
 </pre></div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -87,7 +150,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

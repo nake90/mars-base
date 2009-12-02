@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -51,18 +92,86 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <tr><td class="memItemLeft" align="right" valign="top">char&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a3777dbae63a15da001b2baa317a25149">name</a> [80]</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#af45b6a3417c461d69a8af85781ca7080">vertices_qty</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a4f43c79d7e9b7e38af52be9386765d8e">polygons_qty</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87e888832dd0a6f3c92149951a6fb035"></a><!-- doxytag: member="t_model::vertex" ref="a87e888832dd0a6f3c92149951a6fb035" args="[MAX_VERTICES]" -->
-<a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>vertex</b> [MAX_VERTICES]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a567db3731e791152a87c8eb96f04b2ec"></a><!-- doxytag: member="t_model::polygon" ref="a567db3731e791152a87c8eb96f04b2ec" args="[MAX_POLYGONS]" -->
-<a class="el" href="structt__polygon.html">t_polygon</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>polygon</b> [MAX_POLYGONS]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a433d1c0df3f3a8b6f5bd2cb173fb573c"></a><!-- doxytag: member="t_model::mapcoord" ref="a433d1c0df3f3a8b6f5bd2cb173fb573c" args="[MAX_VERTICES]" -->
-<a class="el" href="structt__mapcoord.html">t_mapcoord</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>mapcoord</b> [MAX_VERTICES]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6ea9b07932df851a61fa72bd01761fe"></a><!-- doxytag: member="t_model::size" ref="aa6ea9b07932df851a61fa72bd01761fe" args="" -->
-float&nbsp;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a4d5084f747b2d61bcddfaddbc7c979d0">materials_qty</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a87e888832dd0a6f3c92149951a6fb035">vertex</a> [MAX_VERTICES]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structt__polygon.html">t_polygon</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a567db3731e791152a87c8eb96f04b2ec">polygon</a> [MAX_POLYGONS]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structt__mapcoord.html">t_mapcoord</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a433d1c0df3f3a8b6f5bd2cb173fb573c">mapcoord</a> [MAX_VERTICES]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structt__texture.html">t_texture</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a7484036b82683242f108ba57fcafed90">material</a> [MAX_MATERIALS]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#aadc5f7d1faca2c759157604d6427cb43">draw_list</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#a7a1dfa3bc5764462da652231e8745ecd">draw_lists</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structt__model.html#aa6ea9b07932df851a61fa72bd01761fe">size</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Descripción detallada</h2>
 <p>Datos del modelo </p>
 <hr/><h2>Documentación de los campos</h2>
+<a class="anchor" id="aadc5f7d1faca2c759157604d6427cb43"></a><!-- doxytag: member="t_model::draw_list" ref="aadc5f7d1faca2c759157604d6427cb43" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__model.html#aadc5f7d1faca2c759157604d6427cb43">draw_list</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Primer índice a la lista de dibujo compilado de OpenGL </p>
+
+</div>
+</div>
+<a class="anchor" id="a7a1dfa3bc5764462da652231e8745ecd"></a><!-- doxytag: member="t_model::draw_lists" ref="a7a1dfa3bc5764462da652231e8745ecd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__model.html#a7a1dfa3bc5764462da652231e8745ecd">draw_lists</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Número de índices compilados de OpenGL </p>
+
+</div>
+</div>
+<a class="anchor" id="a433d1c0df3f3a8b6f5bd2cb173fb573c"></a><!-- doxytag: member="t_model::mapcoord" ref="a433d1c0df3f3a8b6f5bd2cb173fb573c" args="[MAX_VERTICES]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structt__mapcoord.html">t_mapcoord</a> <a class="el" href="structt__model.html#a433d1c0df3f3a8b6f5bd2cb173fb573c">mapcoord</a>[MAX_VERTICES]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7484036b82683242f108ba57fcafed90"></a><!-- doxytag: member="t_model::material" ref="a7484036b82683242f108ba57fcafed90" args="[MAX_MATERIALS]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structt__texture.html">t_texture</a> <a class="el" href="structt__model.html#a7484036b82683242f108ba57fcafed90">material</a>[MAX_MATERIALS]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4d5084f747b2d61bcddfaddbc7c979d0"></a><!-- doxytag: member="t_model::materials_qty" ref="a4d5084f747b2d61bcddfaddbc7c979d0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structt__model.html#a4d5084f747b2d61bcddfaddbc7c979d0">materials_qty</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Cantidad de materiales </p>
+
+</div>
+</div>
 <a class="anchor" id="a3777dbae63a15da001b2baa317a25149"></a><!-- doxytag: member="t_model::name" ref="a3777dbae63a15da001b2baa317a25149" args="[80]" -->
 <div class="memitem">
 <div class="memproto">
@@ -77,6 +186,19 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a567db3731e791152a87c8eb96f04b2ec"></a><!-- doxytag: member="t_model::polygon" ref="a567db3731e791152a87c8eb96f04b2ec" args="[MAX_POLYGONS]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structt__polygon.html">t_polygon</a> <a class="el" href="structt__model.html#a567db3731e791152a87c8eb96f04b2ec">polygon</a>[MAX_POLYGONS]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a4f43c79d7e9b7e38af52be9386765d8e"></a><!-- doxytag: member="t_model::polygons_qty" ref="a4f43c79d7e9b7e38af52be9386765d8e" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -88,6 +210,32 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
 </div>
 <div class="memdoc">
 <p>Cantidad de polígonos </p>
+
+</div>
+</div>
+<a class="anchor" id="aa6ea9b07932df851a61fa72bd01761fe"></a><!-- doxytag: member="t_model::size" ref="aa6ea9b07932df851a61fa72bd01761fe" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="structt__model.html#aa6ea9b07932df851a61fa72bd01761fe">size</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a87e888832dd0a6f3c92149951a6fb035"></a><!-- doxytag: member="t_model::vertex" ref="a87e888832dd0a6f3c92149951a6fb035" args="[MAX_VERTICES]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_v_e_c_t_o_r.html">VECTOR</a> <a class="el" href="structt__model.html#a87e888832dd0a6f3c92149951a6fb035">vertex</a>[MAX_VERTICES]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -114,7 +262,7 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -123,7 +271,7 @@ float&nbsp;</td><td class="memItemRight" valign="bottom"><b>size</b></td></tr>
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

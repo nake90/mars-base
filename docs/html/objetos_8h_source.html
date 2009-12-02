@@ -14,6 +14,47 @@
 <script type="text/javascript"><!--
 var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 --></script>
+<script type="text/javascript">
+<!--
+function changeDisplayState (e){
+  var num=this.id.replace(/[^[0-9]/g,'');
+  var button=this.firstChild;
+  var sectionDiv=document.getElementById('dynsection'+num);
+  if (sectionDiv.style.display=='none'||sectionDiv.style.display==''){
+    sectionDiv.style.display='block';
+    button.src='open.gif';
+  }else{
+    sectionDiv.style.display='none';
+    button.src='closed.gif';
+  }
+}
+function initDynSections(){
+  var divs=document.getElementsByTagName('div');
+  var sectionCounter=1;
+  for(var i=0;i<divs.length-1;i++){
+    if(divs[i].className=='dynheader'&&divs[i+1].className=='dynsection'){
+      var header=divs[i];
+      var section=divs[i+1];
+      var button=header.firstChild;
+      if (button!='IMG'){
+        divs[i].insertBefore(document.createTextNode(' '),divs[i].firstChild);
+        button=document.createElement('img');
+        divs[i].insertBefore(button,divs[i].firstChild);
+      }
+      header.style.cursor='pointer';
+      header.onclick=changeDisplayState;
+      header.id='dynheader'+sectionCounter;
+      button.src='closed.gif';
+      section.id='dynsection'+sectionCounter;
+      section.style.display='none';
+      section.style.marginLeft='14px';
+      sectionCounter++;
+    }
+  }
+}
+window.onload = initDynSections;
+-->
+</script>
 <div class="navigation" id="top">
   <div class="tabs">
     <ul>
@@ -71,63 +112,95 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 <a name="l00033"></a>00033 <span class="preprocessor">#include &quot;GL/openglut.h&quot;</span>
 <a name="l00034"></a>00034 <span class="preprocessor">#include &quot;IL/ilut.h&quot;</span>
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="comment">/* --- DEFINES --- */</span>
-<a name="l00037"></a><a class="code" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">00037</a> <span class="preprocessor">#define MAX_VERTICES 65536 </span>
-<a name="l00038"></a><a class="code" href="objetos_8h.html#a0aaa578e910c66db37a344dcfc514f3b">00038</a> <span class="preprocessor">#define MAX_POLYGONS 65536 </span>
-<a name="l00048"></a><a class="code" href="objetos_8h.html#a989e0563d45aaff3ba8d7e4c0a740d39">00048</a> <span class="preprocessor">#define MAIN3DS 0x4D4D                          </span>
-<a name="l00050"></a><a class="code" href="objetos_8h.html#adc62d551c5959780c87369cdad3ec29c">00050</a> <span class="preprocessor">#define EDIT_MATERIAL 0xAFFF            </span>
-<a name="l00052"></a><a class="code" href="objetos_8h.html#af00ff38c2ca2f5278a135bc4302f23ce">00052</a> <span class="preprocessor">#define EDIT3DS 0x3D3D                          </span>
-<a name="l00053"></a><a class="code" href="objetos_8h.html#a3382608a5f7d73fc7e5539160aaa4b38">00053</a> <span class="preprocessor">#define EDIT_OBJECT 0x4000                      </span>
-<a name="l00054"></a><a class="code" href="objetos_8h.html#a4925d3d641bec11ca0c49ba3d636393c">00054</a> <span class="preprocessor">#define OBJ_TRIMESH 0x4100                      </span>
-<a name="l00055"></a><a class="code" href="objetos_8h.html#aa2ed62aba74d2ee70c828600be3105f1">00055</a> <span class="preprocessor">#define TRI_VERTEXL 0x4110                      </span>
-<a name="l00056"></a><a class="code" href="objetos_8h.html#a5b77b286ad52d41568fccdac45942765">00056</a> <span class="preprocessor">#define TRI_VERTEXOPTIONS 0x4111        </span>
-<a name="l00057"></a><a class="code" href="objetos_8h.html#a13512db294c63f8477e47aeefcc7697a">00057</a> <span class="preprocessor">#define TRI_FACEL1 0x4120                       </span>
-<a name="l00058"></a><a class="code" href="objetos_8h.html#adf958945f9ca6a11dd6dc9900b038523">00058</a> <span class="preprocessor">#define TRI_MATERIAL 0x4130                     </span>
-<a name="l00059"></a><a class="code" href="objetos_8h.html#a6d9396a66d6d3690152ebff37cab8e2a">00059</a> <span class="preprocessor">#define TRI_MAPPINGCOORS 0x4140         </span>
-<a name="l00060"></a><a class="code" href="objetos_8h.html#ae37eb990650413fcfd3281ff25f89e32">00060</a> <span class="preprocessor">#define TRI_SMOOTH 0x4150                       </span>
-<a name="l00061"></a><a class="code" href="objetos_8h.html#a269b0df4388c015cae6ba837d499dfd5">00061</a> <span class="preprocessor">#define TRI_LOCAL 0x4160                        </span>
-<a name="l00062"></a><a class="code" href="objetos_8h.html#afbee9cf3b965e943dd07b07fd032adff">00062</a> <span class="preprocessor">#define TRI_VISIBLE 0x4165                      </span>
-<a name="l00063"></a><a class="code" href="objetos_8h.html#ae245ca6e00ec7bea4d75d9f9d27d44cb">00063</a> <span class="preprocessor">#define TRI_MAPPINGSTANDARD 0x4170      </span>
-<a name="l00065"></a>00065 <span class="preprocessor"></span><span class="comment">/* - TYPEDEFS usados - */</span>
-<a name="l00066"></a>00066 <span class="comment">/* Vértices */</span>
-<a name="l00067"></a>00067 <span class="comment">/*typedef struct{float x,y,z;}t_vertex; USO VECTOR definido en shared.h */</span>
-<a name="l00068"></a>00068 
-<a name="l00069"></a><a class="code" href="structt__polygon.html">00069</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">int</span> a,b,c; <span class="keywordtype">int</span> texture;}<a class="code" href="structt__polygon.html">t_polygon</a>; 
-<a name="l00070"></a><a class="code" href="structt__mapcoord.html">00070</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">float</span> u,v;}<a class="code" href="structt__mapcoord.html">t_mapcoord</a>; 
-<a name="l00073"></a><a class="code" href="structt__model.html">00073</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00074"></a>00074 {
-<a name="l00075"></a><a class="code" href="structt__model.html#a3777dbae63a15da001b2baa317a25149">00075</a>         <span class="keywordtype">char</span> name[80]; 
-<a name="l00076"></a><a class="code" href="structt__model.html#af45b6a3417c461d69a8af85781ca7080">00076</a>         <span class="keywordtype">int</span> vertices_qty; 
-<a name="l00077"></a><a class="code" href="structt__model.html#a4f43c79d7e9b7e38af52be9386765d8e">00077</a>         <span class="keywordtype">int</span> polygons_qty; 
-<a name="l00078"></a>00078         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vertex[<a class="code" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">MAX_VERTICES</a>]; 
-<a name="l00079"></a>00079         <a class="code" href="structt__polygon.html">t_polygon</a> polygon[<a class="code" href="objetos_8h.html#a0aaa578e910c66db37a344dcfc514f3b">MAX_POLYGONS</a>];
-<a name="l00080"></a>00080         <a class="code" href="structt__mapcoord.html">t_mapcoord</a> mapcoord[<a class="code" href="objetos_8h.html#a0fdb7b933ef091574ff57d1f36dd4167">MAX_VERTICES</a>];
-<a name="l00081"></a>00081         <span class="keywordtype">float</span> size; <span class="comment">/* Valor de la escala */</span>
-<a name="l00082"></a>00082 }<a class="code" href="structt__model.html">t_model</a>, *<a class="code" href="structt__model.html">t_model_ptr</a>;
-<a name="l00083"></a>00083 
-<a name="l00085"></a><a class="code" href="structt__obj__base.html">00085</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00086"></a>00086 {
-<a name="l00087"></a><a class="code" href="structt__obj__base.html#a8e03167ce04350be901b028cc4cf1ce1">00087</a>         <span class="keywordtype">char</span> name[256]; 
-<a name="l00088"></a><a class="code" href="structt__obj__base.html#a7c3957c02c6d110a204adf63166cdcd6">00088</a>         <a class="code" href="structt__model.html">t_model</a> modelo; 
-<a name="l00089"></a><a class="code" href="structt__obj__base.html#adb75f132fa864de961fa8b900dda9c5e">00089</a>         <span class="keywordtype">int</span> icono; 
-<a name="l00090"></a><a class="code" href="structt__obj__base.html#a973f240c50caa6c6c6857e217853d193">00090</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> pos; 
-<a name="l00091"></a><a class="code" href="structt__obj__base.html#af9816f15b9da8a8a09b7afa3f0fe9c7e">00091</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> rot; 
-<a name="l00092"></a><a class="code" href="structt__obj__base.html#a80773f7b73e38fc1936f65e8b102af4d">00092</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vel; 
-<a name="l00093"></a><a class="code" href="structt__obj__base.html#a1386555347bbe012a0440a4ba9578318">00093</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> velang; 
-<a name="l00094"></a>00094 }<a class="code" href="structt__obj__base.html">t_obj_base</a>, *<a class="code" href="structt__obj__base.html">t_obj_base_ptr</a>;
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096 <span class="comment">/* - FUNCIONES - */</span>
-<a name="l00097"></a>00097 <span class="keywordtype">int</span> <a class="code" href="objetos_8c.html#a191f00b4d95e50b73000ed459c27ee37" title="Carga los datos básicos de un objeto desde un archivo 3ds.">load_3DS</a> (t_model_ptr data, <span class="keywordtype">char</span> *filename);
-<a name="l00098"></a>00098 <span class="keywordtype">void</span> <a class="code" href="objetos_8c.html#a0ac96b56eb1c63648a05e7c1fc4a857b" title="Dibuja un objeto mediante OpenGL en las coordenadas correspondientes.">object_draw</a>(<a class="code" href="structt__obj__base.html">t_obj_base</a> <span class="keywordtype">object</span>);
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 <span class="preprocessor">#endif</span>
+<a name="l00036"></a>00036 <span class="comment">/* --- MACROS --- */</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#define obj_setpos(a,b,c,d) a.pos.x=b; a.pos.y=c; a.pos.z=d;</span>
+<a name="l00038"></a>00038 <span class="preprocessor"></span>
+<a name="l00039"></a>00039 <span class="comment">/* --- DEFINES --- */</span>
+<a name="l00040"></a>00040 <span class="preprocessor">#define MAX_VERTICES 65536 </span>
+<a name="l00041"></a>00041 <span class="preprocessor">#define MAX_POLYGONS 65536 </span>
+<a name="l00042"></a>00042 <span class="preprocessor">#define MAX_MATERIALS 256 </span>
+<a name="l00043"></a>00043 <span class="preprocessor">#define objetos_debug 0 </span>
+<a name="l00052"></a>00052 <span class="preprocessor"></span><span class="comment">/* MAIN */</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#define MAIN3DS 0x4D4D                          </span>
+<a name="l00055"></a>00055 <span class="preprocessor"></span><span class="comment">/* MATERIAL */</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#define EDIT_MATERIAL           0xAFFF          </span>
+<a name="l00057"></a>00057 <span class="preprocessor">#define MAT_NAME                        0xA000          </span>
+<a name="l00058"></a>00058 <span class="preprocessor">#define MAT_AMBIENT                     0xA010          </span>
+<a name="l00059"></a>00059 <span class="preprocessor">#define MAT_DIFFUSE                     0xA020          </span>
+<a name="l00060"></a>00060 <span class="preprocessor">#define MAT_SPECULAR            0xA030          </span>
+<a name="l00061"></a>00061 <span class="preprocessor">#define MAT_SHININESS           0xA040          </span>
+<a name="l00062"></a>00062 <span class="preprocessor">#define MAT_SHIN2PCT            0xA041          </span>
+<a name="l00063"></a>00063 <span class="preprocessor">#define MAT_SHIN3PCT            0xA042          </span>
+<a name="l00064"></a>00064 <span class="preprocessor">#define MAT_TRANSPARENCY        0xA050          </span>
+<a name="l00065"></a>00065 <span class="preprocessor">#define MAT_XPFALL                      0xA052          </span>
+<a name="l00066"></a>00066 <span class="preprocessor">#define MAT_REFBLUR                     0xA053          </span>
+<a name="l00067"></a>00067 <span class="preprocessor">#define MAT_TEX1                        0xA200          </span>
+<a name="l00068"></a>00068 <span class="preprocessor">#define MAT_MASK1                       0xA33E          </span>
+<a name="l00069"></a>00069 <span class="preprocessor">#define MAT_SUB_RGB                     0x0011          </span>
+<a name="l00070"></a>00070 <span class="preprocessor">#define MAT_SUB_PER                     0x0030          </span>
+<a name="l00071"></a>00071 <span class="preprocessor">#define MAT_MAPNAME                     0xA300          </span>
+<a name="l00073"></a>00073 <span class="preprocessor"></span><span class="comment">/* OBJECT */</span>
+<a name="l00074"></a>00074 <span class="preprocessor">#define EDIT3DS 0x3D3D                          </span>
+<a name="l00075"></a>00075 <span class="preprocessor">#define EDIT_OBJECT 0x4000                      </span>
+<a name="l00076"></a>00076 <span class="preprocessor">#define OBJ_TRIMESH 0x4100                      </span>
+<a name="l00077"></a>00077 <span class="preprocessor">#define TRI_VERTEXL 0x4110                      </span>
+<a name="l00078"></a>00078 <span class="preprocessor">#define TRI_VERTEXOPTIONS 0x4111        </span>
+<a name="l00079"></a>00079 <span class="preprocessor">#define TRI_FACEL1 0x4120                       </span>
+<a name="l00080"></a>00080 <span class="preprocessor">#define TRI_MATERIAL 0x4130                     </span>
+<a name="l00084"></a>00084 <span class="preprocessor">#define TRI_MAPPINGCOORS 0x4140         </span>
+<a name="l00085"></a>00085 <span class="preprocessor">#define TRI_SMOOTH 0x4150                       </span>
+<a name="l00086"></a>00086 <span class="preprocessor">#define TRI_LOCAL 0x4160                        </span>
+<a name="l00087"></a>00087 <span class="preprocessor">#define TRI_VISIBLE 0x4165                      </span>
+<a name="l00088"></a>00088 <span class="preprocessor">#define TRI_MAPPINGSTANDARD 0x4170      </span>
+<a name="l00090"></a>00090 <span class="preprocessor"></span><span class="comment">/* - TYPEDEFS usados - */</span>
+<a name="l00091"></a>00091 <span class="comment">/* Vértices */</span>
+<a name="l00092"></a>00092 <span class="comment">/*typedef struct{float x,y,z;}t_vertex; USO VECTOR definido en shared.h */</span>
+<a name="l00093"></a>00093 
+<a name="l00094"></a><a class="code" href="structt__polygon.html#a9784cd49d66743fe8c75ec6d73b216c1">00094</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">int</span> a,b,c; <span class="keywordtype">int</span> texture;}<a class="code" href="structt__polygon.html">t_polygon</a>; 
+<a name="l00095"></a><a class="code" href="structt__mapcoord.html#a48d9522e58fa05906c6dba23e5745a72">00095</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>{<span class="keywordtype">float</span> u,v;}<a class="code" href="structt__mapcoord.html">t_mapcoord</a>; 
+<a name="l00098"></a><a class="code" href="structt__model.html">00098</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00099"></a>00099 {
+<a name="l00100"></a><a class="code" href="structt__model.html#a3777dbae63a15da001b2baa317a25149">00100</a>         <span class="keywordtype">char</span> name[80]; 
+<a name="l00101"></a><a class="code" href="structt__model.html#af45b6a3417c461d69a8af85781ca7080">00101</a>         <span class="keywordtype">int</span> vertices_qty; 
+<a name="l00102"></a><a class="code" href="structt__model.html#a4f43c79d7e9b7e38af52be9386765d8e">00102</a>         <span class="keywordtype">int</span> polygons_qty; 
+<a name="l00103"></a><a class="code" href="structt__model.html#a4d5084f747b2d61bcddfaddbc7c979d0">00103</a>         <span class="keywordtype">int</span> materials_qty; 
+<a name="l00105"></a><a class="code" href="structt__model.html#a87e888832dd0a6f3c92149951a6fb035">00105</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vertex[MAX_VERTICES]; 
+<a name="l00106"></a><a class="code" href="structt__model.html#a567db3731e791152a87c8eb96f04b2ec">00106</a>         <a class="code" href="structt__polygon.html">t_polygon</a> polygon[MAX_POLYGONS];
+<a name="l00107"></a><a class="code" href="structt__model.html#a433d1c0df3f3a8b6f5bd2cb173fb573c">00107</a>         <a class="code" href="structt__mapcoord.html">t_mapcoord</a> mapcoord[MAX_VERTICES];
+<a name="l00108"></a><a class="code" href="structt__model.html#a7484036b82683242f108ba57fcafed90">00108</a>         <a class="code" href="structt__texture.html">t_texture</a> material[MAX_MATERIALS];
+<a name="l00109"></a>00109         <span class="comment">//char material_name_list[MAX_MATERIALS][256];</span>
+<a name="l00110"></a>00110         
+<a name="l00111"></a><a class="code" href="structt__model.html#aadc5f7d1faca2c759157604d6427cb43">00111</a>         <span class="keywordtype">int</span> draw_list; 
+<a name="l00112"></a><a class="code" href="structt__model.html#a7a1dfa3bc5764462da652231e8745ecd">00112</a>         <span class="keywordtype">int</span> draw_lists; 
+<a name="l00114"></a><a class="code" href="structt__model.html#aa6ea9b07932df851a61fa72bd01761fe">00114</a>         <span class="keywordtype">float</span> size; <span class="comment">/* Valor de la escala */</span>
+<a name="l00115"></a>00115 }<a class="code" href="structt__model.html">t_model</a>, *<a class="code" href="structt__model.html">t_model_ptr</a>;
+<a name="l00116"></a>00116 
+<a name="l00118"></a><a class="code" href="structt__obj__base.html">00118</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00119"></a>00119 {
+<a name="l00120"></a><a class="code" href="structt__obj__base.html#a8e03167ce04350be901b028cc4cf1ce1">00120</a>         <span class="keywordtype">char</span> name[256]; 
+<a name="l00121"></a><a class="code" href="structt__obj__base.html#a46ccf22ee8aae5f242b6288522e83df7">00121</a>         t_model_ptr modelo; 
+<a name="l00122"></a><a class="code" href="structt__obj__base.html#adb75f132fa864de961fa8b900dda9c5e">00122</a>         <span class="keywordtype">int</span> icono; 
+<a name="l00123"></a><a class="code" href="structt__obj__base.html#a973f240c50caa6c6c6857e217853d193">00123</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> pos; 
+<a name="l00124"></a><a class="code" href="structt__obj__base.html#af9816f15b9da8a8a09b7afa3f0fe9c7e">00124</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> rot; 
+<a name="l00125"></a><a class="code" href="structt__obj__base.html#a80773f7b73e38fc1936f65e8b102af4d">00125</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> vel;  <span class="comment">/* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */</span>
+<a name="l00126"></a><a class="code" href="structt__obj__base.html#a1386555347bbe012a0440a4ba9578318">00126</a>         <a class="code" href="struct_v_e_c_t_o_r.html">VECTOR</a> velang; 
+<a name="l00127"></a><a class="code" href="structt__obj__base.html#a3eb37abb5eae00ddc82fe7c11ab6c7f1">00127</a>         <span class="keywordtype">float</span> sq_a, sq_b; 
+<a name="l00129"></a>00129 }<a class="code" href="structt__obj__base.html">t_obj_base</a>, *<a class="code" href="structt__obj__base.html">t_obj_base_ptr</a>;
+<a name="l00130"></a>00130 
+<a name="l00131"></a>00131 <span class="comment">/* - FUNCIONES - */</span>
+<a name="l00132"></a>00132 <span class="keywordtype">int</span> <a class="code" href="objetos_8c.html#a191f00b4d95e50b73000ed459c27ee37" title="Carga los datos básicos de un objeto desde un archivo 3ds.">load_3DS</a> (t_model_ptr data, <span class="keywordtype">char</span> *filename);
+<a name="l00133"></a>00133 <span class="keywordtype">void</span> <a class="code" href="objetos_8c.html#a61bf4c34c43ed31fbf6befa77c832c5d" title="Dibuja un objeto mediante OpenGL en la lista correspondiente.">object_predraw</a>(t_obj_base_ptr <span class="keywordtype">object</span>);
+<a name="l00134"></a>00134 <span class="keywordtype">void</span> <a class="code" href="objetos_8c.html#a0ac96b56eb1c63648a05e7c1fc4a857b" title="Dibuja un objeto mediante OpenGL en las coordenadas correspondientes.">object_draw</a>(<a class="code" href="structt__obj__base.html">t_obj_base</a> <span class="keywordtype">object</span>);
+<a name="l00135"></a>00135 <span class="keywordtype">void</span> <a class="code" href="objetos_8c.html#abe5991ccae962bce117d31065fe2432b" title="Dibuja un objeto mediante listas de OpenGL en las coordenadas correspondientes.">object_draw_l</a>(t_obj_base_ptr <span class="keywordtype">object</span>);
+<a name="l00136"></a>00136 
+<a name="l00137"></a>00137 <span class="preprocessor">#endif</span>
 </pre></div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Definiciones</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&nbsp;</span>Todo</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&nbsp;</span>Estructuras de Datos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&nbsp;</span>Archivos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&nbsp;</span>Funciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&nbsp;</span>Tipos definidos</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&nbsp;</span>Enumeraciones</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&nbsp;</span>Valores de la enumeración</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -136,7 +209,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Buscar');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generado el Thu Nov 19 16:48:57 2009 para Mars Base por&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generado el Tue Dec 1 15:56:50 2009 para Mars Base por&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
