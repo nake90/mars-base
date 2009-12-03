@@ -5,13 +5,14 @@
 
 Recomiendo que *no* uses los binarios, ya que prácticamente siempre, en este estado del juego, estarán desactualizados y pueden tener bugs y/o que le falten cosas.
 
-Si aun así quieres descargar los binarios: *[http://code.google.com/p/mars-base/downloads/list]*
+<font size=4>Si aun así quieres descargar los binarios: *[http://mars-base.googlecode.com/svn/tags]*</font>
 
+----
 ----
 
 = Uso del TortoiseSVN =
 
-<font color=red> *[http://tortoisesvn.net/downloads Descargar TortoiseSVN]* </font>
+<font color=red>*[http://tortoisesvn.net/downloads Descargar TortoiseSVN]* </font>
 
 
 == Descargar datos por primera vez ==
