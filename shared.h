@@ -92,6 +92,8 @@ void scr_init_printf (const char *fmt, ...);
 void scr_init_reprintf (const char *fmt, ...);/* Como scr_init_printf pero sobre la última línea */
 void position_printf (float x, float y, float z, const char *fmt, ...);
 void hud_printf (int col, int row, const char *fmt, ...);
+void set_gl_mode(void);
+void restore_gl_mode(void);
 
 void use_texture (t_texture texture);
 

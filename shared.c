@@ -338,6 +338,48 @@ void debug_printf(const char *fmt, ...)
 
 /* - PRINTING - */
 
+void set_gl_mode(void)
+{
+	/* Guardamos las matrices de proyección y de modelo */
+	glMatrixMode (GL_MODELVIEW);
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0,glutGet(GLUT_WINDOW_WIDTH),glutGet(GLUT_WINDOW_HEIGHT),0);
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity();
+	
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_FOG);
+	glDisable(GL_DEPTH_TEST);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_CULL_FACE);
+	
+	glColor3f(1.0f, 1.0f, 1.0f);
+	
+}
+
+void restore_gl_mode(void)
+{
+	/* Cargamos las matrices de proyección y de modelo */
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_FOG);
+	glEnable(GL_DEPTH_TEST);
+	glColor3f(1.0f, 1.0f, 1.0f);
+}
+
 /*! \fn void position_printf(float x, float y, float z, const char *fmt, ...)
  *  \brief Muestra texto en el mundo en 3D al estilo de printf
  *  \param x,y,z Posición del texto en el mundo
@@ -355,6 +397,7 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
     va_end(args);
     
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
 	
     glGetIntegerv(GL_VIEWPORT,viewport);
 

@@ -53,4 +53,9 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 	return 0;
-}	
+}
+int unload_material (t_texture *texture)
+{
+	//ilDeleteImages(1,
+	return 0;
+}
