@@ -126,6 +126,7 @@ void draw_grid(t_heightmap map, int x, int y)
 
 void display(void)
 {
+	
 	int i;
     int j;
     VECTOR v;
@@ -134,7 +135,8 @@ void display(void)
     float r2,b2;
     float r3,b3;
     float r4,b4;
-
+	
+	glMatrixMode(GL_MODELVIEW);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -145,18 +147,16 @@ void display(void)
     glRotatef(-camera.roll, sin(RAD(-camera.yaw)),cos(RAD(-camera.yaw)),-sin(RAD(camera.pitch)));
 	/* Dibujos estáticos (Sky) */
 	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 	draw_fixsprite(sun.position[0],sun.position[1],sun.position[2]+SUN_SIZE,sun_texture,SUN_SIZE);
-	glBlendFunc(GL_ONE,GL_ZERO);
-	glDisable(GL_BLEND);
+	//glBlendFunc(GL_ONE,GL_ZERO);
+	//glDisable(GL_BLEND);
 	
 	/* Dibujo normal */
 	glTranslatef(-camera.pos_x,-camera.pos_y,-camera.pos_z);
     glEnable(GL_LIGHTING);
     glEnable(GL_FOG);
-	
-	
 	
 	
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
@@ -187,14 +187,30 @@ void display(void)
 	/* Dibujamos los objetos */
 	object_draw_l(&(test));
 	
+	
+	
     glDisable(GL_LIGHTING);
     
 	/* Dibujamos el HUD */
 	draw_HUD();
-	hud_printf (0, 8, "Altura hasta el suelo: %f",coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y));
+	hud_printf (1, 8, "Altura hasta el suelo: %f",coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y));
+	
 	glutSwapBuffers();
 }
 
+static void control (void)
+{
+	if(camera.pitch<0){camera.pitch=0;}
+	if(camera.pitch>180){camera.pitch=180;}
+	if(camera.yaw<0){camera.yaw+=360;}
+	if(camera.yaw>=360){camera.yaw-=360;}
+	if(camera.roll<0){camera.roll+=360;}
+	if(camera.roll>=360){camera.roll-=360;}
+	if (camera.pos_x<(-marte.tam_x/2)*marte.scale -marte.ini_x){camera.pos_x=(-marte.tam_x/2)*marte.scale -marte.ini_x;}
+	if (camera.pos_x>(+marte.tam_x/2)*marte.scale -marte.ini_x -marte.scale*2){camera.pos_x=(+marte.tam_x/2)*marte.scale -marte.ini_x -marte.scale*2;}
+	if (camera.pos_y<(-marte.tam_y/2)*marte.scale -marte.ini_y){camera.pos_y=(-marte.tam_y/2)*marte.scale -marte.ini_y;}
+	if (camera.pos_y>(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale){camera.pos_y=(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale;}
+}
 
 static void
 key(unsigned char key, int x, int y)
@@ -259,7 +275,7 @@ key(unsigned char key, int x, int y)
     default:
         break;
     }
-	
+	control();
     glutPostRedisplay();
 }
 
@@ -303,6 +319,7 @@ special_keys(int key, int x, int y)
 	
 	/* Evitamos el estar bajo la tierra */
 	if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_x=last_x;camera.pos_y=last_y;camera.pos_z=last_z;}
+	control();
 	
     glutPostRedisplay();
 }
@@ -332,6 +349,7 @@ void mouse_but(int button, int state,int x, int y)
 	{
 		b_raton[B_CEN_RATON]=(state-GLUT_DOWN)?0:1;
 	}
+	control();
 }
 
 static /* Si se mueve el ratón mientras se está pulsando algun botón del ratón */
@@ -372,6 +390,8 @@ void mouse_move_but(int x, int y)
 	}
 	p_raton_last_pres[0]=x;
 	p_raton_last_pres[1]=y;
+	
+	control();
 }
 
 static /* Si se mueve el ratón mientras NO se pulsa algun botón del ratón */
@@ -385,6 +405,7 @@ void salir (void)
 {
 	destroy_heightmap(&marte);
 	glDeleteLists(test.modelo->draw_list,1);
+	/* FALTA BORRAR DE LA MEMORIA LAS IMÁGENES! */
 }
 
 static

@@ -10,7 +10,7 @@ normalmente durante el perihelion
 
 -Atmósfera-
 presión: ~600–1000 Pa (Mín: 30Pa en Olympus Mons's (+27km de altura), Máx: 1155Pa en Hellas Planitia (-7km de altura))
-temperatura: 186 K; ~227 K; 268 K
+temperatura: 140 K; ~218 K; 300 K
 CO2: 95.72%
 Ar: 1.6%
 O2: 0.2%

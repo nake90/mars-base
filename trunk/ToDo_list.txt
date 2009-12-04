@@ -1,5 +1,14 @@
 !!!!GRID	<-OnIt
 !!!	Botones, menus, iconos, y todos sus correspondientes elementos de control	<-OnIt
+	- Sistema, funciones base, structs, ... OK
+	- Box OK
+	- Line Ok
+	- Label Ok
+	- Bitmap
+	- Icon
+	- Button
+	- TabButton
+	- TabFrame
 !!	TRACES
 !!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
 !!	Menú para el spawn de objetos
