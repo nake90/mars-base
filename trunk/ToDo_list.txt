@@ -1,6 +1,6 @@
-!!!!GRID	<-OnIt
 !!!	Botones, menus, iconos, y todos sus correspondientes elementos de control	<-OnIt
 	- Sistema, funciones base, structs, ... OK
+	- Funciones básicas de control de eventos
 	- Box OK
 	- Line Ok
 	- Label Ok
@@ -19,3 +19,4 @@
 !	Funciones de transferencia de calor, gases y presión
 !	Console
 !	Acabar el Sol (Es un poco cutre)
+!	Grid

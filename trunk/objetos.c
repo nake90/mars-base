@@ -279,6 +279,8 @@ int load_3DS (t_model_ptr data, char *filename)
 
 void object_predraw(t_obj_base_ptr object)
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	int l_index;
 	glDisable(GL_LIGHTING);
 	
@@ -324,6 +326,7 @@ void object_predraw(t_obj_base_ptr object)
 	glEndList();
 	l_index=glGetError();
 	if (l_index){debug_printf("ERROR: OpenGL ha retornado %i al llamar a object_predraw() - Esto no debería de haber pasado nunca, que raro...\n",l_index);}
+	glPopMatrix();
 }
 
 
@@ -337,6 +340,8 @@ void object_predraw(t_obj_base_ptr object)
 void object_draw_l(t_obj_base_ptr object)
 {
 	int l_index;
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	glEnable(GL_LIGHTING);
 	
     glRotatef(object->rot.y, 0,0,1.0f);
@@ -347,8 +352,21 @@ void object_draw_l(t_obj_base_ptr object)
     glTranslatef(object->pos.x,object->pos.y,object->pos.z);
     
     glCallList(object->modelo->draw_list);
+	glPopMatrix();
 }
 
+void model_unload(t_model_ptr model)
+{
+	int i;
+	glDeleteLists(model->draw_list,1);
+	model->draw_list=0;
+	ilBindImage(0);
+	ilDeleteImages(model->materials_qty,model->material[i].texture);
+	for (i=0; i<model->materials_qty; i++)
+	{
+		model->material[i].texture[0]=0;
+	}
+}
 
 /*! \fn void object_draw(t_obj_base object)
  *  \brief Dibuja un objeto mediante OpenGL en las coordenadas correspondientes
@@ -360,6 +378,8 @@ void object_draw_l(t_obj_base_ptr object)
 
 void object_draw(t_obj_base object)
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	int l_index;
 	glEnable(GL_LIGHTING);
 	
@@ -399,4 +419,5 @@ void object_draw(t_obj_base object)
                     object.modelo->vertex[ object.modelo->polygon[l_index].c ].z *object.modelo->size);
     }
     glEnd();
+	glPopMatrix();
 }

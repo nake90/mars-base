@@ -106,7 +106,6 @@ typedef struct
 	t_polygon polygon[MAX_POLYGONS];
 	t_mapcoord mapcoord[MAX_VERTICES];
 	t_texture material[MAX_MATERIALS];
-	//char material_name_list[MAX_MATERIALS][256];
 	
 	int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
 	int draw_lists; /*!< Número de índices compilados de OpenGL */
@@ -133,5 +132,6 @@ int load_3DS (t_model_ptr data, char *filename);
 void object_predraw(t_obj_base_ptr object);
 void object_draw(t_obj_base object);
 void object_draw_l(t_obj_base_ptr object);
+void model_unload(t_model_ptr model);
 
 #endif

@@ -69,15 +69,16 @@ int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla 
 
 
 t_model test_data;
+t_model test2_data;
 t_obj_base test;
+t_obj_base test2;
 
 /* Niebla y atmósfera */
 GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
-GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y distancia máxima visible */
+GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y distancia máxima visible en metros, pregunta interesante... distancia máxima 50Km?? */
 
-/* TEXTURAS BÁSICAS -- ToDo: Transformarlas en materiales y cargarlas al principio como todos los materiales */
-/*					AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
-t_texture sand;//={{0.2f, 0.2f, 0.2f, 1.0f},{0.92f, 0.72f, 0.21f, 1.0f},{0.05f, 0.05f, 0.05f, 1.0f},{1.0},{0}};
+/* TEXTURAS BÁSICAS */
+t_texture sand;
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
 t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
@@ -115,11 +116,11 @@ void draw_grid(t_heightmap map, int x, int y)
 		if(i!=0){glColor3d(0.7f,0.7f,1.0f);}else{glColor3d(0.0f,0.0f,1.0f);}
 		glBegin(GL_LINES);
 			/* Horizontal */
-			glVertex3f( (map.tam_x-x+1 - half_x)*map.scale+i, (y   - half_y)*map.scale, 0.0f);
-			glVertex3f( (map.tam_x-x+1 - half_x)*map.scale+i, (y+1 - half_y)*map.scale, 0.0f);
+			glVertex3f( (map.tam_x-x-1 - half_x)*map.scale-map.ini_x +i, (y+1 - half_y)*map.scale-map.ini_y, get_real_height(map,(map.tam_x-x-1 - half_x)*map.scale-map.ini_x +i, (y+1 - half_y)*map.scale-map.ini_y));
+			glVertex3f( (map.tam_x-x-1 - half_x)*map.scale-map.ini_x +i, (y+2 - half_y)*map.scale-map.ini_y, get_real_height(map,(map.tam_x-x-1 - half_x)*map.scale-map.ini_x +i, (y+2 - half_y)*map.scale-map.ini_y));
 			/* Vertical */
-			//glVertex3f( TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
-			//glVertex3f(-TERR_SIZE * 1.0f, i * 1.0f, 0.0f);
+			glVertex3f( (map.tam_x-x-0 - half_x)*map.scale-map.ini_x, (y+1  - half_y)*map.scale-map.ini_y+i, 0.0f);
+			glVertex3f( (map.tam_x-x-1 - half_x)*map.scale-map.ini_x, (y+1  - half_y)*map.scale-map.ini_y+i, 0.0f);
 		glEnd();
 	}
 }
@@ -169,8 +170,8 @@ void display(void)
 	/* - Display Casillas - FIXME!!!!! (casillas solo de la zona actual, de 1x1m^2) */
    	/*if (show_grid)
 	{*/
-		//draw_grid(marte, ((int)(camera.pos_x/marte.scale))-marte.ini_x, ((int)(camera.pos_y/marte.scale))-marte.ini_y);
-		//hud_printf (0, 9, "(%i,%i)",((int)((camera.pos_x-(marte.ini_x*marte.scale))/marte.scale)+marte.ini_x/2), ((int)((camera.pos_y-(marte.ini_y*marte.scale))/marte.scale)+marte.tam_y/2));
+		//draw_grid(marte, (int)(-((camera.pos_x+marte.ini_x)/marte.scale) + marte.tam_x/2), (int)(((camera.pos_y+marte.ini_y)/marte.scale) + marte.tam_y/2)-1);
+		//hud_printf (1, 9, "(%i,%i)",(int)(((camera.pos_x+marte.ini_x)/marte.scale) + marte.tam_x/2), (int)(-((camera.pos_y+marte.ini_y)/marte.scale) + marte.tam_y/2)-1);
 	/*}*/
 	glColor3d(1.0,1.0,1.0);
 	
@@ -186,6 +187,7 @@ void display(void)
 	
 	/* Dibujamos los objetos */
 	object_draw_l(&(test));
+	object_draw_l(&(test2));
 	
 	
 	
@@ -327,8 +329,6 @@ special_keys(int key, int x, int y)
 static void
 idle(void)
 {
-	/* ¿Aún bajo tierra? Enseguida lo arreglamos... *//* O no... xD*/
-	//if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_z=-coord_to_real_height(marte,0);}
 	glutPostRedisplay();
 }
 
@@ -404,8 +404,9 @@ static
 void salir (void)
 {
 	destroy_heightmap(&marte);
-	glDeleteLists(test.modelo->draw_list,1);
-	/* FALTA BORRAR DE LA MEMORIA LAS IMÁGENES! */
+	model_unload(test.modelo);
+	unload_material(&sand);
+	unload_material(&sun_texture);
 }
 
 static
@@ -520,9 +521,14 @@ int main(int argc, char *argv[])
 	
 	scr_init_printf ("Cargando modelos...");
 	test.modelo=&test_data;
-	if(load_3DS(test.modelo,"models\\test.3ds")!=0){exit(1);}
+	if(load_3DS(test.modelo,"models\\base\\hq_general_4_8x8\\hq_general_4_8x8.3ds")!=0){exit(1);}
 	object_predraw(&(test));
 	obj_setpos(test,0,0,0);
+	
+	test2.modelo=&test2_data;
+	if(load_3DS(test2.modelo,"models\\base\\ps_general_2_2x8\\ps_general_2_2x8.3ds")!=0){exit(1);}
+	object_predraw(&(test2));
+	obj_setpos(test2,-8,0,0);
 	
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);

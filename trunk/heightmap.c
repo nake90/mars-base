@@ -348,26 +348,19 @@ float z_to_real_height(t_heightmap obj, int z)/* Transforma una z (0-255) a su a
 	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
 }
 
-float coord_to_real_height(t_heightmap obj, float z)/* Transforma una coordenada z (como el de la cámara) a su altura real */
+float coord_to_real_height(t_heightmap obj, float z)/* Transforma una coordenada z (como la de la cámara) a su altura real */
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	return -((128-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale+obj.ini_z+z+23;
 	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
 }
 
-float real_height_to_coord(t_heightmap obj, float z)/* Transforma una coordenada z (como el de la cámara) a su altura real */
+float real_height_to_coord(t_heightmap obj, float z)/* Transforma una altura real a su coordenada z (como la de la cámara) */
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	return -((128-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale+obj.ini_z+z+23;
 	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
 }
-
-/*
-float get_real_height (int x, int y, t_heightmap obj)/* Obtiene el valor de la altura real de una casilla no centrada (0->tamaño_mapa) */
-/*{
-	if (x<0 || x>obj.tam_x || y<0 || y>obj.tam_y){return 0;}
-	return _get_real_height(obj.data[x+y*obj.tam_x],obj);
-}*/
 
 void compile_map(t_heightmap* obj, t_texture texture)
 {
