@@ -28,9 +28,10 @@
 #ifndef MATERIALES_H
 #define MATERIALES_H
 #include "shared.h"
+#include "IL/ilut.h"
 
 int load_material (t_texture *texture, const char* ruta_);
-
+void unload_material (t_texture *texture);
 
 
 
