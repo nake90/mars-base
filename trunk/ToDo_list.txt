@@ -20,3 +20,4 @@
 !	Console
 !	Acabar el Sol (Es un poco cutre)
 !	Grid
+!	Triángulos lejanos de mayor tamaño para aumentar el rendimiento
