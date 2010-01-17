@@ -3,10 +3,17 @@
 
 = Descargar binarios =
 
-Recomiendo que *no* uses los binarios, ya que prácticamente siempre, en este estado del juego, estarán desactualizados y pueden tener bugs y/o que le falten cosas.
+Recomiendo que *no* uses los binarios, ya que prácticamente siempre, en este estado de desarrollo, estarán desactualizados y pueden tener bugs y/o que le falten cosas.
 
 <font size=4>Si aun así quieres descargar los binarios: *[http://mars-base.googlecode.com/svn/tags]*</font>
 
+Formato de las descargas: `mars_base_v<mayor>.<menor>.<actualización>.<build>_<tipo>.zip`
+Normalmente necesitarás la última versión y, a ser posible la de tipo binario.
+
+Tipos:
+ * *BIN* -> Binarios para Windows. Perfecto para el que solo quiere jugar/probar el juego. Solo tiene los archivos necesarios ya compilados para tan solo necesitar hacer click en mars-base.exe.
+ * *ALL* -> Contiene todos los archivos actuales del programa (Binarios y source). Es igual que el BIN, con el código. Se puede usar para jugar sin más, pero también para leer/editar el código o compilarlo por tu cuenta.
+ * *SRC* -> Tan solo tiene el código. Hace falta compilarlo.
 ----
 ----
 
