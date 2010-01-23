@@ -45,17 +45,17 @@ void draw_minimap(GLuint minimap)
 	
 	glBegin(GL_QUADS);
 		glTexCoord2f(1,1);
-		glVertex2i(glutGet(GLUT_WINDOW_WIDTH)-2, 2);
+		glVertex2i(scr_width-2, 2);
 		glTexCoord2f(0,1);
-		glVertex2i(glutGet(GLUT_WINDOW_WIDTH)-w/4-2, 2);
+		glVertex2i(scr_width-w/4-2, 2);
 		glTexCoord2f(0,0);
-		glVertex2i(glutGet(GLUT_WINDOW_WIDTH)-w/4-2, h/4+2);
+		glVertex2i(scr_width-w/4-2, h/4+2);
 		glTexCoord2f(1,0);
-		glVertex2i(glutGet(GLUT_WINDOW_WIDTH)-2, h/4+2);
+		glVertex2i(scr_width-2, h/4+2);
 	glEnd();
 	
 	float x, y;
-	x = (((camera.pos_x+marte.ini_x)/marte.scale) + marte.tam_x/2)/marte.tam_x  *w/4 +glutGet(GLUT_WINDOW_WIDTH)-w/4-2;
+	x = (((camera.pos_x+marte.ini_x)/marte.scale) + marte.tam_x/2)/marte.tam_x  *w/4 +scr_width-w/4-2;
 	y = (-((camera.pos_y+marte.ini_y)/marte.scale) + marte.tam_y/2)/marte.tam_y  *h/4 +2;
 	
 	glDisable(GL_TEXTURE_2D);
@@ -80,20 +80,57 @@ void draw_minimap(GLuint minimap)
 
 void draw_HUD(void)
 {
+/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
 	DIALOG box1 = {d_box_proc, 0, 0, 430, 150 ,{0,255,0,128} ,{0,128,0,128}, 0, 0, 0, 0, NULL, NULL, NULL};
+	/*DIALOG lbl_test[] = {
+	{d_label_proc, 20, 220, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo1!", fntArial12, NULL},
+	{d_label_proc, 20, 232, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo2!", fntArial12, NULL},
+	{d_label_proc, 20, 244, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo3!", fntArial12, NULL},
+	{d_label_proc, 20, 256, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo4!", fntArial12, NULL},
+	{NULL_DIALOG}};
+	
+	draw_dialog(lbl_test);*/
 	draw_element(box1);
+	
 	draw_minimap(minimapa);
 	
-	hud_printf (1, 0, "Mars Base - v" VER_STRING);
-	hud_printf (1, 1, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
-	hud_printf (1, 2, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
-	hud_printf (1, 3, "Flechas para moverse, shift para ir muy rápido");
-	hud_printf (1, 4, "WASD+QE -> Girar cámara");
-	hud_printf (1, 5, "IJKL -> Girar objeto");
-	hud_printf (1, 6, "C/V -> Ver/ocultar la cuadrícula");
-	hud_printf (1, 7, "B/N -> Ver/ocultar las normales");
+	hud_printf (12, 2*12, "Mars Base - v" VER_STRING);
+	hud_printf (12, 3*12, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
+	hud_printf (12, 4*12, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
+	hud_printf (12, 5*12, "Flechas para moverse, shift para ir muy rápido");
+	hud_printf (12, 6*12, "WASD+QE -> Girar cámara");
+	hud_printf (12, 7*12, "IJKL -> Girar objeto");
+	hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrícula");
+	hud_printf (12, 9*12, "B/N -> Ver/ocultar las normales");
 }
 
+/*! \fn int draw_dialog(DIALOG d[])
+ *  \brief Dibuja todos los elementos del dialog. NOTA: No inicializa el dialog, solo los dibuja
+ *  \param d[] Matriz de dialogs, el último elemento debe ser NULL_DIALOG
+ *  \return D_O_K Si todo fué bien
+*/
+
+int draw_dialog(DIALOG d[])
+{
+	int res=D_O_K;
+	int ret;
+	int cont=0;
+	set_gl_mode();
+	while(d[cont].df!=NULL)
+	{
+		ret=d[cont].df(MSG_DRAW,&d[cont],0);
+		if(ret!=D_O_K){res=ret;}
+		cont++;
+	}
+	restore_gl_mode();
+	return res;
+}
+
+/*! \fn int draw_element(DIALOG d)
+ *  \brief Envía un mensaje de dibujo al dialog. NOTA: No inicializa el elemento
+ *  \param d Dialog que se debe dibujar
+ *  \return D_O_K Si todo fué bien
+*/
 int draw_element(DIALOG d)
 {
 	int res;
@@ -102,6 +139,7 @@ int draw_element(DIALOG d)
 	restore_gl_mode();
 	return res;
 }
+
 
 int d_box_proc(int msg, struct st_Dialog * d, int c)
 {
@@ -164,10 +202,6 @@ int d_line_proc(int msg, struct st_Dialog * d, int c)
 
 int d_label_proc(int msg, struct st_Dialog * d, int c)
 {
-	void *font = GLUT_STROKE_ROMAN;
-	int size=d->d1;
-	if (size<=0){size=1;}
-	if (size>16){size=16;}
 	switch (msg)
 	{
 		case MSG_START:
@@ -178,30 +212,17 @@ int d_label_proc(int msg, struct st_Dialog * d, int c)
 			break;
 		case MSG_DRAW:
 			glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
+			SDL_Color clrFg = {d->fg.r, d->fg.g, d->fg.b, d->fg.a}; /* Color del texto */
+			
 			glBegin(GL_QUADS);
-				glVertex2i(d->x, d->y);				/* Arriba izquierda */
-				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
-				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
-				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
+				glVertex2i(d->x, d->y-d->h);		/* Arriba izquierda */
+				glVertex2i(d->x, d->y);				/* Abajo izquierda */
+				glVertex2i(d->x+d->w, d->y);		/* Abajo derecha */
+				glVertex2i(d->x+d->w, d->y-d->h);	/* Arriba derecha */
 			glEnd();
-			glMatrixMode(GL_MODELVIEW);
-			glPushMatrix();
-			glLoadIdentity();
 			
-			glMatrixMode(GL_PROJECTION);
-			glPushMatrix();
-			glLoadIdentity();
-			glOrtho(0,glutGet(GLUT_WINDOW_WIDTH)*(17-size),0,glutGet(GLUT_WINDOW_HEIGHT)*(17-size),-1,1);
+			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x, d->y, 0.1);
 			
-			glMatrixMode(GL_MODELVIEW);
-			glTranslatef(d->x*(17-size)+10, (glutGet(GLUT_WINDOW_HEIGHT) - d->y)*(17-size)-119.05, 0.0f);
-			
-			glutStrokeString (font, (unsigned char *) d->dp);
-			
-			glMatrixMode(GL_PROJECTION);
-			glPopMatrix();
-			glMatrixMode(GL_MODELVIEW);
-			glPopMatrix();
 			break;
 		case MSG_IDLE:
 			

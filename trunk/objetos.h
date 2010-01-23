@@ -30,8 +30,11 @@
 #define OBJETOS_H
 
 #include "shared.h"
-#include "GL/openglut.h"
-#include "IL/ilut.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <SDL/SDL.h>
+#include <SDL_ttf.h>
+#include <IL/ilut.h>
 
 /* --- MACROS --- */
 #define obj_setpos(a,b,c,d) a.pos.x=b; a.pos.y=c; a.pos.z=d;
@@ -88,9 +91,6 @@
 #define TRI_MAPPINGSTANDARD 0x4170	/*!< #UNK# MESH_TEXTURE_INFO */
 
 /* - TYPEDEFS usados - */
-/* Vértices */
-/*typedef struct{float x,y,z;}t_vertex; USO VECTOR definido en shared.h */
-
 typedef struct{int a,b,c; int texture;}t_polygon; /*!< Polígono -> Apunta a 3 vértices y a una textura */
 typedef struct{float u,v;}t_mapcoord; /*!< Coordenadas u,v de la textura */
 

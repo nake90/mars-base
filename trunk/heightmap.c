@@ -26,6 +26,7 @@
 */
 
 #include "heightmap.h"
+#include <pthread.h>
 
 static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 {
@@ -362,8 +363,33 @@ float real_height_to_coord(t_heightmap obj, float z)/* Transforma una altura rea
 	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
 }
 
+/*int compile_percent;
+int compile_gl_status;
+
+static void *loading_print_subrutine(void *no_usado)
+{
+	while(compile_percent>=0)
+	{
+		if(compile_gl_status!=0)
+		{}
+		else{SDL_GL_SwapBuffers();}
+		SDL_Delay(20);
+	}
+}*/
+
 void compile_map(t_heightmap* obj, t_texture texture)
 {
+	/*compile_percent=0;
+	compile_gl_status=0;
+	
+	pthread_t display_thread;
+	pthread_attr_t attr;
+	
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+	
+	pthread_create(&display_thread,&attr,loading_print_subrutine,NULL);*/
+	
 	debug_printf(" -- Compilando mapa --\n");
 	scr_init_printf ("Compilando mapa");
 	scr_init_printf ("Puede tardar unos minutos y puede que la pantalla se ponga en blanco");
@@ -386,11 +412,12 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	VECTOR vec1, vec2, vec3;/* Vectores que forman las aristas de los triángulos para calcular las normales */
 	VECTOR pos1, pos2;/* Posición de los puntos anteriores */
 	
+	//compile_gl_status=1;
 	/* Primero calculamos las sombras y las normales */
 	/* 'x' e 'y' NUNCA = 0 */
 	for (y=1;y<obj->tam_y; y++)
 	{
-		if(y%64)scr_init_reprintf (" > Calculando sombras y normales (%3.0f%%)",carga_estado);
+		if(y%64){/*compile_percent=carga_estado;*/scr_init_reprintf (" > Calculando sombras y normales (%3.0f)",carga_estado);}
 		for (x=1;x<obj->tam_x; x++)
 		{
 				vec1.x=-1;//pos1.x-x;
@@ -411,9 +438,16 @@ void compile_map(t_heightmap* obj, t_texture texture)
 		}
 		carga_estado+=carga_inc;
 	}
+	//compile_gl_status=0;
 	list_compile_map(obj, texture);
 	scr_init_reprintf (" > Finalizado");
 	debug_printf("    Mapa compilado con éxito\n");
+	
+	//compile_percent=-10;
+	//pthread_join(display_thread, NULL);
+	
+	//pthread_attr_destroy(&attr);
+	
 }
 
 float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float ambiente)

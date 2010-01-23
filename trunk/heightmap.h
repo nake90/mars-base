@@ -29,8 +29,11 @@
 #define HEIGHTMAP_H
 #include "shared.h"
 #include <stdio.h>
-#include "GL/openglut.h"
-#include "IL/ilut.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <SDL/SDL.h>
+#include <SDL_ttf.h>
+#include <IL/ilut.h>
 
 #define NHMAP_VERSION 2 /* Define la versión de los mapas precompilados */
 

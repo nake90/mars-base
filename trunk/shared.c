@@ -28,6 +28,57 @@
 */
 
 #include "shared.h"
+static
+int nextpoweroftwo(int x)
+{
+	double logbase2 = log(x) / log(2);
+	return nround(pow(2,ceil(logbase2)));
+}
+
+
+void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z)
+{
+	glEnable(GL_TEXTURE_2D);
+	
+	SDL_Surface *Message = TTF_RenderText_Blended(font, text, color);
+	unsigned Texture = 0;
+	
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Message->w, Message->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, Message->pixels);
+	
+	glPushMatrix();
+    glLoadIdentity();
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+	
+	int viewport[4];
+    glGetIntegerv(GL_VIEWPORT,viewport);
+	glOrtho(0,viewport[2],0,viewport[3],-1,1);
+	glColor3f(1,1,1);
+	
+	glBegin(GL_QUADS);
+		glTexCoord2d(0, 1); glVertex3d(x,				scr_height-y,				z);
+		glTexCoord2d(1, 1); glVertex3d(x+Message->w,	scr_height-y,				z);
+		glTexCoord2d(1, 0); glVertex3d(x+Message->w,	scr_height-y+Message->h,	z);
+		glTexCoord2d(0, 0); glVertex3d(x,				scr_height-y+Message->h,	z);
+	glEnd();
+	
+	glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+	
+	/* Bad things happen if we delete the texture before it finishes */
+	glFinish();
+	glDeleteTextures(1, &Texture);
+	SDL_FreeSurface(Message);
+}
+
 
 /* - MATH - */
 float nabs(float val)
@@ -89,15 +140,15 @@ void scr_init_printf (const char *fmt, ...)
 	/* Printing */
 	if (scr_message_debug){debug_printf(scr_messages[scr_message_index-1]);}
 	int i;
-	int pos=0;
+	int pos=1;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (i=scr_message_index-1; i>=0; i--)
 	{
-		hud_printf (1, pos, scr_messages[i]);
+		hud_printf (12, pos*12, scr_messages[i]);
 		pos++;
 	}
 	glFinish();
-	glutSwapBuffers();
+	SDL_GL_SwapBuffers();
 }
 
 void scr_init_reprintf (const char *fmt, ...)
@@ -114,15 +165,15 @@ void scr_init_reprintf (const char *fmt, ...)
 	/* Printing */
 	if (scr_message_debug){debug_printf(scr_messages[scr_message_index-1]);}
 	int i;
-	int pos=0;
+	int pos=1;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (i=scr_message_index-1; i>=0; i--)
 	{
-		hud_printf (1, pos, scr_messages[i]);
+		hud_printf (12, pos*12, scr_messages[i]);
 		pos++;
 	}
 	glFinish();
-	glutSwapBuffers();
+	SDL_GL_SwapBuffers();
 }
 
 
@@ -348,7 +399,7 @@ void set_gl_mode(void)
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0,glutGet(GLUT_WINDOW_WIDTH),glutGet(GLUT_WINDOW_HEIGHT),0);
+	gluOrtho2D(0,scr_width,scr_height,0);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity();
 	
@@ -387,9 +438,9 @@ void restore_gl_mode(void)
 */
 void position_printf(float x, float y, float z, const char *fmt, ...)
 {
+	SDL_Color clrFg = {255,255,255,0}; /* Color del texto */
 	static char buf[256];
     int viewport[4];
-    void *font = GLUT_STROKE_ROMAN;
     va_list args;
 
     va_start(args, fmt);
@@ -419,7 +470,9 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
               glutBitmapWidth(font, ' ') * col,
             - glutBitmapHeight(font) * (row+1) + viewport[3]
         );*/
-        glutStrokeString (font, (unsigned char *) buf);
+        ////////glutStrokeString (font, (unsigned char *) buf);
+		SDL_GL_RenderText(buf, fntCourier12, clrFg, x,y,z);
+		//SDL_GL_SwapBuffers();
         //glColor3d(1.0,1.0,1.0);
 
     //glPopMatrix();
@@ -433,47 +486,22 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
  *  \param row Fila en la que mostrar el texto
  *	Esta es una función muy básica ya que no permite cambiar el color del texto.
 */
-void hud_printf(int col, int row, const char *fmt, ...)
+void hud_printf(float x, float y, const char *fmt, ...)
 {
-    
+	SDL_Color clrFg = {255,255,255,128}; /* Color del texto */
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
-	glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
 	static char buf[256];
-    int viewport[4];
-    //void *font = GLUT_BITMAP_HELVETICA_12;
-    void *font = GLUT_BITMAP_9_BY_15;
     va_list args;
 
     va_start(args, fmt);
-    (void) vsprintf (buf, fmt, args);
+	(void) vsprintf (buf, fmt, args);
     va_end(args);
     
-	glDisable(GL_TEXTURE_2D);
+	SDL_GL_RenderText(buf, fntCourier12, clrFg, x, y, 0.1f);
 	
-    glGetIntegerv(GL_VIEWPORT,viewport);
-
-    glPushMatrix();
-    glLoadIdentity();
-
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-
-        glOrtho(0,viewport[2],0,viewport[3],-1,1);
-        
-        glColor3d(1.0,1.0,1.0);
-        glRasterPos2i(
-              glutBitmapWidth(font, ' ') * col,
-            - glutBitmapHeight(font) * (row+1) + viewport[3]
-        );
-        glutBitmapString (font, (unsigned char *) buf);
-        glColor3d(1.0,1.0,1.0);
-
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_FOG);

@@ -28,8 +28,11 @@
 #ifndef ATMOSFERICO_H
 #define ATMOSFERICO_H
 
-#include "GL/openglut.h"
-#include "IL/ilut.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <SDL/SDL.h>
+#include <SDL_ttf.h>
+#include <IL/ilut.h>
 #include "heightmap.h"
 
 #include <stdio.h>

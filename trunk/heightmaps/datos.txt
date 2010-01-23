@@ -18,3 +18,5 @@ Density Stretch Type       "none"
 World Files Created        "NO"
 
 0.31026 km/px
+
+--LUGAR REAL: Ius Chasma - Geryon Montes - Louros Valles
