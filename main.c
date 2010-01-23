@@ -36,14 +36,20 @@
 */
 #include "mars_base_private.h"
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <math.h>
-#include <time.h>
+#include <stdio.h> /* Archivos */
+#include <stdarg.h> /* Argumentos variables (Como printf()) */
+#include <math.h> /* Math */
+#include <time.h> /* Para random */
+#include <pthread.h> /* Multithreading */
 
 /* Librerías añadidas a las carpetas 'include' y 'lib' del proyecto */
-#include "GL/openglut.h"
-#include "IL/ilut.h"
+//#include "GL/openglut.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <SDL/SDL.h>
+//#include <SDL/SDL_thread.h>
+#include <SDL_ttf.h>
+#include <IL/ilut.h>
 
 #include "shared.h"
 #include "objetos.h"
@@ -52,20 +58,22 @@
 #include "materiales.h"
 #include "atmosferico.h"
 
-static short update=0;
+
+SDL_Surface *screen;
+const SDL_VideoInfo* scr_info = NULL;
+int scr_width = 0;
+int scr_height = 0;
+int scr_bpp = 0;
+int scr_flags = 0;
+
+SDL_Event sdl_event;
+
+static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */
+static float FPS;
+#define FPS_FRAMES 10
 
 int show_grid;
 int show_presion;
-
-enum botones_raton
-{
-	B_IZQ_RATON,
-	B_DER_RATON,
-	B_CEN_RATON
-};
-short int b_raton[3]={0,0,0};
-int p_raton_last_pres[2]={0,0};/* Ultima posicion del ratón al pulsar una tecla */
-
 
 
 t_model test_data;
@@ -84,9 +92,23 @@ t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sun_texture={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
-/* GLUT callback Handlers */
 
-static void resize(int width, int height)
+
+int window_mode; /* 0->Normal, 1->Minimizado */
+
+Uint32 time_left(void)
+{
+    Uint32 now;
+
+    now = SDL_GetTicks();
+    if(next_time <= now)
+        return 0;
+    else
+        return next_time - now;
+}
+
+
+static void resize_window(int width, int height)
 {
 	const float ar = (float) width / (float) height;
 	/* NORMAL */
@@ -195,9 +217,12 @@ void display(void)
     
 	/* Dibujamos el HUD */
 	draw_HUD();
-	hud_printf (1, 8, "Altura hasta el suelo: %f",coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y));
+	hud_printf (12, 10*12, "Altura hasta el suelo: %f",coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y));
+	hud_printf (12, 11*12, "FPS: %3.2f",FPS);
 	
-	glutSwapBuffers();
+	
+	//glutSwapBuffers();
+	SDL_GL_SwapBuffers();
 }
 
 static void control (void)
@@ -214,223 +239,245 @@ static void control (void)
 	if (camera.pos_y>(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale){camera.pos_y=(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale;}
 }
 
-static void
-key(unsigned char key, int x, int y)
+
+static
+void key_handle(SDLKey key, SDLMod mod)
 {
+	float speed=0.5f;
+	float last_x=camera.pos_x;
+	float last_y=camera.pos_y;
+	float last_z=camera.pos_z;
+	if (mod&KMOD_SHIFT){speed=200.0f;}
+    
 	VECTOR vec;
 	float presion;
 	switch (key)
     {
-    case 27 :
-    case 'Q': exit(0);
-		 break;
-    
-    case 'w': camera.pitch++;
+    case SDLK_ESCAPE: 
+		exit(0);
 		break;
-    case 's': camera.pitch--;
+	case SDLK_w: camera.pitch++;
 		break;
-		
-    case 'e': camera.roll++;
-		break;
-    case 'q': camera.roll--;
+    case SDLK_s: camera.pitch--;
 		break;
 		
-    case 'a': camera.yaw++;
+    case SDLK_e: camera.roll++;
 		break;
-    case 'd': camera.yaw--;
-		break;
-		
-	case 'i': test.rot.x++;
-		break;
-    case 'k': test.rot.x--;
+    case SDLK_q: camera.roll--;
 		break;
 		
-    case 'o': test.rot.z++;
+    case SDLK_a: camera.yaw++;
 		break;
-    case 'u': test.rot.z--;
+    case SDLK_d: camera.yaw--;
 		break;
 		
-    case 'j': test.rot.y++;
+	case SDLK_i: test.rot.x++;
 		break;
-    case 'l': test.rot.y--;
+    case SDLK_k: test.rot.x--;
+		break;
+		
+    case SDLK_o: test.rot.z++;
+		break;
+    case SDLK_u: test.rot.z--;
+		break;
+		
+    case SDLK_j: test.rot.y++;
+		break;
+    case SDLK_l: test.rot.y--;
 		break;
 	
-    case 'c':
+    case SDLK_c:
 		show_grid=1;
 		break;
-    case 'v':
+    case SDLK_v:
 		show_grid=0;
 		break;
 		
-    case 'b':
+    case SDLK_b:
 		show_presion=1;
 		break;
-    case 'n':
+    case SDLK_n:
 		show_presion=0;
 		break;
 		
-    case 't': /* Funciones de test */
+    case SDLK_t: /* Funciones de test */
 		
 		break;
+	
+	case SDLK_UP:
+		camera.vel_x+=speed*sin(RAD(-camera.yaw));
+		camera.vel_y+=speed*cos(RAD(-camera.yaw));
+		camera.wasd_count++;
+		break;
+    case SDLK_DOWN:
+		camera.vel_x+=-speed*sin(RAD(-camera.yaw));
+		camera.vel_y+=-speed*cos(RAD(-camera.yaw));
+		camera.wasd_count++;
+		break;
 		
-
+    case SDLK_RIGHT:
+		camera.vel_x+=speed*cos(RAD(camera.yaw));
+		camera.vel_y+=speed*sin(RAD(camera.yaw));
+		camera.wasd_count++;
+		break;
+    case SDLK_LEFT:
+		camera.vel_x+=-speed*cos(RAD(camera.yaw));
+		camera.vel_y+=-speed*sin(RAD(camera.yaw));
+		camera.wasd_count++;
+		break;
+		
+    case SDLK_PAGEUP: camera.pos_z+=speed;
+		break;
+    case SDLK_PAGEDOWN: camera.pos_z-=speed;
+		break;
+	
+	
     default:
         break;
     }
+    if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_x=last_x;camera.pos_y=last_y;camera.pos_z=last_z;}
 	control();
-    glutPostRedisplay();
 }
 
-static void
-special_keys(int key, int x, int y)
+static
+void key_up_handle(SDLKey key, SDLMod mod)
 {
-    float speed=0.5f;
-    float last_x=camera.pos_x;
-    float last_y=camera.pos_y;
-    float last_z=camera.pos_z;
-    if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){speed=200.0f;}
-	
 	switch (key)
     {
-    case GLUT_KEY_UP: 
-		camera.pos_x+=speed*sin(RAD(-camera.yaw));
-		camera.pos_y+=speed*cos(RAD(-camera.yaw));
+	case SDLK_UP:
+    case SDLK_DOWN:
+    case SDLK_RIGHT:
+    case SDLK_LEFT:
+		camera.wasd_count--;
 		break;
-    case GLUT_KEY_DOWN:
-		camera.pos_x-=speed*sin(RAD(-camera.yaw));
-		camera.pos_y-=speed*cos(RAD(-camera.yaw));
-		break;
-		
-    case GLUT_KEY_RIGHT:
-		camera.pos_x+=speed*cos(RAD(camera.yaw));
-		camera.pos_y+=speed*sin(RAD(camera.yaw));
-		break;
-    case GLUT_KEY_LEFT:
-		camera.pos_x-=speed*cos(RAD(camera.yaw));
-		camera.pos_y-=speed*sin(RAD(camera.yaw));
-		break;
-		
-    case GLUT_KEY_PAGE_UP: camera.pos_z+=speed;
-		break;
-    case GLUT_KEY_PAGE_DOWN: camera.pos_z-=speed;
-		break;
-
     default:
         break;
     }
-	
-	/* Evitamos el estar bajo la tierra */
-	if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_x=last_x;camera.pos_y=last_y;camera.pos_z=last_z;}
-	control();
-	
-    glutPostRedisplay();
-}
-
-static void
-idle(void)
-{
-	glutPostRedisplay();
-}
-
-static /* Si se aprieta o se suelta una tecla del ratón */
-void mouse_but(int button, int state,int x, int y)
-{
-	p_raton_last_pres[0]=x;
-	p_raton_last_pres[1]=y;
-	if (button==GLUT_LEFT_BUTTON)
-	{
-		b_raton[B_IZQ_RATON]=(state-GLUT_DOWN)?0:1;
-	}
-	if (button==GLUT_RIGHT_BUTTON)
-	{
-		b_raton[B_DER_RATON]=(state-GLUT_DOWN)?0:1;
-	}
-	if (button==GLUT_MIDDLE_BUTTON)
-	{
-		b_raton[B_CEN_RATON]=(state-GLUT_DOWN)?0:1;
-	}
-	control();
 }
 
 static /* Si se mueve el ratón mientras se está pulsando algun botón del ratón */
-void mouse_move_but(int x, int y)
+void mouse_move_but(int button, int x, int y)
 {
-	float cx, cy;
-	int w=glutGet(GLUT_WINDOW_WIDTH);
-	int h=glutGet(GLUT_WINDOW_HEIGHT);
+	int w=scr_width;
+	int h=scr_height;
 	int val;
 	float altura_real = coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y);
 	//debug_printf("Altura real: %f; z2real: %f; get_real: %f \n",altura_real,coord_to_real_height(marte,camera.pos_z),get_real_height(marte, camera.pos_x, camera.pos_y));
 	
-	if (b_raton[B_DER_RATON] && !b_raton[B_IZQ_RATON])/* Desplazamiento por la pantalla */
+	if (button & SDL_BUTTON(SDL_BUTTON_RIGHT))/* Desplazamiento por la pantalla */
 	{
-		/* cx, cy -> Incrementos de posición del ratón */
-		cx=(p_raton_last_pres[0]-x);
-		cy=(p_raton_last_pres[1]-y);
-		camera.pos_x+=cx*cos(RAD(camera.yaw))*altura_real/1000.0;
-		camera.pos_y+=cx*sin(RAD(camera.yaw))*altura_real/1000.0;
-		camera.pos_x-=cy*sin(RAD(-camera.yaw))*altura_real/1000.0;
-		camera.pos_y-=cy*cos(RAD(-camera.yaw))*altura_real/1000.0;
+		camera.pos_x+=x*cos(RAD(camera.yaw))*altura_real/1000.0;
+		camera.pos_y+=x*sin(RAD(camera.yaw))*altura_real/1000.0;
+		camera.pos_x-=y*sin(RAD(-camera.yaw))*altura_real/1000.0;
+		camera.pos_y-=y*cos(RAD(-camera.yaw))*altura_real/1000.0;
 	}
 	
-	if (b_raton[B_IZQ_RATON] && b_raton[B_DER_RATON])/* Zoom */
+	/*if (b_raton[B_IZQ_RATON] && b_raton[B_DER_RATON])/* Zoom /
 	{
-		/* cy -> Incremento de posición del ratón */
+		/* cy -> Incremento de posición del ratón /
 		cy=(p_raton_last_pres[1]-y);
 		camera.pos_z+=cy*altura_real/1000.0;
+	}*/
+	
+	if (button & SDL_BUTTON(SDL_BUTTON_MIDDLE))/* Girar pantalla */
+	{
+		camera.pitch+=y/10.0f;
+		camera.yaw+=x/10.0f;
 	}
 	
-	if (b_raton[B_CEN_RATON])/* Girar pantalla */
+	if (button & SDL_BUTTON(SDL_BUTTON_WHEELUP))
 	{
-		/* cx, cy -> Incrementos de posición del ratón */
-		cx=(p_raton_last_pres[0]-x);
-		cy=(p_raton_last_pres[1]-y);
-		camera.pitch+=cy/10.0f;
-		camera.yaw+=cx/10.0f;
+		camera.vel_z=+1;
 	}
-	p_raton_last_pres[0]=x;
-	p_raton_last_pres[1]=y;
+	if (button & SDL_BUTTON(SDL_BUTTON_WHEELDOWN))
+	{
+		camera.vel_z=-1;
+	}
 	
 	control();
 }
 
-static /* Si se mueve el ratón mientras NO se pulsa algun botón del ratón */
-void mouse_move_pas(int x, int y)
-{
-	
-}
 
 static
-void salir (void)
+void salir(void)
 {
+	/* Unload maps */
 	destroy_heightmap(&marte);
+	/* Unload objects */
 	model_unload(test.modelo);
+	/* Unload materials */
 	unload_material(&sand);
 	unload_material(&sun_texture);
+	/* Unload fonts */
+	TTF_CloseFont(fntCourier12);
+	TTF_CloseFont(fntArial12);
+	/* Unload libs */
+	TTF_Quit();
+	SDL_Quit();
 }
 
 static
-void GLinit(void)
+void video_init(void)
 {
-	/* Inicio del GLUT*/
-	glutInitWindowSize(800,600);
-	glutInitWindowPosition(40,40);
+	scr_info = SDL_GetVideoInfo();
 	
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE );
-	glutCreateWindow("Mars Base v" VER_STRING);
-	glutFullScreen();
+	scr_bpp = scr_info->vfmt->BitsPerPixel; /* Usamos la config del escritorio */
+	
+	/* PREVIO del GL*/
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	scr_flags = SDL_OPENGL | SDL_FULLSCREEN;
+	
+	/* Laarga lista de resoluciones posibles xD incluso para 16:9 . He usado las más comunes, fuente: http://en.wikipedia.org/wiki/Display_resolution */
+	scr_width = 1680;
+	scr_height = 1050;
+	/* Hmmm he leido hace poco que SDL emula un modo si no lo puede hacer.. así que a la mierda la lista */
+	screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
+	if ( screen == NULL )
+	{
+		scr_width = 1440;
+		scr_height = 900;
+		screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
+		if ( screen == NULL )
+		{
+			scr_width = 1280;
+			scr_height = 1024;
+			screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
+			if ( screen == NULL )
+			{
+				scr_width = 1280;
+				scr_height = 800;
+				screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
+				if ( screen == NULL )
+				{
+					scr_width = 1024;
+					scr_height = 768;
+					screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
+					if ( screen == NULL )
+					{
+						scr_width = 800;
+						scr_height = 600;
+						screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
+						if ( screen == NULL )
+						{
+							debug_printf("No se ha podido iniciar la pantalla: %s\n", SDL_GetError());
+							exit(1);
+						}
+					}
+				}
+			}
+		}
+	}
+	resize_window(scr_width,scr_height);
+	
+	if (TTF_Init()!=0)
+	{
+		debug_printf("No se ha podido iniciar el módulo de fuentes SDL_TTF: %s.\n", TTF_GetError());
+		exit(-1);
+	}
 	
 	/* Funciones por mensaje */
-	atexit(salir);
-	glutReshapeFunc(resize);
-	glutDisplayFunc(display);
-	glutKeyboardFunc(key);
-	glutSpecialFunc(special_keys);
-	glutIdleFunc(idle);
-	glutMouseFunc(mouse_but);
-	glutMotionFunc(mouse_move_but);
-	glutPassiveMotionFunc(mouse_move_pas);
-	
+	atexit(salir);/*
+
 	/* DevIL init */
 	ilInit();
 	ilutInit();
@@ -439,7 +486,6 @@ void GLinit(void)
 	/* OpenGL - Specific */
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.02f,0.1f,0.02f,1.0f);
-	//glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
 	
 	glFogi(GL_FOG_MODE, GL_LINEAR);
 	glFogfv(GL_FOG_COLOR, fogColor);
@@ -473,12 +519,73 @@ void GLinit(void)
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
 }
 
+void process_events(void)
+{
+	Uint8 mstat;
+	int x,y;
+	while(SDL_PollEvent(&sdl_event))
+	{
+		switch(sdl_event.type)
+		{
+		case SDL_QUIT:
+			/* Handle quit requests (like Ctrl-c). */
+			exit(0);
+			break;
+		case SDL_ACTIVEEVENT: /* No funciona bien... */
+			if(sdl_event.active.state==SDL_APPACTIVE)
+			{
+				window_mode=(sdl_event.active.gain==0?1:0);
+				if(window_mode==0){SDL_WM_GrabInput(SDL_GRAB_ON);}else{SDL_WM_GrabInput(SDL_GRAB_OFF);}
+				debug_printf("Minimizado: %i\n",window_mode);
+			}
+			break;
+		case SDL_KEYDOWN:
+			key_handle(sdl_event.key.keysym.sym, sdl_event.key.keysym.mod);
+			break;
+		case SDL_KEYUP:
+			key_up_handle(sdl_event.key.keysym.sym, sdl_event.key.keysym.mod);
+			break;
+		case SDL_MOUSEMOTION:
+			mstat = SDL_GetMouseState(&x,&y);
+			x-=scr_width/2;
+			y-=scr_height/2;
+			x*=-1;
+			y*=-1;
+			if (!x && !y)break;
+			mouse_move_but(mstat, x, y);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			mstat = SDL_GetMouseState(&x,&y);
+			x-=scr_width/2;
+			y-=scr_height/2;
+			if (!x && !y)break;
+			mouse_move_but(mstat, x, y);
+			break;
+		}
+	}
+	if(window_mode==0){SDL_WarpMouse(scr_width/2, scr_height/2);}
+}
 
-
-
-
-
-
+void main_update(void)
+{
+	if(camera.vel_x>CAMERA_MIN_VEL || camera.vel_x<-CAMERA_MIN_VEL)
+	{
+		camera.pos_x += camera.vel_x; if(!camera.wasd_count)camera.vel_x/=CAMERA_VEL_DIV;
+	}
+	else if(camera.vel_x!=0){camera.vel_x=0;}
+	if(camera.vel_y>CAMERA_MIN_VEL || camera.vel_y<-CAMERA_MIN_VEL)
+	{
+		camera.pos_y += camera.vel_y; if(!camera.wasd_count)camera.vel_y/=CAMERA_VEL_DIV;
+	}
+	else if(camera.vel_y!=0){camera.vel_y=0;}
+	if(camera.vel_z>CAMERA_MIN_VEL || camera.vel_z<-CAMERA_MIN_VEL)
+	{
+		camera.pos_z += camera.vel_z; if(!camera.wasd_count)camera.vel_z/=CAMERA_VEL_DIV;
+	}
+	else if(camera.vel_z!=0){camera.vel_z=0;}
+	
+	control();
+}
 
 int main(int argc, char *argv[])
 {
@@ -492,18 +599,35 @@ int main(int argc, char *argv[])
 	tam_mapa_y = TERR_SIZE*2;
     show_grid=0;
     show_presion=0;
+    window_mode=0;
     
     
     /* - INICIACIÓN PROGRAMA - */
-    glutInit(&argc, argv);
-	GLinit();
+    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+	if((SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)==-1))
+	{ 
+		debug_printf("No se ha podido iniciar SDL: %s.\n", SDL_GetError());
+		exit(-1);
+	}
+	
+	video_init();
 	scr_init_reset(0);
 
 	/* - POSINICIALIZACIÓN (Carga elementos) - */
+	SDL_WM_SetCaption("mars_base", NULL);
+	
+	/* Carga fuentes */
+	fntCourier12=TTF_OpenFont("fonts/cour.ttf", 12);
+	if (fntCourier12==NULL){debug_printf("Error al cargar la fuente base: \"cour.ttf\"\n",i); exit(-1);}
+	
+	fntArial12=TTF_OpenFont("fonts/arial.ttf", 12);
+	if (fntArial12==NULL){debug_printf("Error al cargar la fuente: \"arial.ttf\"\n",i); exit(-1);}
+	
+	/* Carga materiales */
 	scr_init_printf ("Cargando materiales...");
 	
 	i=load_material(&sand, "materials\\sand_default");
-	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); return(-1);}
+	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); exit(-1);}
 	
 	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
 	if(!sun_texture.texture[0]){exit(0);}
@@ -518,6 +642,7 @@ int main(int argc, char *argv[])
 	camera.pos_x=0;
 	camera.pos_z=10;
 	camera.pos_y=-4.5;
+	camera.wasd_count=0;
 	
 	scr_init_printf ("Cargando modelos...");
 	test.modelo=&test_data;
@@ -533,14 +658,31 @@ int main(int argc, char *argv[])
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);
 	
+	SDL_ShowCursor(0); /* Ocultamos el cursor */
+	//SDL_EnableKeyRepeat(100, 80);
+	SDL_WM_GrabInput(SDL_GRAB_ON);
 	
 	scr_init_printf ("Iniciado");
-	
 	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
 	
 	
 	/* - MAIN LOOP - */
-    glutMainLoop();
-
-    return 0;
+	next_time = SDL_GetTicks() + TICK_INTERVAL;
+	
+	unsigned int contador=0;
+	
+	while(1)
+	{
+		process_events();
+		
+		main_update();
+		
+		display();
+		SDL_Delay(time_left());
+		next_time += TICK_INTERVAL;
+		contador++;
+		if(contador>=FPS_FRAMES){FPS=1000.0f/(float)(next_time-SDL_GetTicks()); contador=0;}
+	}
+	
+    exit(0);
 }

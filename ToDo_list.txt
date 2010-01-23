@@ -1,9 +1,10 @@
+!!	Problemas con movimiento por teclado
 !!!	Botones, menus, iconos, y todos sus correspondientes elementos de control	<-OnIt
 	- Sistema, funciones base, structs, ... OK
-	- Funciones básicas de control de eventos
+	- Funciones básicas de control de eventos (SDL ayuda)
 	- Box OK
-	- Line Ok
-	- Label Ok
+	- Line OK
+	- Label OK
 	- Bitmap
 	- Icon
 	- Button

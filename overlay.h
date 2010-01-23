@@ -97,11 +97,15 @@ typedef struct st_Dialog
 #define MSG_WANTMOUSE   24       /*!< does object want the mouse? */
 #define MSG_USER        25       /*!< from here on are free... */
 
+#define NULL_DIALOG		NULL, 0, 0, 0, 0 ,{0,0,0,0} ,{0,0,0,0}, 0, 0, 0, 0, NULL, NULL, NULL
+
+int draw_dialog(DIALOG *d);
 int draw_element(DIALOG d);
 
+/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
 int d_box_proc(int msg, struct st_Dialog * d, int c);
 int d_line_proc(int msg, struct st_Dialog * d, int c); /* w, h son las coordenadas del segundo punto, d1 el tamaño */
-int d_label_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , d1 el tamaño (de 1 a 16) */
+int d_label_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , dp2 la fuente a usar */
 
 
 #endif

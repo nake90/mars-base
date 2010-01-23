@@ -30,8 +30,12 @@
 #ifndef SHARED_H
 #define SHARED_H
 
-#include "GL/openglut.h"
-#include "IL/ilut.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <SDL/SDL.h>
+#include <SDL_ttf.h>
+#include <IL/ilut.h>
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -42,6 +46,8 @@
 //2*PI/360 = 0.017453292519943295769236907684886
 #define RAD(x) (float)((x)*0.01745329)
 
+#define TICK_INTERVAL 20
+/* FPS = 1000/TICK_INTERVAL => TICK_INTERVAL=1000/FPS
 
 /* Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */
 #define TERR_SIZE 100
@@ -59,14 +65,27 @@ char app_path[256];
 
 GLuint minimapa;
 
+TTF_Font *fntCourier12;
+TTF_Font *fntArial12;
+
+
 typedef struct{float x; float y; float z;}VECTOR;
 typedef struct{float r; float g; float b; float a;}COLORf;
 
+
+#define CAMERA_MIN_VEL 0.001
+#define CAMERA_VEL_DIV 1.1
 typedef struct
 {
 	GLfloat pos_x;
 	GLfloat pos_y;
 	GLfloat pos_z;
+	
+	GLfloat vel_x;
+	GLfloat vel_y;
+	GLfloat vel_z;
+	
+	GLint wasd_count;/* Cuenta el número de teclas de movimiento presionadas. (Para la desaceleración) */
 	
 	GLfloat pitch;
 	GLfloat yaw;
@@ -91,7 +110,7 @@ void scr_init_reset (int debug_too);
 void scr_init_printf (const char *fmt, ...);
 void scr_init_reprintf (const char *fmt, ...);/* Como scr_init_printf pero sobre la última línea */
 void position_printf (float x, float y, float z, const char *fmt, ...);
-void hud_printf (int col, int row, const char *fmt, ...);
+void hud_printf (float x, float y, const char *fmt, ...);
 void set_gl_mode(void);
 void restore_gl_mode(void);
 
@@ -130,5 +149,9 @@ int nceil(float val);
 
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
 void draw_sprite (float x, float y, float z, t_texture textura, float size);
+
+void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z);
+
+extern int scr_width, scr_height, scr_bpp;
 
 #endif
