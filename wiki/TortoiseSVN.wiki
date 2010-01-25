@@ -33,7 +33,7 @@ Click en _OK_ y se descargarán los datos.
 
 == Actualizar ==
 
-Para actualizar haz click derecho sobre la carpeta donde tienes el proyecto y eleje _SVN Update_.
+Para actualizar haz click derecho sobre la carpeta donde tienes el proyecto y elije _SVN Update_.
 Espera a que se descarguen los datos que han cambiado y ya está.
 
 
