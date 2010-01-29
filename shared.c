@@ -102,8 +102,15 @@ int nfloor(float val)
 int nceil(float val)
 {
 	int buff=(int)val;
-	if(val-buff!=0.0f){return (int)val+1;}
+	if(val-buff!=0.0f){return (int)val+nsgn(val);} /* Usando nsgn funciona incluso con negativos */
 	return val;
+}
+
+int nsgn(float val)
+{
+	if (val>0)return 1;
+	if (val<0)return -1;
+	return 0;
 }
 
 /* - SCREEN LIST PRINTF - */
@@ -138,7 +145,14 @@ void scr_init_printf (const char *fmt, ...)
 	str_cpyl(scr_messages[scr_message_index],MAX_SCREEN_MESSAGES_LEN,buf);
 	scr_message_index++;
 	/* Printing */
-	if (scr_message_debug){debug_printf(scr_messages[scr_message_index-1]);}
+	if (scr_message_debug)
+	{
+		char msg[MAX_SCREEN_MESSAGES_LEN];
+		str_cpy(msg, "*[");
+		str_append(msg, scr_messages[scr_message_index-1]);
+		str_append(msg, "]*\n");
+		debug_printf(msg);
+	}
 	int i;
 	int pos=1;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

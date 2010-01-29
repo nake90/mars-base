@@ -1,5 +1,5 @@
-!!	Problemas con movimiento por teclado
-!!!	Botones, menus, iconos, y todos sus correspondientes elementos de control	<-OnIt
+!	Problemas con movimiento por teclado
+!!!	Botones, menus, iconos, y todos sus correspondientes elementos de control
 	- Sistema, funciones base, structs, ... OK
 	- Funciones básicas de control de eventos (SDL ayuda)
 	- Box OK
@@ -10,15 +10,17 @@
 	- Button
 	- TabButton
 	- TabFrame
-!!	TRACES
+!!	Grid	<-OnIt  (FALTA OFFSET) No va bien aun...
+!!	TRACES	<-OnIt	(Falta Grid)
 !!	Lista de objetos cargables [Lo haré cuando tenga objetos a cargar ¬¬]
 !!	Menú para el spawn de objetos
 !!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
+!!	Minilibrería para leer archivos de texto del estilo de configuración (a lo xml)
+!	Archivo de configuración
 !	Control de nodos
 !	Presión atmosférica
 !	Temperatura atmosférica
 !	Funciones de transferencia de calor, gases y presión
 !	Console
 !	Acabar el Sol (Es un poco cutre)
-!	Grid
 !	Triángulos lejanos de mayor tamaño para aumentar el rendimiento

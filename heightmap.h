@@ -38,6 +38,9 @@
 #define NHMAP_VERSION 2 /* Define la versión de los mapas precompilados */
 
 #define AMBIENTE 0.2f
+#define MAP_Z_OFFSET 0.20
+#define pos_a_casilla_x(m,x) ((int)((m).tam_x -((m).tam_x -((m).tam_x/2) -((x)+(m).ini_x)/(m).scale)+1))
+#define pos_a_casilla_y(m,y) ((int)((m).tam_y -(((m).tam_y/2) +((y)+(m).ini_y)/(m).scale) -1))
 
 typedef struct
 {
@@ -72,5 +75,7 @@ void list_compile_map(t_heightmap* obj, t_texture texture);
 float get_real_height(t_heightmap obj, float coord_x, float coord_y);
 float z_to_real_height (t_heightmap obj, int z);
 float coord_to_real_height(t_heightmap obj, float z);
+
+int get_current_triangle (t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3);
 
 #endif

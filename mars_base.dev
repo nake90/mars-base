@@ -1,7 +1,7 @@
 [Project]
 FileName=mars_base.dev
 Name=mars_base
-UnitCount=13
+UnitCount=17
 Type=0
 Ver=1
 ObjFiles=
@@ -42,8 +42,8 @@ BuildCmd=
 [VersionInfo]
 Major=0
 Minor=2
-Release=0
-Build=2435
+Release=1
+Build=2727
 LanguageID=1033
 CharsetID=1252
 CompanyName=
@@ -168,7 +168,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=objetos.h
+FileName=control.h
 CompileCpp=0
 Folder=
 Compile=1
@@ -178,7 +178,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=objetos.c
+FileName=control.c
 CompileCpp=0
 Folder=
 Compile=1
@@ -189,6 +189,26 @@ BuildCmd=
 
 [Unit6]
 FileName=heightmap.h
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=display.h
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=display.c
 CompileCpp=0
 Folder=
 Compile=1
