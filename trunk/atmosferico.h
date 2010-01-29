@@ -53,6 +53,10 @@
 //#define SKYBOX_DISTANCE   55000 /* 50000 es el máximo de niebla... */
 //GLint skybox[5]; /*!< Texturas del skybox. 0->Front; 1->Right; 2-> Back; 3-> Left; 4->Top*/
 
+/* Niebla y atmósfera */
+extern GLfloat fogColor[4];/*= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
+extern GLfloat fogRange[2];/*= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y distancia máxima visible en metros */
+
 typedef struct
 {
 	GLfloat ambient[4];
@@ -62,5 +66,11 @@ typedef struct
 	float hora[1];
 	GLint texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
 }t_sun;
+
+/* TEXTURAS BÁSICAS */
+/*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
+extern t_sun sun;/*={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
+/*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
+extern t_texture sun_texture;/*={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};*/
 
 #endif

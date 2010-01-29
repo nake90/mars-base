@@ -143,7 +143,7 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 	half_y = obj->tam_y/2;
 	
 	float v_scale = (obj->max_h-obj->min_h)/255.0f;
-	float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale;
+	float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale + MAP_Z_OFFSET;
 	float color=1.0f;
 	scr_init_printf ("Predibujando terreno");
 	
@@ -153,6 +153,7 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 		glDisable(GL_LIGHTING);
 		use_texture(texture);
 		glPushMatrix();
+		
 		glTranslatef(-obj->ini_x,-obj->ini_y,-obj->ini_z);
 		glRotatef(180, 0, 0, 1.0f);
 		
@@ -508,6 +509,11 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 	*/
 	a=obj.tam_x -(obj.tam_x -(obj.tam_x/2) -(coord_x+obj.ini_x)/obj.scale)+1;
 	b=obj.tam_y -((obj.tam_y/2) +(coord_y+obj.ini_y)/obj.scale) -1;
+	/* Las operaciones no se pueden simplificar por problemas entre (int) y (float), no sale el mismo resultado */
+	//a=obj.tam_x/2 +(coord_x+obj.ini_x)/obj.scale +1;
+	//b=obj.tam_y/2 -(coord_y+obj.ini_y)/obj.scale -1;
+	
+	
 	x=(int)a;
 	y=(int)b;
 	a-=x; b-=y; /* Transformamos 'a' y 'b' en los incrementos, van de [0-1) respecto la dist. relativa en el eje 'x' e 'y' respect. */
@@ -528,13 +534,22 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 	return h;
 }
 
-#if(0)
-float get_real_height_nc(t_heightmap obj, float coord_x, float coord_y)
+/*! \fn void get_current_triangle (t_heightmap obj, int coord_x, int coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3)
+ *  \brief Retorna las coordenadas en el espacio (de openGL) de los vértices del triángulo en el que está situado (x,y) (Coordenadas de cámara)
+ *	Nota: v1 es el vértice que forma 90º con v2 y v3, v2 con v1 es paralelo al eje x, y v3 con v1 es paralelo al eje y
+ *  \param obj Mapa del terreno
+ *  \param coord_x, coord_y Las coordenadas de la posición sobre la cual se quiere obtener el triángulo en el que están
+ *  \param v1, v2, v3 Vectores de posición de cada vértice (En coordenadas de openGL) (SALIDA)
+ *	\return 0: Ok
+ *	\return no cero: Error
+*/
+int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3)
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	int x, y; /* Coordenadas (x,y) de la matriz de alturas */
-	float h1,h2,h3,h4,h; /* Alturas de los vértices y final */
+	float h1,h2,h3,h4;
 	float a,b; /* Son los incrementos de posición en cada eje */
+	float v_add = +(obj.data[(obj.tam_x/2)+(obj.tam_y/2)*obj.tam_x]-obj.zero_h)*v_scale - obj.min_h;
 	
 	/* h1  h2
 	   0->/|
@@ -542,26 +557,48 @@ float get_real_height_nc(t_heightmap obj, float coord_x, float coord_y)
 	   v/_2|
 	   h3  h4
 	*/
-	(map->tam_x-x+1 - half_x)*map->scale+i, (y+1 - half_y)*map->scale
-	a=obj.tam_x -(obj.tam_x -coord_x+1 -(obj.tam_x/2) -(coord_x+obj.ini_x)/obj.scale)+1;
+	
+	a=obj.tam_x -(obj.tam_x -(obj.tam_x/2) -(coord_x+obj.ini_x)/obj.scale)+1;
 	b=obj.tam_y -((obj.tam_y/2) +(coord_y+obj.ini_y)/obj.scale) -1;
+	/* Las operaciones no se pueden simplificar por problemas entre (int) y (float), no sale el mismo resultado */
+	//a=obj.tam_x/2 +(coord_x+obj.ini_x)/obj.scale +1;
+	//b=obj.tam_y/2 -(coord_y+obj.ini_y)/obj.scale -1;
 	x=(int)a;
 	y=(int)b;
 	a-=x; b-=y; /* Transformamos 'a' y 'b' en los incrementos, van de [0-1) respecto la dist. relativa en el eje 'x' e 'y' respect. */
-	if (x<0 || x>obj.tam_x-1 || y<0 || y>obj.tam_y-1){return 0.0f;}
-	h1=obj.data[x+y*obj.tam_x]*v_scale+obj.min_h;
-	h2=obj.data[(x+1)+y*obj.tam_x]*v_scale+obj.min_h;
-	h3=obj.data[x+(y+1)*obj.tam_x]*v_scale+obj.min_h;
-	h4=obj.data[(x+1)+(y+1)*obj.tam_x]*v_scale+obj.min_h;
+	if (x<0 || x>obj.tam_x-1 || y<0 || y>obj.tam_y-1){return -1;}
+	h1=(obj.data[x+y*obj.tam_x])*v_scale+obj.min_h+v_add;			/*(0,0)*/
+	h2=(obj.data[(x+1)+y*obj.tam_x])*v_scale+obj.min_h+v_add;		/*(1,0)*/
+	h3=(obj.data[x+(y+1)*obj.tam_x])*v_scale+obj.min_h+v_add;		/*(0,1)*/
+	h4=(obj.data[(x+1)+(y+1)*obj.tam_x])*v_scale+obj.min_h+v_add;	/*(1,1)*/
 	
-	if(a+b<1)/* Primer triángulo h1,h2,h3 */
+	if(a+b<1)/* Primer triángulo h1=v1, h2=v2, h3=v3 */
 	{
-		h=h1+(a*(h2-h1))+(b*(h3-h1));
+		v1->x= (x-1-obj.tam_x/2)*obj.scale -obj.ini_x;
+		v1->y=-(y+0-obj.tam_y/2)*obj.scale -obj.ini_y;
+		v1->z=h1;
+		
+		v2->x= (x  -obj.tam_x/2)*obj.scale -obj.ini_x;
+		v2->y=-(y+0-obj.tam_y/2)*obj.scale -obj.ini_y;
+		v2->z=h2;
+		
+		v3->x= (x-1-obj.tam_x/2)*obj.scale -obj.ini_x;
+		v3->y=-(y+1-obj.tam_y/2)*obj.scale -obj.ini_y;
+		v3->z=h3;
 	}
-	else/* Segundo triángulo h4,h3,h2 */
+	else/* Segundo triángulo h4=v1, h3=v2, h2=v3 */
 	{
-	 	h=h4+((1-b)*(h2-h4))+((1-a)*(h3-h4));
+		v1->x= (x  -obj.tam_x/2)*obj.scale -obj.ini_x;
+		v1->y=-(y+1-obj.tam_y/2)*obj.scale -obj.ini_y;
+		v1->z=h4;
+		
+		v2->x= (x-1-obj.tam_x/2)*obj.scale -obj.ini_x;
+		v2->y=-(y+1-obj.tam_y/2)*obj.scale -obj.ini_y;
+		v2->z=h3;
+		
+		v3->x= (x  -obj.tam_x/2)*obj.scale -obj.ini_x;
+		v3->y=-(y+0-obj.tam_y/2)*obj.scale -obj.ini_y;
+		v3->z=h2;
 	}
-	return h;
+	return 0;
 }
-#endif

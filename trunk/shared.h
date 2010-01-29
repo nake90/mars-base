@@ -90,6 +90,9 @@ typedef struct
 	GLfloat pitch;
 	GLfloat yaw;
 	GLfloat roll;
+	
+	int show_grid;
+	int show_presion;
 }t_camera;
 t_camera camera;
 
@@ -146,6 +149,7 @@ float nabs(float val);
 int nround(float val);
 int nfloor(float val);
 int nceil(float val);
+int nsgn(float val);
 
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
 void draw_sprite (float x, float y, float z, t_texture textura, float size);

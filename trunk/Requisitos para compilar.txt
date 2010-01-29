@@ -1,0 +1,16 @@
+Lista de librerías necesarias para compilar el mars-base:
+(*) openGL [gl.h, glu.h, glext.h] (http://www.opengl.org/)
+(*) SDL (http://www.libsdl.org/)
+(*) SDL_ttf (http://www.libsdl.org/projects/SDL_ttf/)
+(*) devIL [il.h, ilu.h, ilut.h] (http://openil.sourceforge.net/)
+
+A parte, debes de tener todas las librerías necesarias para poder incluir:
+#include <stdio.h>
+#include <stdarg.h>
+#include <math.h>
+#include <time.h>
+#include <pthread.h>
+
+
+El programa está desarrollado en Dev-C++ y compilado usando MinGW.
+Existe un archivo de proyecto del Dev-C++ (mars_base.dev).
