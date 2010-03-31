@@ -5,11 +5,11 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = mars_base_private.res
-OBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o $(RES)
-LINKOBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lglu32 -lopengl32 -lwinmm -lgdi32 -lmingw32 -lSDLmain -lSDL -mwindows -ldevil -lilu -lilut ../../../../../Dev-Cpp/lib/libpthreadGC2.a ../../../../../../Dev-Cpp/lib/SDL_ttf.lib  
-INCS =  -I"C:/Dev-Cpp/include" 
-CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.5/include"  -I"C:/Dev-Cpp/include/c++/3.4.5/backward"  -I"C:/Dev-Cpp/include/c++/3.4.5/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.5"  -I"C:/Dev-Cpp/include" 
+OBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o $(RES)
+LINKOBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o $(RES)
+LIBS =  -L"I:/MinGW/lib" -mwindows -lglu32 -lopengl32 -lwinmm -lgdi32 -lmingw32 -lSDLmain -lSDL -mwindows -ldevil -lilu -lilut I:/mingw/lib/SDL_ttf.lib I:/mingw/lib/libpthreadGC2.a  
+INCS =  -I"I:/MinGW/include" 
+CXXINCS = 
 BIN  = mars_base.exe
 CXXFLAGS = $(CXXINCS) -DOPENGLUT_STATIC -IL_STATIC_LIB  
 CFLAGS = $(INCS) -DOPENGLUT_STATIC -IL_STATIC_LIB  
@@ -52,6 +52,9 @@ control.o: control.c
 
 display.o: display.c
 	$(CC) -c display.c -o display.o $(CFLAGS)
+
+parser.o: parser.c
+	$(CC) -c parser.c -o parser.o $(CFLAGS)
 
 mars_base_private.res: mars_base_private.rc 
 	$(WINDRES) -i mars_base_private.rc --input-format=rc -o mars_base_private.res -O coff 

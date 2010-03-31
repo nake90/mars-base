@@ -34,7 +34,7 @@
 #include <GL/glu.h>
 #include <GL/glext.h>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 
 #include <stdio.h>
@@ -98,6 +98,15 @@ t_camera camera;
 
 typedef struct
 {
+	int show_fondo;
+	
+	int show_grid;
+	int show_presion;
+}t_config;
+t_config config;
+
+typedef struct
+{
 	char name[80];
 	GLfloat ambient[4];
 	GLfloat diffuse[4];
@@ -157,5 +166,6 @@ void draw_sprite (float x, float y, float z, t_texture textura, float size);
 void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z);
 
 extern int scr_width, scr_height, scr_bpp;
+extern t_texture fondo;
 
 #endif

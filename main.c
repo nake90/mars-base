@@ -48,7 +48,7 @@
 #include <GL/glu.h>
 #include <SDL/SDL.h>
 //#include <SDL/SDL_thread.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 
 #include "shared.h"
@@ -61,6 +61,9 @@
 #include "display.h"
 
 
+#include "parser.h"
+
+
 static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */
 
 /* Niebla y atmósfera */
@@ -71,12 +74,13 @@ GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y 
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
 t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
-t_texture sun_texture={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
+t_texture sun_texture=	{{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
+t_texture fondo=		{{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
-t_model test_data;
+/*t_model test_data;
 t_model test2_data;
 t_obj_base test;
-t_obj_base test2;
+t_obj_base test2;*/
 
 
 static
@@ -97,9 +101,11 @@ void salir(void)
 	/* Unload maps */
 	destroy_heightmap(&marte);
 	/* Unload objects */
-	model_unload(test.modelo);
+	//model_unload(test.modelo);
+	lista_base_limpiar(lista_objeto_base,&lista_objetos_base);
 	/* Unload materials */
 	unload_material(&sand);
+	unload_material(&fondo);
 	unload_material(&sun_texture);
 	/* Unload fonts */
 	TTF_CloseFont(fntCourier12);
@@ -134,10 +140,13 @@ int main(int argc, char *argv[])
 	
 	video_init();
 	atexit(salir);
-	scr_init_reset(1);
-
-	/* - POSINICIALIZACIÓN (Carga elementos) - */
+	scr_init_reset(0);
+	
 	SDL_WM_SetCaption("mars_base", NULL);
+	fondo.texture[0] = ilutGLLoadImage("materials\\sun.tga");
+	if(!fondo.texture[0]){debug_printf("No se ha encontrado la textura de fondo.\n",i); config.show_fondo=0;}else{config.show_fondo=1;}
+	/* - POSINICIALIZACIÓN (Carga elementos) - */
+	
 	
 	/* Carga fuentes */
 	fntCourier12=TTF_OpenFont("fonts/cour.ttf", 12);
@@ -168,15 +177,55 @@ int main(int argc, char *argv[])
 	camera.wasd_count=0;
 	
 	scr_init_printf ("Cargando modelos...");
-	test.modelo=&test_data;
-	if(load_3DS(test.modelo,"models\\base\\hq_general_4_8x8\\hq_general_4_8x8.3ds")!=0){exit(1);}
-	object_predraw(&(test));
-	obj_setpos(test,0,0,0);
+	//lista_objeto_base=lista_base_crear(&lista_objetos_base);
+	//lista_objeto_base=NULL;
+	lista_objetos_base=0;
 	
-	test2.modelo=&test2_data;
-	if(load_3DS(test2.modelo,"models\\base\\ps_general_2_2x8\\ps_general_2_2x8.3ds")!=0){exit(1);}
-	object_predraw(&(test2));
-	obj_setpos(test2,-8,0,0);
+	int cont=1;
+	char key[256];
+	char buffer[256];
+	t_parse parse;
+	if(parse_open(&parse, "models/temporal_lista_objetos_a_cargar.txt")==0)
+	{
+		do
+		{
+			sprintf(key,"obj_%i file",cont);
+			debug_printf("Buscando... \"%s\"   ",key);
+			if(parse_get_str(&parse, key, buffer)!=-1)
+			{
+				debug_printf("encontrado! \"%s\"\n",buffer);
+				i=lista_base_crear_elemento(lista_objeto_base, &lista_objetos_base, buffer);
+				if (i!=0){debug_printf("Error al cargar el objeto %i (\"%s\"), retornado: %i\n",cont,buffer,i);exit(1);}
+				sprintf(key,"obj_%i x",cont);
+				lista_objeto_base[cont-1]->pos.x = parse_get_float(&parse, key);
+				sprintf(key,"obj_%i y",cont);
+				lista_objeto_base[cont-1]->pos.y = parse_get_float(&parse, key);
+				sprintf(key,"obj_%i z",cont);
+				lista_objeto_base[cont-1]->pos.z = parse_get_float(&parse, key);
+				cont++;
+			}
+			else
+			{
+				debug_printf("no encontrado\n",buffer);
+				break;
+			}
+		}while(1);
+		
+		parse_close(&parse);
+	}
+	else
+	{
+		debug_printf("ATENCIÓN: No se ha encontrado la lista de archivos a cargar (\"%s\")\n",buffer);
+	}
+	/*
+	i=lista_base_crear_elemento(lista_objeto_base, &lista_objetos_base, "models\\base\\hq_general_4_8x8\\hq_general_4_8x8.3ds");
+	if (i!=0){debug_printf("Error al cargar el objeto 1, retornado: %i\n",i);exit(1);}
+	obj_ptr_setpos(lista_objeto_base[0],0,0,0);
+	
+	i=lista_base_crear_elemento(lista_objeto_base, &lista_objetos_base, "models\\base\\ps_general_2_2x8\\ps_general_2_2x8.3ds");
+	if (i!=0){debug_printf("Error al cargar el objeto 2, retornado: %i\n",i);exit(1);}
+	obj_ptr_setpos(lista_objeto_base[1],-8,0,0);
+	*/
 	
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps\\marineris",&marte,sand);

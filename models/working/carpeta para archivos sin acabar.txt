@@ -1,0 +1,10 @@
+Añadir a esta carpeta los archivos que aún no están acabados, así tenemos una copia de todos los
+archivos aunque no estén acabados en el servidor de google.
+
+Es más, así podemos ver qué tal van las cosas y podemos ayudarnos. O por si falta algo del archivo,
+como por ejemplo la textura o la información de objeto, así otra persona puede añadir lo que falta.
+
+Si queréis haced subdirectorios con vuestra propia carpeta de trabajo para evitar que todo se
+entremezcle y tal.
+
+~~ Nake

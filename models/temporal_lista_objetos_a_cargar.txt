@@ -1,0 +1,19 @@
+// Comentarios con doble barra solo!
+
+// Lista de objetos a cargar, es solo temporal, más adelante lo haré de otra forma.
+// Así podéis probar los objetos
+// Formato: (Todo es obligatorio)
+// obj_<número_único_objeto> file = <ruta>;
+// obj_<número_único_objeto> x = <coordenada x>;
+// obj_<número_único_objeto> y = <coordenada y>;
+// obj_<número_único_objeto> z = <coordenada z>;
+
+obj_1 file = models/base/hq_general_4_8x8/hq_general_4_8x8.3ds;
+obj_1 x =  0;
+obj_1 y =  0;
+obj_1 z =  0;
+
+obj_2 file = models/base/ps_general_2_2x8/ps_general_2_2x8.3ds;
+obj_2 x = -8;
+obj_2 y =  0;
+obj_2 z =  0;

@@ -31,7 +31,8 @@
 
 void control(void)
 {
-	if(camera.pitch<0){camera.pitch=0;}
+	float f1;
+    if(camera.pitch<0){camera.pitch=0;}
 	if(camera.pitch>180){camera.pitch=180;}
 	if(camera.yaw<0){camera.yaw+=360;}
 	if(camera.yaw>=360){camera.yaw-=360;}
@@ -42,6 +43,7 @@ void control(void)
 	if (camera.pos_y<(-marte.tam_y/2)*marte.scale -marte.ini_y){camera.pos_y=(-marte.tam_y/2)*marte.scale -marte.ini_y;}
 	if (camera.pos_y>(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale){camera.pos_y=(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale;}
 	if (camera.pos_z>30000){camera.pos_z=30000;}
+	if ((f1=altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z)-1.0)<0){camera.pos_z-=f1;}
 }
 
 
@@ -75,22 +77,7 @@ void key_handle(SDLKey key, SDLMod mod)
 		break;
     case SDLK_d: camera.yaw--;
 		break;
-		
-	/*case SDLK_i: test.rot.x++;
-		break;
-    case SDLK_k: test.rot.x--;
-		break;
-		
-    case SDLK_o: test.rot.z++;
-		break;
-    case SDLK_u: test.rot.z--;
-		break;
-		
-    case SDLK_j: test.rot.y++;
-		break;
-    case SDLK_l: test.rot.y--;
-		break;
-	*/
+	
     case SDLK_c:
 		camera.show_grid=1;
 		break;

@@ -30,8 +30,15 @@
 
 #include "display.h"
 
-extern t_obj_base test; /* BORRAR ESTO AL AÑADIR OBJETOS BIEN */
-extern t_obj_base test2;
+
+static void draw_object_list_base(t_obj_base **lista, int contador)
+{
+	int i;
+	for (i=0; i<contador; i++)
+	{
+		object_draw_l(lista[i]);
+	}
+}
 
 
 void resize_window(int width, int height)
@@ -93,7 +100,7 @@ void draw_grid(t_heightmap map, float pos_x, float pos_y)
 	if (sg2<0){y_offset=(1.53-nabs(y_offset));}else{y_offset+=0.25;}
 	/* Seguro que no funciona bien al final... esto de prueba-error no suele acabar bien */
 	
-	#warning Esto no funciona bien...
+	//#warning Esto no funciona bien...
 	
 	glColor4f(0.0f,0.0f,1.0f,0.5f);
 	for (i=x_offset; i<map.scale+x_offset; i++) // map.scale es el tamaño en metros de una casilla, y por desgracia es float
@@ -164,8 +171,7 @@ void display(void)
 	glCallList(marte.list);/* Dibujamos el terreno */
 	
 	/* Dibujamos los objetos */
-	object_draw_l(&(test));/* RECUERDA BORRAR LOS extern AL AÑADIR OBJETOS BIEN */
-	object_draw_l(&(test2));
+	draw_object_list_base(lista_objeto_base, lista_objetos_base);
 	
 	/* Dibujamos los extras del terreno */
 	
@@ -195,7 +201,7 @@ void display(void)
     
 	/* Dibujamos el HUD */
 	draw_HUD();
-	hud_printf (12, 10*12, "Altura hasta el suelo: %f",coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y));
+	hud_printf (12, 10*12, "Altura hasta el suelo: %f",altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z));
 	hud_printf (12, 11*12, "FPS: %3.2f",FPS);
 	
 	SDL_GL_SwapBuffers();
