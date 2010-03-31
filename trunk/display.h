@@ -35,7 +35,7 @@
 #include <GL/glu.h>
 #include <GL/glext.h>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 
 #include <stdio.h>

@@ -32,7 +32,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 
 #define NHMAP_VERSION 2 /* Define la versión de los mapas precompilados */
@@ -75,7 +75,9 @@ void list_compile_map(t_heightmap* obj, t_texture texture);
 float get_real_height(t_heightmap obj, float coord_x, float coord_y);
 float z_to_real_height (t_heightmap obj, int z);
 float coord_to_real_height(t_heightmap obj, float z);
+#define altura_al_suelo(m,x,y,z) (coord_to_real_height((m),(z)) - get_real_height((m), (x), (y)))
 
 int get_current_triangle (t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3);
+int size_of_texture; /* POR IMPLEMENTAR Tamaño en metros de la textura. Ej: Si la textura representa un cuadrado de 3x3m entonces vale 3 */
 
 #endif

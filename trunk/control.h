@@ -31,7 +31,7 @@
 #define CONTROL_H
 
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 
 #include <stdio.h>
 #include <math.h>

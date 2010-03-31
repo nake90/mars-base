@@ -31,7 +31,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 #include "heightmap.h"
 
@@ -43,7 +43,7 @@
 #include "shared.h"
 /* Dynamic Pressure: q(Pa) = 1/2 * densidad(kg/m3) * v^2(m/s) */
 
-#define SUN_SIZE 2000.0f
+#define SUN_SIZE 4000.0f
 
 /* Presión media en Pascales */
 #define PRESION_MEDIA 800

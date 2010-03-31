@@ -534,7 +534,7 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 	return h;
 }
 
-/*! \fn void get_current_triangle (t_heightmap obj, int coord_x, int coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3)
+/*! \fn int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3)
  *  \brief Retorna las coordenadas en el espacio (de openGL) de los vértices del triángulo en el que está situado (x,y) (Coordenadas de cámara)
  *	Nota: v1 es el vértice que forma 90º con v2 y v3, v2 con v1 es paralelo al eje x, y v3 con v1 es paralelo al eje y
  *  \param obj Mapa del terreno

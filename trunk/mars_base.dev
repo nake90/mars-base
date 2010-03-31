@@ -1,7 +1,7 @@
 [Project]
 FileName=mars_base.dev
 Name=mars_base
-UnitCount=17
+UnitCount=19
 Type=0
 Ver=1
 ObjFiles=
@@ -12,12 +12,12 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=-DOPENGLUT_STATIC_@@_-IL_STATIC_LIB_@@_
 CppCompiler=-DOPENGLUT_STATIC_@@_-IL_STATIC_LIB_@@_
-Linker=-lglu32 -lopengl32 -lwinmm -lgdi32_@@_-lmingw32 -lSDLmain -lSDL -mwindows_@@_-ldevil_@@_-lilu_@@_-lilut_@@_../../../../../Dev-Cpp/lib/libpthreadGC2.a_@@_../../../../../../Dev-Cpp/lib/SDL_ttf.lib_@@_
+Linker=-lglu32 -lopengl32 -lwinmm -lgdi32_@@_-lmingw32 -lSDLmain -lSDL -mwindows_@@_-ldevil_@@_-lilu_@@_-lilut_@@_I:/mingw/lib/SDL_ttf.lib_@@_I:/mingw/lib/libpthreadGC2.a_@@_
 IsCpp=0
 Icon=mars_base.ico
-ExeOutput=
+ExeOutput=..\mars_base
 ObjectOutput=
-OverrideOutput=0
+OverrideOutput=1
 OverrideOutputName=mars_base.exe
 HostApplication=
 Folders=
@@ -42,8 +42,8 @@ BuildCmd=
 [VersionInfo]
 Major=0
 Minor=2
-Release=1
-Build=2727
+Release=2
+Build=2983
 LanguageID=1033
 CharsetID=1252
 CompanyName=
@@ -211,6 +211,26 @@ BuildCmd=
 FileName=display.c
 CompileCpp=0
 Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=parser.c
+CompileCpp=0
+Folder=mars_base
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=parser.h
+CompileCpp=0
+Folder=mars_base
 Compile=1
 Link=1
 Priority=1000

@@ -39,14 +39,14 @@ static int get_material_index(t_model_ptr object, const char* name)
 	return -1;
 }
 
-/*! \fn int load_3DS (t_model_ptr data, char *filename)
+/*! \fn int load_3DS (t_model *data, char *filename)
  *  \brief Carga los datos básicos de un objeto desde un archivo 3ds
  *  \param data Pointer al lugar donde se deben guardar los datos
  *  \param filename Ruta al archivo 3ds
  *  \return 0 -> Ok; 1 -> Archivo no encontrado; -1 -> Error interno
 */
 
-int load_3DS (t_model_ptr data, char *filename)
+int load_3DS (t_model *data, char *filename)
 {
 	if(objetos_debug){debug_printf("DEBUG: - load_3DS - (debug level: %i) \"%s\"\n",objetos_debug, filename);}
 	int i;
@@ -277,7 +277,7 @@ int load_3DS (t_model_ptr data, char *filename)
  *  \param object Objeto a dibujar
 */
 
-void object_predraw(t_obj_base_ptr object)
+void object_predraw(t_obj_base *object)
 {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -289,6 +289,7 @@ void object_predraw(t_obj_base_ptr object)
 	
 	object->modelo->draw_list=glGenLists(1);
 	object->modelo->draw_lists=1;
+	
 	glNewList(object->modelo->draw_list,GL_COMPILE);
 	
     glDisable(GL_CULL_FACE);
@@ -324,8 +325,10 @@ void object_predraw(t_obj_base_ptr object)
     }
     glEnable(GL_CULL_FACE);
 	glEndList();
+			
 	l_index=glGetError();
 	if (l_index){debug_printf("ERROR: OpenGL ha retornado %i al llamar a object_predraw() - Esto no debería de haber pasado nunca, que raro...\n",l_index);}
+	
 	glPopMatrix();
 }
 
@@ -417,7 +420,142 @@ void object_draw(t_obj_base object)
         glVertex3f( object.modelo->vertex[ object.modelo->polygon[l_index].c ].x *object.modelo->size,
                     object.modelo->vertex[ object.modelo->polygon[l_index].c ].y *object.modelo->size,
                     object.modelo->vertex[ object.modelo->polygon[l_index].c ].z *object.modelo->size);
-    }
-    glEnd();
+	}
+	glEnd();
 	glPopMatrix();
+}
+
+
+/*! \fn t_obj_base_ptr *lista_base_crear(int* contador)
+ *  \brief Crea una lista de objetos base
+ *  \param contador Contador de la lista
+ *	\return lista con su malloc establecido
+ *	\return Si contador <0 ha habido un error en el malloc
+*/
+
+/*t_obj_base **lista_base_crear(int* contador)
+{
+	t_obj_base **lista;
+	(*contador)=0;
+	lista=malloc(sizeof(t_obj_base*));
+    if (lista==NULL){*contador=-1;}
+    lista[0]=NULL;
+    return lista;
+}*/
+
+
+/*! \fn int lista_base_aumentar(t_obj_base_ptr *lista, int* contador, t_obj_base_ptr elemento)
+ *  \brief Añade a una lista de objetos tipo base un elemento
+ *  \param lista La lista a la cual se debe añadir el elemento
+ *  \param contador Contador de la lista
+ *  \param elemento Puntero al elemento a añadir a la lista
+ *	\return 0 si todo fué bien.
+*/
+
+/*int lista_base_aumentar(t_obj_base **lista, int* contador, t_obj_base *elemento)
+{
+    lista[*contador]=elemento;
+	(*contador)++;
+	lista=realloc(lista, sizeof(t_obj_base*)*((*contador)+1));
+    if (lista==NULL){(*contador)=-1;return -1;}
+    lista[(*contador)]=NULL;
+    return 0;
+}*/
+
+
+/*! \fn int lista_base_crear_elemento(t_obj_base_ptr *lista, int* contador, char *ruta)
+ *  \brief Carga un objeto tipo base y lo añade a la lista.
+ *  \param lista La lista a la cual se debe añadir el elemento
+ *  \param contador Contador de la lista
+ *  \param ruta Ruta al archivo 3ds
+ *	\return 0 si todo fué bien.
+ *	\return 1 Archivo no encontrado.
+ *	\return -1 Error interno del archivo 3ds.
+ *	\return -2 Error en el malloc del objeto base.
+ *	\return -3 Error en el malloc del modelo.
+*/
+
+int lista_base_crear_elemento(t_obj_base **lista, int *contador, char *ruta)
+{
+	t_obj_base *objeto; // Objetos que vamos a guardar en memoria
+	t_model *modelo;
+	
+	objeto = malloc(sizeof(t_obj_base));
+	if (objeto==NULL){return -2;}
+	modelo = malloc(sizeof(t_model));
+	if (modelo==NULL){free(objeto); return -3;}
+	
+	
+	int i;
+	i=load_3DS(modelo, ruta);
+	objeto->modelo=modelo;
+	
+	if (i!=0){debug_printf("Error al cargar el modelo 3DS \"%s\", retornado %i.\n",ruta,i); free(objeto); free(modelo); return i;}
+    obj_ptr_setpos(objeto,0,0,0);
+	object_predraw(objeto);
+	
+	//lista=realloc(lista, sizeof(t_obj_base*)*((*contador)+1));
+	//if (lista==NULL){debug_printf("Error en el realloc de la lista de objetos\n"); free(objeto); free(modelo); *contador=-1; return -1;}
+    
+	
+    lista[*contador]=objeto;
+	(*contador)++;
+	
+	
+    return 0;
+}
+
+/*! \fn int lista_base_borrar_elemento(t_obj_base_ptr *lista, int* contador, unsigned int index)
+ *  \brief Borra de una lista de objetos base un elemento
+ *  \warning Esta función no borra de la memoria el objeto eliminado de la lista, se debe hacer manualmente
+ *  \param lista La lista de la cual se debe borrar el elemento
+ *  \param contador Contador de la lista
+ *  \param index Elemento a borrar
+ *	\return 0 si todo fué bien.
+*/
+
+/*int lista_base_borrar_elemento(t_obj_base **lista, int* contador, unsigned int index)
+{
+	(*contador)--;
+	int i;
+	for (i=index; i<*contador; i++){lista[i]=lista[i+1];}
+	lista=realloc(lista, sizeof(t_obj_base_ptr)*(*contador+1));
+    if (lista==NULL){*contador=-1;return -1;}
+    return 0;
+}*/
+
+/*! \fn void lista_base_limpiar(t_obj_base_ptr *lista, int* contador)
+ *  \brief Limpia de la memoria todos los elementos de la lista y borra la lista
+ *  \warning No llamar a la función lista_base_borrar ni intentar dibujar la lista después de usar esta función.
+ *  \param lista La lista que contiene los elementos que se deben borrar
+ *  \param contador Contador de la lista
+*/
+
+void lista_base_limpiar(t_obj_base **lista, int* contador)
+{
+	*contador--;
+    while(*contador>=0)
+	{
+		model_unload(lista[*contador]->modelo);
+		free(lista[*contador]->modelo);
+		free(lista[*contador]);
+		(*contador)--;
+	}
+	lista_base_borrar(lista, contador);
+}
+
+
+/*! \fn void lista_base_borrar(t_obj_base_ptr *lista, int* contador)
+ *  \brief Limpia de la memoria una lista de objetos base
+ *  \warning No llamar a la función lista_base_borrar después de usar lista_base_limpiar.
+ *	Esta función se debe usar solo si se limpia de la memoria los objetos de forma manual
+ *  \param lista La lista que se debe borrar
+ *  \param contador Contador de la lista
+*/
+
+void lista_base_borrar(t_obj_base **lista, int* contador)
+{
+	//free(lista);
+	(*contador)=0;
+	//lista=NULL;
 }

@@ -33,16 +33,18 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 
 /* --- MACROS --- */
-#define obj_setpos(a,b,c,d) a.pos.x=b; a.pos.y=c; a.pos.z=d;
+#define obj_setpos(a,b,c,d) (a).pos.x=(b); (a).pos.y=(c); (a).pos.z=(d);
+#define obj_ptr_setpos(a,b,c,d) (a)->pos.x=(b); (a)->pos.y=(c); (a)->pos.z=(d);
 
 /* --- DEFINES --- */
 #define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
+#define MAX_OBJETOS 2048 /*!< Número máximo de objetos */
 #define objetos_debug 0 /*!< Nivel de debug de los objetos */
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
@@ -117,7 +119,7 @@ typedef struct
 typedef struct
 {
 	char name[256]; /*!< Nombre del objeto */
-	t_model_ptr modelo; /*!< Datos de vértices y demás */
+	t_model *modelo; /*!< Datos de vértices y demás */
 	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
 	VECTOR pos; /*!< Posición (en metros) */
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
@@ -127,11 +129,23 @@ typedef struct
 	
 }t_obj_base, *t_obj_base_ptr;
 
-/* - FUNCIONES - */
-int load_3DS (t_model_ptr data, char *filename);
-void object_predraw(t_obj_base_ptr object);
+
+//t_obj_base **lista_objeto_base; /* Lista dinámica de punteros a todos los objetos de este tipo */
+t_obj_base *lista_objeto_base[MAX_OBJETOS]; /* Lista estática de punteros a todos los objetos de este tipo */
+int lista_objetos_base;
+
+
+/* - FUNCIONES de objetos - */
+int load_3DS (t_model *data, char *filename);
+void object_predraw(t_obj_base *object);
 void object_draw(t_obj_base object);
-void object_draw_l(t_obj_base_ptr object);
-void model_unload(t_model_ptr model);
+void object_draw_l(t_obj_base *object);
+void model_unload(t_model *model);
+
+/* - FUNCIONES de listas - */
+int lista_base_crear_elemento(t_obj_base **lista, int* contador, char *ruta);
+void lista_base_limpiar(t_obj_base **lista, int* contador);
+void lista_base_borrar(t_obj_base **lista, int* contador);
+
 
 #endif

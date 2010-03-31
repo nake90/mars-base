@@ -28,13 +28,6 @@
 */
 
 #include "shared.h"
-static
-int nextpoweroftwo(int x)
-{
-	double logbase2 = log(x) / log(2);
-	return nround(pow(2,ceil(logbase2)));
-}
-
 
 void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z)
 {
@@ -67,6 +60,12 @@ void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, flo
 		glTexCoord2d(1, 1); glVertex3d(x+Message->w,	scr_height-y,				z);
 		glTexCoord2d(1, 0); glVertex3d(x+Message->w,	scr_height-y+Message->h,	z);
 		glTexCoord2d(0, 0); glVertex3d(x,				scr_height-y+Message->h,	z);
+		
+		glColor3f(1,0,0);
+		glVertex3d(x,				scr_height-y,				z);
+		glVertex3d(x+Message->w,	scr_height-y,				z);
+		glVertex3d(x+Message->w,	scr_height-y+Message->h,	z);
+		glVertex3d(x,				scr_height-y+Message->h,	z);
 	glEnd();
 	
 	glPopMatrix();
@@ -145,6 +144,7 @@ void scr_init_printf (const char *fmt, ...)
 	str_cpyl(scr_messages[scr_message_index],MAX_SCREEN_MESSAGES_LEN,buf);
 	scr_message_index++;
 	/* Printing */
+	
 	if (scr_message_debug)
 	{
 		char msg[MAX_SCREEN_MESSAGES_LEN];
@@ -181,11 +181,29 @@ void scr_init_reprintf (const char *fmt, ...)
 	int i;
 	int pos=1;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	if (config.show_fondo)
+	{
+		set_gl_mode();
+		glColor3f(1,0,0);
+		//use_texture(fondo);
+		glBindTexture(GL_TEXTURE_2D, fondo.texture[0] );
+		glBegin(GL_QUADS);
+			glTexCoord2d(0,1); glVertex3d(0,		scr_height,0.1f);
+			glTexCoord2d(1,1); glVertex3d(scr_width,scr_height,0.1f);
+			glTexCoord2d(1,0); glVertex3d(scr_width,scr_height*2,0.1f);
+			glTexCoord2d(0,0); glVertex3d(0,		scr_height*2,0.1f);
+		glEnd();
+		restore_gl_mode();
+		glFinish();
+	}
+	
 	for (i=scr_message_index-1; i>=0; i--)
 	{
 		hud_printf (12, pos*12, scr_messages[i]);
 		pos++;
 	}
+	
 	glFinish();
 	SDL_GL_SwapBuffers();
 }
@@ -225,6 +243,7 @@ void str_cpy(char* string1,const char* string2)
  * 	Siempre acaba con \\0, incluso cuando no hay espacio.
  *  \param string1 String de destino
  *  \param string2 String de origen
+ *  \param len Longitud máxima a copiar. Siempre acaba en \0, aunque corte parte del texto.
  *	\sa str_cpy
 */
 void str_cpyl(char* string1, int len, const char* string2)
@@ -448,6 +467,7 @@ void restore_gl_mode(void)
 /*! \fn void position_printf(float x, float y, float z, const char *fmt, ...)
  *  \brief Muestra texto en el mundo en 3D al estilo de printf
  *  \param x,y,z Posición del texto en el mundo
+ *  \param *fmt Texto de formato al estilo del printf
  *	Esta es una función muy básica ya que no permite girar ni cambiar el tamaño del texto.
 */
 void position_printf(float x, float y, float z, const char *fmt, ...)
@@ -494,10 +514,10 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
     //glPopMatrix();
 }
 
-/*! \fn void hud_printf(int col, int row, const char *fmt, ...)
+/*! \fn void hud_printf(float x, float y, const char *fmt, ...)
  *  \brief Muestra texto en el HUD (2D) al estilo de printf
- *  \param col Columna en la que mostrar el texto
- *  \param row Fila en la que mostrar el texto
+ *  \param x,y Coordenadas en la que mostrar el texto
+ *  \param *fmt Texto de formato al estilo del printf
  *	Esta es una función muy básica ya que no permite cambiar el color del texto.
 */
 void hud_printf(float x, float y, const char *fmt, ...)
@@ -553,6 +573,7 @@ void draw_sprite (float x, float y, float z, t_texture textura, float size)
 	proy_z = (z-camera.pos_z)/mod;
 	
 	use_texture(textura);
+	glColor3f(1.0f,1.0f,1.0f);
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f); glVertex3f(x-size*proy_y, y+size*proy_x, z-size);// Bottom Left
 		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*proy_y, y-size*proy_x, z-size);// Bottom Right
@@ -570,6 +591,7 @@ void draw_sprite (float x, float y, float z, t_texture textura, float size)
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
 {
 	use_texture(textura);
+	glColor3f(1.0f,1.0f,1.0f);
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f); glVertex3f(x-size*(sin(RAD(camera.yaw+90))), y+size*(cos(RAD(camera.yaw+90))-cos(RAD(camera.pitch))), z-size*sin(RAD(camera.pitch)));// Bottom Left
 		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*(sin(RAD(camera.yaw+90))), y-size*(cos(RAD(camera.yaw+90))+cos(RAD(camera.pitch))), z-size*sin(RAD(camera.pitch)));// Bottom Right
