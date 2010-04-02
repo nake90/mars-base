@@ -101,8 +101,8 @@ void salir(void)
 	/* Unload maps */
 	destroy_heightmap(&marte);
 	/* Unload objects */
-	//model_unload(test.modelo);
-	lista_base_limpiar(lista_objeto_base,&lista_objetos_base);
+	lista_modelos_limpiar();
+	lista_base_limpiar();
 	/* Unload materials */
 	unload_material(&sand);
 	unload_material(&fondo);
@@ -113,6 +113,7 @@ void salir(void)
 	/* Unload libs */
 	TTF_Quit();
 	SDL_Quit();
+	debug_printf("\nMars-base cerrado correctamente\n");
 }
 
 int main(int argc, char *argv[])
@@ -176,10 +177,15 @@ int main(int argc, char *argv[])
 	camera.pos_y=-4.5;
 	camera.wasd_count=0;
 	
+	scr_init_printf ("Cargando terreno...");
+	load_heightmap("heightmaps\\marineris",&marte,sand);
+	
 	scr_init_printf ("Cargando modelos...");
-	//lista_objeto_base=lista_base_crear(&lista_objetos_base);
-	//lista_objeto_base=NULL;
+	
+	lista_objeto_base=NULL;
+	lista_modelo=NULL;
 	lista_objetos_base=0;
+	lista_modelos=0;
 	
 	int cont=1;
 	char key[256];
@@ -190,23 +196,39 @@ int main(int argc, char *argv[])
 		do
 		{
 			sprintf(key,"obj_%i file",cont);
-			debug_printf("Buscando... \"%s\"   ",key);
 			if(parse_get_str(&parse, key, buffer)!=-1)
 			{
-				debug_printf("encontrado! \"%s\"\n",buffer);
-				i=lista_base_crear_elemento(lista_objeto_base, &lista_objetos_base, buffer);
+				i = lista_cargar_modelo(buffer);
+				if (i!=0){debug_printf("Error al cargar el modelo %i (\"%s\"), retornado: %i\n",cont,buffer,i);exit(1);}
+				
+				i = lista_base_crear_elemento(cont-1);
 				if (i!=0){debug_printf("Error al cargar el objeto %i (\"%s\"), retornado: %i\n",cont,buffer,i);exit(1);}
+				
 				sprintf(key,"obj_%i x",cont);
 				lista_objeto_base[cont-1]->pos.x = parse_get_float(&parse, key);
+				
 				sprintf(key,"obj_%i y",cont);
 				lista_objeto_base[cont-1]->pos.y = parse_get_float(&parse, key);
+				
 				sprintf(key,"obj_%i z",cont);
 				lista_objeto_base[cont-1]->pos.z = parse_get_float(&parse, key);
+				
+				sprintf(key,"obj_%i sq_r",cont);
+				lista_objeto_base[cont-1]->sq_r = parse_get_float(&parse, key);
+				
+				sprintf(key,"obj_%i sq_l",cont);
+				lista_objeto_base[cont-1]->sq_l = parse_get_float(&parse, key);
+				
+				sprintf(key,"obj_%i sq_t",cont);
+				lista_objeto_base[cont-1]->sq_t = parse_get_float(&parse, key);
+				
+				sprintf(key,"obj_%i sq_b",cont);
+				lista_objeto_base[cont-1]->sq_b = parse_get_float(&parse, key);
+				
 				cont++;
 			}
 			else
 			{
-				debug_printf("no encontrado\n",buffer);
 				break;
 			}
 		}while(1);
@@ -217,18 +239,6 @@ int main(int argc, char *argv[])
 	{
 		debug_printf("ATENCIÓN: No se ha encontrado la lista de archivos a cargar (\"%s\")\n",buffer);
 	}
-	/*
-	i=lista_base_crear_elemento(lista_objeto_base, &lista_objetos_base, "models\\base\\hq_general_4_8x8\\hq_general_4_8x8.3ds");
-	if (i!=0){debug_printf("Error al cargar el objeto 1, retornado: %i\n",i);exit(1);}
-	obj_ptr_setpos(lista_objeto_base[0],0,0,0);
-	
-	i=lista_base_crear_elemento(lista_objeto_base, &lista_objetos_base, "models\\base\\ps_general_2_2x8\\ps_general_2_2x8.3ds");
-	if (i!=0){debug_printf("Error al cargar el objeto 2, retornado: %i\n",i);exit(1);}
-	obj_ptr_setpos(lista_objeto_base[1],-8,0,0);
-	*/
-	
-	scr_init_printf ("Cargando terreno...");
-	load_heightmap("heightmaps\\marineris",&marte,sand);
 	
 	scr_init_printf ("Iniciado");
 	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);

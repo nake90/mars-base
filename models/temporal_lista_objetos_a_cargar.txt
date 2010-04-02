@@ -3,17 +3,52 @@
 // Lista de objetos a cargar, es solo temporal, más adelante lo haré de otra forma.
 // Así podéis probar los objetos
 // Formato: (Todo es obligatorio)
-// obj_<número_único_objeto> file = <ruta>;
-// obj_<número_único_objeto> x = <coordenada x>;
-// obj_<número_único_objeto> y = <coordenada y>;
-// obj_<número_único_objeto> z = <coordenada z>;
+// empieza con obj_<num>, donde <num> es el número único de objeto (empezando por el 1)
+// después va la propiedad separada por un espacio en blanco:
+// file = <ruta (string)>;
+// x = <coordenada x (float)>;
+// y = <coordenada y (float)>;
+// z = <coordenada z (float)>;
+// sq_r = <right (float)>;  //Lados que definen la base rectangular de colisión del objeto.
+// sq_l = <left (float)>;   //Básicamente, el número de metros hacia cada lado. Los rectángulos de
+// sq_t = <top (float)>;    //los objetos no se podrán solapar, y al seleccionarlos se muestra el
+// sq_b = <bottom (float)>; //rectángulo pero medio metro más grande en cada dirección.
 
 obj_1 file = models/base/hq_general_4_8x8/hq_general_4_8x8.3ds;
+//obj_1 file = models/ed_2_combinado_escalado.3DS;
 obj_1 x =  0;
 obj_1 y =  0;
 obj_1 z =  0;
+obj_1 sq_r = 4;
+obj_1 sq_l =-4;
+obj_1 sq_t = 4;
+obj_1 sq_b =-4;
 
 obj_2 file = models/base/ps_general_2_2x8/ps_general_2_2x8.3ds;
 obj_2 x = -8;
 obj_2 y =  0;
 obj_2 z =  0;
+obj_2 sq_r = 4;
+obj_2 sq_l =-4;
+obj_2 sq_t = 1.5;
+obj_2 sq_b =-1.5;
+
+obj_3 file = models/base/ps_general_2_2x8/ps_general_2_2x8.3ds;
+obj_3 x = 16;
+obj_3 y =  0;
+obj_3 z =  0;
+obj_3 sq_x = 4;
+obj_3 sq_y = 1;
+obj_3 sq_r = 4;
+obj_3 sq_l =-4;
+obj_3 sq_t = 1.5;
+obj_3 sq_b =-1.5;
+
+obj_4 file = models/base/ps_general_2_2x8/ps_general_2_2x8.3ds;
+obj_4 x =  8;
+obj_4 y =  0;
+obj_4 z =  0;
+obj_4 sq_r = 4;
+obj_4 sq_l =-4;
+obj_4 sq_t = 1.5;
+obj_4 sq_b =-1.5;

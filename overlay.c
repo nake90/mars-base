@@ -25,6 +25,7 @@
  * \author Alfonso Arbona Gimeno
 */
 
+#include "control.h"
 #include "overlay.h"
 #include "heightmap.h"
 
@@ -95,11 +96,16 @@ void draw_HUD(void)
 	draw_minimap(minimapa);
 	
 	hud_printf (12, 2*12, "Mars Base - v" VER_STRING);
-	hud_printf (12, 3*12, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
+	hud_printf (12, 3*12, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch-90, camera.yaw, camera.roll);
 	hud_printf (12, 4*12, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
 	hud_printf (12, 5*12, "Flechas para moverse, shift para ir muy rápido");
 	hud_printf (12, 6*12, "WASD+QE -> Girar cámara");
-	hud_printf (12, 7*12, "IJKL -> Girar objeto");
+	
+		VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
+		VECTOR dir = v_from_ang(RAD(camera.pitch-90), RAD(camera.yaw));
+		int obj = get_traced_object(pos, dir);
+		
+	hud_printf (12, 7*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
 	hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrícula");
 	hud_printf (12, 9*12, "B/N -> Ver/ocultar las normales");
 }

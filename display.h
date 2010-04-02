@@ -59,7 +59,6 @@ float FPS;
 /* TEXTURAS BÁSICAS */
 t_texture sand;
 
-
 void video_init(void);
 void resize_window(int width, int height);
 void display(void);

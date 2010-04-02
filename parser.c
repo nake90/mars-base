@@ -1,5 +1,7 @@
 #include "parser.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include "shared.h"
 
 #define PARSER_LINE_BUFFER_SIZE 1024
 
@@ -26,7 +28,7 @@ static int linea_vacia(char* buffer) /* 1 si la línea está vacía o es un comenta
 	return 0;
 }
 
-static int str_cmp(const char* string1,const char* string2)
+/*static int str_cmp(const char* string1,const char* string2) DEFINIDO EN SHARED
 {
 	int valor = 0;
 	int pos=0;
@@ -36,7 +38,7 @@ static int str_cmp(const char* string1,const char* string2)
 		pos++;
 	}
 	return valor;
-}
+}*/
 
 /* Busca key en la lista de elementos cargados, retorna -1 si no lo encuentra */
 static int parser_get_index(t_parse parse, const char *key)
@@ -109,8 +111,8 @@ int parse_open(t_parse* parse, char *ruta)
 			while(actual<lineas)/* Realmente no hace el bucle, es solo una comprobación */
 			{
 				/* NOMBRE */
-				strcpy(str,buffer);
-				len=strlen(str);
+				str_cpy(str,buffer);
+				len=str_len(str);
 				/* Obtenemos el texto hasta la primera letra antes del '=' */
 				c1=0;
 				while(c1<len && str[c1] != '='){c1++;}
@@ -225,6 +227,6 @@ int parse_get_str(t_parse* parse, const char *entrada, char* str)
 	int index = parser_get_index(*parse, entrada);
 	if (index<0){return PARSE_NOT_FOUND;}
 	
-	str_cpy(str,parse->value[index]);
+	strcpy(str,parse->value[index]);
 	return strlen(parse->value[index]);
 }

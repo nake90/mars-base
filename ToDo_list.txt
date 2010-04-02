@@ -1,5 +1,4 @@
-!!!!Pasa algo raro con los objetos, no puedo cargar más de 2... mmm tengo que mirarlo todo bien
-!	Problemas con movimiento por teclado
+!!!!Creo (estoy casi seguro) que al cargar el mapa pasa algo raro en la memoria
 !!!	Botones, menus, iconos, y todos sus correspondientes elementos de control
 	- Sistema, funciones base, structs, ... OK
 	- Funciones básicas de control de eventos (SDL)
@@ -11,10 +10,11 @@
 	- Button
 	- TabButton
 	- TabFrame
-!!	Grid	(FALLA OFFSET)
-!!	TRACES
+!!	TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
 !!	Menú para el spawn de objetos
-!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA PENSARLO)
+!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA IMPLEMENTAR)
+!	Grid	(FALLA OFFSET)
+!	Problemas con movimiento por teclado
 !	Archivo de configuración
 !	Control de nodos
 !	Presión atmosférica

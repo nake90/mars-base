@@ -29,6 +29,8 @@
 */
 
 #include "display.h"
+#include "overlay.h"
+
 
 
 static void draw_object_list_base(t_obj_base **lista, int contador)
@@ -38,12 +40,27 @@ static void draw_object_list_base(t_obj_base **lista, int contador)
 	{
 		object_draw_l(lista[i]);
 	}
+	/* Para la transparencia deben estar los objetos ya dibujados... */
+	for (i=0; i<contador; i++)
+	{
+		if (lista_objeto_base[i]->selec != 0)
+		{
+			glLineWidth(2.0f);
+			glColor4f(0.0,0.0,1.0,0.8f);
+			glBegin(GL_LINE_LOOP);
+				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_l -0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_t +0.5, lista_objeto_base[i]->pos.z +0.01);
+				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_l -0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_b -0.5, lista_objeto_base[i]->pos.z +0.01);
+				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_r +0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_b -0.5, lista_objeto_base[i]->pos.z +0.01);
+				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_r +0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_t +0.5, lista_objeto_base[i]->pos.z +0.01);
+			glEnd();
+		}
+	}
 }
 
 
 void resize_window(int width, int height)
 {
-	const float ar = (float) width / (float) height;
+	//const float ar = (float) width / (float) height;
 	/* NORMAL */
 	glViewport(0, 0, width, height);
 	
@@ -133,16 +150,6 @@ void draw_grid(t_heightmap map, float pos_x, float pos_y)
 
 void display(void)
 {
-	
-	int i;
-    int j;
-    VECTOR v;
-    
-    float r,g,b;
-    float r2,b2;
-    float r3,b3;
-    float r4,b4;
-	
 	glMatrixMode(GL_MODELVIEW);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
