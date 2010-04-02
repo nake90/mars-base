@@ -389,6 +389,26 @@ VECTOR vsub(VECTOR vec1, VECTOR vec2)
 	return res;
 }
 
+float vdist(VECTOR vec1, VECTOR vec2)
+{
+	return sqrt( (vec1.x+vec2.x)*(vec1.x+vec2.x) + (vec1.y+vec2.y)*(vec1.y+vec2.y) + (vec1.z+vec2.z)*(vec1.z+vec2.z));
+}
+
+float vdist_sq(VECTOR vec1, VECTOR vec2)
+{
+	return ((vec1.x+vec2.x)*(vec1.x+vec2.x) + (vec1.y+vec2.y)*(vec1.y+vec2.y) + (vec1.z+vec2.z)*(vec1.z+vec2.z));
+}
+
+VECTOR v_from_ang(float pitch, float yaw)
+{
+	VECTOR vec;
+	vec.x = -sin(yaw) * cos(pitch);
+	vec.y = cos(yaw) * cos(pitch);
+	vec.z = -sin(-pitch);
+	return vec;
+}
+
+
 /* - DEBUG - */
 
 /*! \fn void debug_reset(void)
@@ -410,7 +430,6 @@ void debug_reset(void)
 */
 void debug_printf(const char *fmt, ...)
 {
-    static char buf[256];
     FILE* file;
     file=fopen("debug.log","a");
     va_list args;

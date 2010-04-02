@@ -54,8 +54,8 @@
 //GLint skybox[5]; /*!< Texturas del skybox. 0->Front; 1->Right; 2-> Back; 3-> Left; 4->Top*/
 
 /* Niebla y atmósfera */
-extern GLfloat fogColor[4];/*= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
-extern GLfloat fogRange[2];/*= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y distancia máxima visible en metros */
+extern GLfloat fogColor[4];/*= {0.81f, 0.64f, 0.61f, 1.0f}; !< Color de la niebla */
+extern GLfloat fogRange[2];/*= {25000.0f, 50000.0f}; !< Distancia mínima de la niebla y distancia máxima visible en metros */
 
 typedef struct
 {
@@ -69,7 +69,7 @@ typedef struct
 
 /* TEXTURAS BÁSICAS */
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
-extern t_sun sun;/*={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
+extern t_sun sun;/*={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};*/
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 extern t_texture sun_texture;/*={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};*/
 

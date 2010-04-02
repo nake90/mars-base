@@ -40,12 +40,18 @@
 #include "heightmap.h"
 #include "shared.h"
 
+// Máxima distancia al cuadrado desde la cámara hasta el objeto al hacer los traces
+#define MAX_DIST_TRACE_OBJ_SQ 1000
+
 void control(void);
 void key_handle(SDLKey key, SDLMod mod);
 void key_up_handle(SDLKey key, SDLMod mod);
 void mouse_move_but(int button, int x, int y);
+void mouse_static_but(int button, int x, int y);
 void process_events(void);
 void main_update(void);
+
+int get_traced_object(VECTOR pos, VECTOR dir);
 
 int last_m_x,last_m_y;
 SDL_Event sdl_event;

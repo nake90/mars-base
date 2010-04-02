@@ -28,6 +28,7 @@
 
 #include "objetos.h"
 #include <stdio.h>
+#include <io.h>
 
 static int get_material_index(t_model_ptr object, const char* name)
 {
@@ -74,7 +75,7 @@ int load_3DS (t_model *data, char *filename)
 	data->draw_list=0;
 	data->draw_lists=0;
 	
-	while (ftell (l_file) < filelength (fileno (l_file))) /* Leemos todo el archivo */
+	while (ftell (l_file) < filelength(fileno (l_file))) /* Leemos todo el archivo */
 	{
 		fread (&l_chunk_id, 2, 1, l_file); /* HEADER (tipo de chunk) */
 		fread (&l_chunk_lenght, 4, 1, l_file); /* Length */
@@ -342,7 +343,7 @@ void object_predraw(t_obj_base *object)
 
 void object_draw_l(t_obj_base_ptr object)
 {
-	int l_index;
+	//int l_index;
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glEnable(GL_LIGHTING);
@@ -358,13 +359,13 @@ void object_draw_l(t_obj_base_ptr object)
 	glPopMatrix();
 }
 
-void model_unload(t_model_ptr model)
+void model_unload(t_model *model)
 {
 	int i;
 	glDeleteLists(model->draw_list,1);
-	model->draw_list=0;
+	model->draw_lists=0;
 	ilBindImage(0);
-	ilDeleteImages(model->materials_qty,model->material[i].texture);
+	//ilDeleteImages(model->materials_qty,model->material[i].texture); ## DA ERROR (no se ve pero se cierra)
 	for (i=0; i<model->materials_qty; i++)
 	{
 		model->material[i].texture[0]=0;
@@ -475,32 +476,56 @@ void object_draw(t_obj_base object)
  *	\return -3 Error en el malloc del modelo.
 */
 
-int lista_base_crear_elemento(t_obj_base **lista, int *contador, char *ruta)
+int lista_base_crear_elemento(int id_modelo)
 {
-	t_obj_base *objeto; // Objetos que vamos a guardar en memoria
-	t_model *modelo;
+	if (id_modelo>=lista_modelos || id_modelo<0){debug_printf("Error, id_modelo incorrecto\n"); return -3;}
 	
-	objeto = malloc(sizeof(t_obj_base));
-	if (objeto==NULL){return -2;}
-	modelo = malloc(sizeof(t_model));
-	if (modelo==NULL){free(objeto); return -3;}
+	lista_objeto_base=realloc(lista_objeto_base, sizeof(t_obj_base*)*(lista_objetos_base+1));
+	if (lista_objeto_base==NULL){debug_printf("Error en el realloc de la lista de modelos\n"); lista_objetos_base=-1; return -1;}
 	
+	lista_objeto_base[lista_objetos_base]=malloc(sizeof(t_obj_base));
+	if (lista_objeto_base[lista_objetos_base]==NULL){return -2;}
+	
+	memset(lista_objeto_base[lista_objetos_base], 0, sizeof(lista_objeto_base[lista_objetos_base]));
+	
+	lista_objeto_base[lista_objetos_base]->modelo = lista_modelo[id_modelo];
+	
+	/* Inicialización */
+	obj_ptr_setpos(lista_objeto_base[lista_objetos_base],0,0,0);
+	lista_objeto_base[lista_objetos_base]->selec = 0;
+    
+	object_predraw(lista_objeto_base[lista_objetos_base]);
+	
+	lista_objetos_base++;
+	
+    return 0;
+}
+
+int lista_modelo_get_id(const char* nombre_modelo)
+{
+	int i;
+	for(i=0; i<lista_modelos; i++)
+	{
+		if(str_cmp(nombre_modelo, lista_modelo[lista_modelos]->name)==0){return i;}
+	}
+	return -1;
+}
+
+int lista_cargar_modelo(char *ruta)
+{
+	lista_modelo=realloc(lista_modelo, sizeof(t_model*)*(lista_modelos+1));
+
+	if (lista_modelo==NULL){debug_printf("Error en el realloc de la lista de modelos\n"); lista_modelos=-1; return -1;}
+	
+	lista_modelo[lista_modelos]=malloc(sizeof(t_model));
+	if (lista_modelo[lista_modelos]==NULL){return -2;}
 	
 	int i;
-	i=load_3DS(modelo, ruta);
-	objeto->modelo=modelo;
+	i=load_3DS(lista_modelo[lista_modelos], ruta);
 	
-	if (i!=0){debug_printf("Error al cargar el modelo 3DS \"%s\", retornado %i.\n",ruta,i); free(objeto); free(modelo); return i;}
-    obj_ptr_setpos(objeto,0,0,0);
-	object_predraw(objeto);
+	if (i!=0){debug_printf("Error al cargar el modelo 3DS \"%s\", retornado %i.\n",ruta,i); free(lista_modelo[lista_modelos]); return i;}
 	
-	//lista=realloc(lista, sizeof(t_obj_base*)*((*contador)+1));
-	//if (lista==NULL){debug_printf("Error en el realloc de la lista de objetos\n"); free(objeto); free(modelo); *contador=-1; return -1;}
-    
-	
-    lista[*contador]=objeto;
-	(*contador)++;
-	
+	lista_modelos++;
 	
     return 0;
 }
@@ -524,38 +549,40 @@ int lista_base_crear_elemento(t_obj_base **lista, int *contador, char *ruta)
     return 0;
 }*/
 
+
 /*! \fn void lista_base_limpiar(t_obj_base_ptr *lista, int* contador)
  *  \brief Limpia de la memoria todos los elementos de la lista y borra la lista
- *  \warning No llamar a la función lista_base_borrar ni intentar dibujar la lista después de usar esta función.
+ *  \warning No intentar dibujar la lista después de usar esta función.
  *  \param lista La lista que contiene los elementos que se deben borrar
  *  \param contador Contador de la lista
 */
 
-void lista_base_limpiar(t_obj_base **lista, int* contador)
+void lista_base_limpiar(void)
 {
-	*contador--;
-    while(*contador>=0)
+	debug_printf("Borrando %i objetos_base\n",lista_objetos_base);
+	lista_objetos_base--;
+    while(lista_objetos_base>=0)
 	{
-		model_unload(lista[*contador]->modelo);
-		free(lista[*contador]->modelo);
-		free(lista[*contador]);
-		(*contador)--;
+		free(lista_objeto_base[lista_objetos_base]);
+		lista_objetos_base--;
 	}
-	lista_base_borrar(lista, contador);
+	free(lista_objeto_base);
+	lista_objetos_base=0;
+	lista_objeto_base=NULL;
 }
 
 
-/*! \fn void lista_base_borrar(t_obj_base_ptr *lista, int* contador)
- *  \brief Limpia de la memoria una lista de objetos base
- *  \warning No llamar a la función lista_base_borrar después de usar lista_base_limpiar.
- *	Esta función se debe usar solo si se limpia de la memoria los objetos de forma manual
- *  \param lista La lista que se debe borrar
- *  \param contador Contador de la lista
-*/
-
-void lista_base_borrar(t_obj_base **lista, int* contador)
+void lista_modelos_limpiar(void)
 {
-	//free(lista);
-	(*contador)=0;
-	//lista=NULL;
+	debug_printf("Borrando %i modelos\n",lista_modelos);
+	lista_modelos--;
+    while(lista_modelos>=0)
+	{
+		model_unload(lista_modelo[lista_modelos]);
+		free(lista_modelo[lista_modelos]);
+		lista_modelos--;
+	}
+	free(lista_modelo);
+	lista_modelos=0;
+	lista_modelo=NULL;
 }

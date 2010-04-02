@@ -49,7 +49,7 @@
 #define TICK_INTERVAL 20
 /* FPS = 1000/TICK_INTERVAL => TICK_INTERVAL=1000/FPS
 
-/* Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */
+Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */
 #define TERR_SIZE 100
 
 int tam_mapa_x;
@@ -141,6 +141,7 @@ VECTOR trace_camera(float x, float y, float z)
 }*/
 
 int str_size(const char* string);
+#define str_len str_size
 void str_cpy(char* string1,const char* string2);
 void str_cpyl(char* string1, int len, const char* string2);
 void str_append(char* string1,const char* string2);
@@ -153,6 +154,9 @@ float p_escalar(VECTOR vec1,VECTOR vec2);
 void normalize(VECTOR* vec1);
 VECTOR vadd(VECTOR vec1, VECTOR vec2);
 VECTOR vsub(VECTOR vec1, VECTOR vec2);
+float vdist(VECTOR vec1, VECTOR vec2); /* Distancia entre ambos vectores */
+float vdist_sq(VECTOR vec1, VECTOR vec2); /* Cuadrado de la distancia */
+VECTOR v_from_ang(float pitch, float yaw); /* Vector definido por pitch y yaw en radianes */
 
 float nabs(float val);
 int nround(float val);

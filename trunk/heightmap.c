@@ -53,18 +53,18 @@ static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 */
 int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)
 {
-	char str_buffer[255];/* Añade la extensión */
+	char str_buffer[1024];/* Añade la extensión */
 	int res;
 	
-	
 	/* Cargamos el minimapa */
-	str_cpy(str_buffer,filename);
+	str_cpyl(str_buffer,1024-str_len("_minimap.jpg"),filename); // Nos aseguramos que no se pasa de tamaño
+	
 	str_append(str_buffer,"_minimap.jpg");
 	minimapa=ilutGLLoadImage(str_buffer);
 	if(!minimapa)debug_printf("ATENCIÓN: Minimapa no encontrado \"%s\"\n",str_buffer);
 	
 	/* Intentamos abrir el archivo precompilado */
-	str_cpy(str_buffer,filename);
+	str_cpyl(str_buffer,1024-str_len(".nhmap"),filename);
 	str_append(str_buffer,".nhmap");
 	res=load_compiled_map(str_buffer, h_buffer, texture);
 	
@@ -115,7 +115,6 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	
 	int i=0;
 	char val[2];
-	int vali[2];
 	char line[255];
 	fscanf(data,"%c%c\n",&(val[0]),&(val[1])); if(val[0]!='P'||val[1]!='2'){debug_printf("### Fallo, no es un PGM (%c%c)",val[0],val[1]);return 4;}
 	
@@ -123,7 +122,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	while(line[0]=='#');/* Leemos una línea. Si hay un '#' implica que era un comentario... */
 	fscanf(data,"%i\n",&i);
 	i=0;
-	while(fscanf(data,"%i\n",&(h_buffer->data[i]))!=EOF && i<h_buffer->tam_y*h_buffer->tam_x){i++;}
+	while(fscanf(data,"%c\n",&(h_buffer->data[i]))!=EOF && i<h_buffer->tam_y*h_buffer->tam_x){i++;}
 	fclose(data);
 	
 	
@@ -404,14 +403,14 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	half_x = obj->tam_x/2;
 	half_y = obj->tam_y/2;
 	
-	float v_scale = (obj->max_h-obj->min_h)/255.0f;
-	float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale;
+	//float v_scale = (obj->max_h-obj->min_h)/255.0f;
+	//float v_add = -(obj->data[half_x+half_y*obj->tam_x]-obj->zero_h)*v_scale;
 	float color=1.0f;
 	VECTOR ray = {0.6,0.7,-1.4};
 	
 	/* - NOTA - No uso al final las normales en reflejos porque hace muuucho lag! -> ¡Las uso en las sombras! */
-	VECTOR vec1, vec2, vec3;/* Vectores que forman las aristas de los triángulos para calcular las normales */
-	VECTOR pos1, pos2;/* Posición de los puntos anteriores */
+	VECTOR vec1, vec2;/* Vectores que forman las aristas de los triángulos para calcular las normales */
+	//VECTOR pos1, pos2;/* Posición de los puntos anteriores */
 	
 	//compile_gl_status=1;
 	/* Primero calculamos las sombras y las normales */

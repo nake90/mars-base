@@ -1,0 +1,51 @@
+Datos que deben guardar los objetos:
+
+//Esto ya está implementado
+struct t_obj_base
+	name
+	struct modelo
+		name
+		vertices_qty
+		poligonos_qty
+		materiales_qty
+		lista vértices
+		lista polígonos
+		lista map_coord
+		lista texturas
+		draw_list_qty
+		draw_list
+		size (escala)
+	icono (textura opengl)
+	pos
+	rot
+	vel
+	velang
+	sq_a (cuadrado que define la base del objeto)
+	sq_b
+//A partir de aquí falta implementar, esto es solo teoría.
+//Variables
+reparación (100%?)
+cantidad_gases
+	CO2
+	Ar
+	O2
+	CO
+	H2O
+	H2
+	...(más?)
+	--> Presión calculada de aquí
+delta_gases (igual que cantidad_gases, pero lo que cambia con el tiempo)
+	(Depende de:)
+	reparación (en función de la diferencia de presiones con el exterior y random)
+	cantidad vida dentro (plantas y personas)
+	diferentes presiones elementos conectados
+	Tuberías (fugas y entradas/salidas de gases)
+temperatura (K)
+//Internos
+seleccionado (true/false)
+conexiones_qty (cantidad de conexiones que admite el objeto)
+lista conexiones(id del elemento conectado o -1 si no está conectado (CUIDADO PÉRDIDA PRESIÓN))
+lista coordenadas conexiones (coordenadas locales)
+lista normal conexiones (para saber el ángulo al que deben estar las conexiones)
+
+-- creo que ya está todo --

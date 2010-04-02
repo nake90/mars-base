@@ -28,6 +28,9 @@
 */
 
 #include "control.h"
+#include "objetos.h"
+
+extern float debug_float;
 
 void control(void)
 {
@@ -56,8 +59,8 @@ void key_handle(SDLKey key, SDLMod mod)
 	
 	if (SDL_GetModState() & KMOD_SHIFT){speed=200.0f;}
     
-	VECTOR vec;
-	float presion;
+	
+	
 	switch (key)
     {
     case SDLK_ESCAPE: 
@@ -140,6 +143,36 @@ void key_up_handle(SDLKey key, SDLMod mod)
     }
 }
 
+/* Obtiene el ID del objeto que está en el trace desde pos en la dirección dir */
+int get_traced_object(VECTOR pos, VECTOR dir)
+{
+	if(dir.z>=0)return -1; // Si miramos hacia arriba o de frente no podemos calcular el punto de corte...
+	int obj;
+	float sq_l, sq_r, sq_t, sq_b; /* Coordenadas reales del cuadrado del objeto */
+	float corte_x, corte_y; /* Coordenadas reales del punto de corte del trace con el plano z = obj.z */
+	/* Tipo objeto: base */
+	for (obj=0; obj<lista_objetos_base; obj++)
+	{
+		if (lista_objeto_base[obj]->pos.z < pos.z && vdist_sq(lista_objeto_base[obj]->pos, pos)<MAX_DIST_TRACE_OBJ_SQ) // Nos saltamos los objetos que están demasiado lejos ni por encima nuestro
+		{
+			sq_l = lista_objeto_base[obj]->pos.x + lista_objeto_base[obj]->sq_l;
+			sq_r = lista_objeto_base[obj]->pos.x + lista_objeto_base[obj]->sq_r;
+			sq_t = lista_objeto_base[obj]->pos.y + lista_objeto_base[obj]->sq_t;
+			sq_b = lista_objeto_base[obj]->pos.y + lista_objeto_base[obj]->sq_b;
+			
+			
+			corte_x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
+			corte_y = -dir.y/dir.z * pos.z + pos.y;
+			
+			if ( (corte_x>=sq_l && corte_x<=sq_r) && (corte_y>=sq_b && corte_y<=sq_t))
+			{
+				return obj;
+			}
+		}
+	}
+	return -1;
+}
+
 /* Si se mueve el ratón mientras se está pulsando algun botón del ratón */
 void mouse_move_but(int button, int x, int y)
 {
@@ -147,11 +180,9 @@ void mouse_move_but(int button, int x, int y)
 	float last_x=camera.pos_x;
 	float last_y=camera.pos_y;
 	float last_z=camera.pos_z;
-	int w=scr_width;
-	int h=scr_height;
-	int val;
+	
+	
 	float altura_real = coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y);
-	//debug_printf("Altura real: %f; z2real: %f; get_real: %f \n",altura_real,coord_to_real_height(marte,camera.pos_z),get_real_height(marte, camera.pos_x, camera.pos_y));
 	
 	if (button & SDL_BUTTON(SDL_BUTTON_RIGHT) && !(SDL_GetModState() & KMOD_SHIFT))/* Desplazamiento por la pantalla */
 	{
@@ -180,13 +211,36 @@ void mouse_move_but(int button, int x, int y)
 	
 	if (button & SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
-		
+		mouse_static_but(button, x, y);
 	}
 	
     if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0){camera.pos_x=last_x;camera.pos_y=last_y;camera.pos_z=last_z;}
 	control();
 }
 
+/* Si se pulsa algun botón del ratón y el ratón está quieto */
+void mouse_static_but(int button, int x, int y)
+{
+	
+	if (button & SDL_BUTTON(SDL_BUTTON_LEFT))
+	{
+		VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
+		VECTOR dir = v_from_ang(RAD(camera.pitch-90), RAD(camera.yaw));
+		int obj = get_traced_object(pos, dir);
+		
+		int i;
+		for(i=0; i<lista_objetos_base; i++)
+		{
+			lista_objeto_base[i]->selec=0;
+		}
+		
+		if(obj!=-1) // Si el trace detecta un objeto
+		{
+			lista_objeto_base[obj]->selec=1;
+		}
+	}
+	
+}
 
 void process_events(void)
 {
@@ -220,7 +274,7 @@ void process_events(void)
 			y-=last_m_y;//scr_height/2;
 			x*=-1;
 			y*=-1;
-			if (!x && !y)break;
+			if (!x && !y){break;}
 			mouse_move_but(mstat, x, y);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -229,7 +283,7 @@ void process_events(void)
 			mstat = SDL_GetMouseState(&x,&y);
 			x-=last_m_x;//scr_width/2;
 			y-=last_m_y;//scr_height/2;
-			if (!x && !y)break;
+			if (!x && !y){mouse_static_but(mstat, x, y);break;}
 			mouse_move_but(mstat, x, y);
 			break;
 		}

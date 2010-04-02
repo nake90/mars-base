@@ -12,7 +12,7 @@ INCS =  -I"I:/MinGW/include"
 CXXINCS = 
 BIN  = mars_base.exe
 CXXFLAGS = $(CXXINCS) -DOPENGLUT_STATIC -IL_STATIC_LIB  
-CFLAGS = $(INCS) -DOPENGLUT_STATIC -IL_STATIC_LIB  
+CFLAGS = $(INCS) -DOPENGLUT_STATIC -IL_STATIC_LIB -Wall  
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom

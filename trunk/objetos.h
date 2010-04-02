@@ -125,14 +125,17 @@ typedef struct
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
 	VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
 	VECTOR velang; /*!< Velocidad angular (en rad/s) */
-	float sq_a, sq_b; /*!< Ambos lados que definen la base rectangular de colisión del objeto */
+	float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisión del objeto */
+	
+	// Internos
+	char selec; /*!< ¿Seleccionado? */
 	
 }t_obj_base, *t_obj_base_ptr;
 
-
-//t_obj_base **lista_objeto_base; /* Lista dinámica de punteros a todos los objetos de este tipo */
-t_obj_base *lista_objeto_base[MAX_OBJETOS]; /* Lista estática de punteros a todos los objetos de este tipo */
-int lista_objetos_base;
+t_model **lista_modelo; /* Lista dinámica de punteros a modelos mallocados */
+t_obj_base **lista_objeto_base; /* Lista dinámica de punteros a objetos mallocados */
+int lista_objetos_base; // Contador de la lista de objetos
+int lista_modelos; // Contador de la lista de modelos
 
 
 /* - FUNCIONES de objetos - */
@@ -143,9 +146,13 @@ void object_draw_l(t_obj_base *object);
 void model_unload(t_model *model);
 
 /* - FUNCIONES de listas - */
-int lista_base_crear_elemento(t_obj_base **lista, int* contador, char *ruta);
-void lista_base_limpiar(t_obj_base **lista, int* contador);
-void lista_base_borrar(t_obj_base **lista, int* contador);
+int lista_cargar_modelo(char *ruta); // Carga a la lista de modelos un modelo
+int lista_base_crear_elemento(int id_modelo);
+
+int lista_modelo_get_id(const char* nombre_modelo); // Obtiene el id de un modelo por su nombre
+
+void lista_base_limpiar(void);
+void lista_modelos_limpiar(void);
 
 
 #endif
