@@ -71,9 +71,9 @@ typedef struct st_Dialog
 
 
 /* messages for the dialog procedures */
-#define MSG_START       1        /*!< start the dialog, initialise */
-#define MSG_END         2        /*!< dialog is finished - cleanup */
-#define MSG_DRAW        3        /*!< draw the object */
+#define MSG_START       1        /*!< start the dialog, initialise */	// OK
+#define MSG_END         2        /*!< dialog is finished - cleanup */	// OK
+#define MSG_DRAW        3        /*!< draw the object */				// OK
 #define MSG_CLICK       4        /*!< mouse click on the object */
 #define MSG_DCLICK      5        /*!< double click on the object */
 #define MSG_KEY         6        /*!< keyboard shortcut */
@@ -83,21 +83,23 @@ typedef struct st_Dialog
 #define MSG_WANTFOCUS   10       /*!< does object want the input focus? */
 #define MSG_GOTFOCUS    11       /*!< got the input focus */
 #define MSG_LOSTFOCUS   12       /*!< lost the input focus */
-#define MSG_GOTMOUSE    13       /*!< mouse on top of object */
-#define MSG_LOSTMOUSE   14       /*!< mouse moved away from object */
-#define MSG_IDLE        15       /*!< update any background stuff */
+#define MSG_GOTMOUSE    13       /*!< mouse on top of object */			// OK
+#define MSG_LOSTMOUSE   14       /*!< mouse moved away from object */	// OK
+#define MSG_IDLE        15       /*!< update any background stuff */	// OK
 #define MSG_RADIO       16       /*!< clear radio buttons */
 #define MSG_WHEEL       17       /*!< mouse wheel moved */
-#define MSG_LPRESS      18       /*!< mouse left button pressed */
-#define MSG_LRELEASE    19       /*!< mouse left button released */
-#define MSG_MPRESS      20       /*!< mouse middle button pressed */
-#define MSG_MRELEASE    21       /*!< mouse middle button released */
-#define MSG_RPRESS      22       /*!< mouse right button pressed */
-#define MSG_RRELEASE    23       /*!< mouse right button released */
+#define MSG_LPRESS      18       /*!< mouse left button pressed */		// OK
+#define MSG_LRELEASE    19       /*!< mouse left button released */		// SI
+#define MSG_MPRESS      20       /*!< mouse middle button pressed */	// SI
+#define MSG_MRELEASE    21       /*!< mouse middle button released */	// SI
+#define MSG_RPRESS      22       /*!< mouse right button pressed */		// SI
+#define MSG_RRELEASE    23       /*!< mouse right button released */	// SI
 #define MSG_WANTMOUSE   24       /*!< does object want the mouse? */
 #define MSG_USER        25       /*!< from here on are free... */
 
 #define NULL_DIALOG		NULL, 0, 0, 0, 0 ,{0,0,0,0} ,{0,0,0,0}, 0, 0, 0, 0, NULL, NULL, NULL
+
+int do_dialog(DIALOG *d); // Entra en un loop interno y sale con el valor del objeto que ha cerrado el dialog
 
 int draw_dialog(DIALOG *d);
 int draw_element(DIALOG d);
@@ -105,7 +107,9 @@ int draw_element(DIALOG d);
 /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
 int d_box_proc(int msg, struct st_Dialog * d, int c);
 int d_line_proc(int msg, struct st_Dialog * d, int c); /* w, h son las coordenadas del segundo punto, d1 el tamaño */
-int d_label_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , dp2 la fuente a usar */
+int d_label_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , *dp2 la fuente a usar */
+int d_image_proc(int msg, struct st_Dialog * d, int c); /* Imagen a usar en d1 */
+int d_icon_proc(int msg, struct st_Dialog * d, int c); /* Imagen a usar en d1. Se ilumina el borde y al ser pulsado retorna exit */
 
 
 #endif

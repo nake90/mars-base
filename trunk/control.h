@@ -26,7 +26,6 @@
  * del usuario (teclado, ratón, y cosas así).
  * \author Alfonso Arbona Gimeno
 */
-
 #ifndef CONTROL_H
 #define CONTROL_H
 

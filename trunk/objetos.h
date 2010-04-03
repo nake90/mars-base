@@ -25,7 +25,6 @@
  * Este archivo se encarga de todo lo relacionado con los objetos. (Carga, dibujo, control, ...)
  * \author Alfonso Arbona Gimeno
 */
-
 #ifndef OBJETOS_H
 #define OBJETOS_H
 
