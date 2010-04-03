@@ -1,16 +1,16 @@
-!!!!Creo (estoy casi seguro) que al cargar el mapa pasa algo raro en la memoria
+!!!!Memwatch hace que se cierre el programa al cargar los objetos (debe de ser un problema decente o que hago cosas raras xD)
 !!!	Botones, menus, iconos, y todos sus correspondientes elementos de control
 	- Sistema, funciones base, structs, ... OK
-	- Funciones básicas de control de eventos (SDL)
+	- Funciones básicas de control de eventos (SDL) OK (falla el lost_mouse)
 	- Box OK
 	- Line OK
 	- Label OK
-	- Bitmap
-	- Icon
+	- Image OK
+	- Icon OK (falla el lost_mouse)
 	- Button
-	- TabButton
-	- TabFrame
-!!	TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
+	- TabButton ?
+	- TabFrame ?
+!!	TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón) y a veces falla
 !!	Menú para el spawn de objetos
 !!	Tipo: Objeto (información para nodos y datos de presión -> FALTA IMPLEMENTAR)
 !	Grid	(FALLA OFFSET)

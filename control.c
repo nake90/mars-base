@@ -26,11 +26,12 @@
  * del usuario (teclado, ratón, y cosas así).
  * \author Alfonso Arbona Gimeno
 */
-
 #include "control.h"
 #include "objetos.h"
+#include "overlay.h"
 
-extern float debug_float;
+extern DIALOG spawn_dialog[];
+
 
 void control(void)
 {
@@ -96,7 +97,8 @@ void key_handle(SDLKey key, SDLMod mod)
 		break;
 		
     case SDLK_t: /* Funciones de test */
-		
+		spawn_dialog[2].dp2 = fntArial12;
+		do_dialog(spawn_dialog);
 		break;
 	
 	case SDLK_UP:

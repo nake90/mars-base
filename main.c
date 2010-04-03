@@ -36,11 +36,11 @@
 */
 #include "mars_base_private.h"
 
-#include <stdio.h> /* Archivos */
-#include <stdarg.h> /* Argumentos variables (Como printf()) */
-#include <math.h> /* Math */
+//#include <stdio.h> /* Archivos */
+//#include <stdarg.h> /* Argumentos variables (Como printf()) */
+//#include <math.h> /* Math */
 #include <time.h> /* Para random */
-#include <pthread.h> /* Multithreading */
+//#include <pthread.h> /* Multithreading */
 
 /* Librerías añadidas a las carpetas 'include' y 'lib' del proyecto */
 //#include "GL/openglut.h"
@@ -63,6 +63,13 @@
 
 #include "parser.h"
 
+
+DIALOG spawn_dialog[]={
+/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
+{d_box_proc , 20, 120, 400, 300, {0,0,0,255}, {40,128,40,200}, 0, 0, 0, 0, NULL, NULL, NULL},
+{d_icon_proc, 40, 140, 80, 80, {255,255,255,255}, {40,255,40,255}, 0, 0, 1, 0, NULL, NULL, NULL},
+{d_label_proc, 40, 135, 0, 0, {255,255,255,255}, {40,255,40,255}, 0, 0, 0, 0, "Click en la imagen para cerrar el menu", NULL, NULL},
+{NULL_DIALOG}};
 
 static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */
 
@@ -118,7 +125,7 @@ void salir(void)
 
 int main(int argc, char *argv[])
 {
-    /* - INICIACIÓN VARIABLES - */
+	/* - INICIACIÓN VARIABLES - */
     str_cpy(app_path,argv[0]);
     str_ruta_back(app_path);
     int i;
@@ -144,7 +151,16 @@ int main(int argc, char *argv[])
 	scr_init_reset(0);
 	
 	SDL_WM_SetCaption("mars_base", NULL);
-	fondo.texture[0] = ilutGLLoadImage("materials\\sun.tga");
+	randomize(17.5);
+	sfrand(); // no se por qué pero sale siempre <0 la primera vez ??
+	if(sfrand()>0.0f)
+	{
+		fondo.texture[0] = ilutGLLoadImage("materials/fondo1.tga");
+	}
+	else
+	{
+		fondo.texture[0] = ilutGLLoadImage("materials/fondo2.tga");
+	}
 	if(!fondo.texture[0]){debug_printf("No se ha encontrado la textura de fondo.\n",i); config.show_fondo=0;}else{config.show_fondo=1;}
 	/* - POSINICIALIZACIÓN (Carga elementos) - */
 	
@@ -159,10 +175,10 @@ int main(int argc, char *argv[])
 	/* Carga materiales */
 	scr_init_printf ("Cargando materiales...");
 	
-	i=load_material(&sand, "materials\\sand_default");
+	i=load_material(&sand, "materials/sand_default");
 	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); exit(-1);}
 	
-	sun_texture.texture[0]=ilutGLLoadImage("materials\\sun.tga");
+	sun_texture.texture[0]=ilutGLLoadImage("materials/sun.tga");
 	if(!sun_texture.texture[0]){exit(0);}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -178,7 +194,7 @@ int main(int argc, char *argv[])
 	camera.wasd_count=0;
 	
 	scr_init_printf ("Cargando terreno...");
-	load_heightmap("heightmaps\\marineris",&marte,sand);
+	load_heightmap("heightmaps/marineris",&marte,sand);
 	
 	scr_init_printf ("Cargando modelos...");
 	
@@ -247,8 +263,6 @@ int main(int argc, char *argv[])
 	/* - MAIN LOOP - */
 	next_time = SDL_GetTicks() + TICK_INTERVAL;
 	
-	unsigned int contador=0;
-	
 	while(1)
 	{
 		process_events();
@@ -258,8 +272,9 @@ int main(int argc, char *argv[])
 		display();
 		SDL_Delay(time_left());
 		next_time += TICK_INTERVAL;
-		contador++;
-		if(contador>=FPS_FRAMES){FPS=1000.0f/(float)(next_time-SDL_GetTicks()); contador=0;}
+		
+		//contador++;
+		//if(contador>=FPS_FRAMES){FPS=1000.0f/(float)(next_time-SDL_GetTicks()); contador=0;}
 	}
 	
     exit(0);

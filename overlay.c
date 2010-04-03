@@ -198,6 +198,7 @@ int d_line_proc(int msg, struct st_Dialog * d, int c)
 				glVertex2i(d->x, d->y);
 				glVertex2i(d->w, d->h);
 			glEnd();
+			d->flag |= D_DIRTY;
 			break;
 		case MSG_IDLE:
 			
@@ -229,10 +230,280 @@ int d_label_proc(int msg, struct st_Dialog * d, int c)
 			
 			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x, d->y, 0.1);
 			
+			d->flag |= D_DIRTY;
 			break;
 		case MSG_IDLE:
 			
 			break;
 	}
 	return D_O_K;
+}
+
+int d_image_proc(int msg, struct st_Dialog * d, int c)
+{
+	switch (msg)
+	{
+		case MSG_START:
+			
+			break;
+		case MSG_END:
+			
+			break;
+		case MSG_DRAW:
+			//glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, d->d1);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,1);
+				glVertex2i(d->x, d->y);				/* Arriba izquierda */
+				glTexCoord2f(0,0);
+				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
+				glTexCoord2f(1,0);
+				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
+				glTexCoord2f(1,1);
+				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+			glLineWidth(2);
+			glColor4f(d->fg.r/255.0f, d->fg.g/255.0f, d->fg.b/255.0f, d->fg.a/255.0f);
+			glBegin(GL_LINE_LOOP);
+				glVertex2i(d->x+1, d->y+1);				/* Arriba izquierda */
+				glVertex2i(d->x+1, d->y+d->h-1);		/* Abajo izquierda */
+				glVertex2i(d->x+d->w-1, d->y+d->h-1);	/* Abajo derecha */
+				glVertex2i(d->x+d->w-1, d->y+1);		/* Arriba derecha */
+			glEnd();
+			d->flag |= D_DIRTY;
+			break;
+		case MSG_IDLE:
+			
+			break;
+	}
+	return D_O_K;
+}
+
+
+int d_icon_proc(int msg, struct st_Dialog * d, int c)
+{
+	static float color_divisor;
+	static int border_color;
+	if(!color_divisor){color_divisor = 255.0f; border_color = 0;} // Por si intentamos dibujar sin iniciar
+	switch (msg)
+	{
+		case MSG_START:
+			color_divisor = 255.0f;
+			border_color = 0;
+			break;
+		case MSG_END:
+			
+			break;
+		case MSG_DRAW:
+			glColor4f(d->bg.r/color_divisor, d->bg.g/color_divisor, d->bg.b/color_divisor, d->bg.a/255.0f);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, d->d1);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0,1);
+				glVertex2i(d->x, d->y);				/* Arriba izquierda */
+				glTexCoord2f(0,0);
+				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
+				glTexCoord2f(1,0);
+				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
+				glTexCoord2f(1,1);
+				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
+			glEnd();
+			
+			glDisable(GL_TEXTURE_2D);
+			glLineWidth(2);
+			if(d->flag & D_GOTMOUSE)//border_color == 1)
+			{
+				glColor4f(1.0f, 1.0f, 1.0f, d->fg.a/255.0f);
+			}
+			else
+			{
+				glColor4f(d->fg.r/255.0f, d->fg.g/255.0f, d->fg.b/255.0f, d->fg.a/255.0f);
+			}
+			glBegin(GL_LINE_LOOP);
+				glVertex2i(d->x+1, d->y+1);				/* Arriba izquierda */
+				glVertex2i(d->x+1, d->y+d->h-1);		/* Abajo izquierda */
+				glVertex2i(d->x+d->w-1, d->y+d->h-1);	/* Abajo derecha */
+				glVertex2i(d->x+d->w-1, d->y+1);		/* Arriba derecha */
+			glEnd();
+			d->flag |= D_DIRTY;
+			break;
+		case MSG_GOTMOUSE:
+			return D_REDRAW;
+			
+		case MSG_LOSTMOUSE:
+			return D_REDRAW;
+			
+		case MSG_LPRESS:
+			return D_CLOSE;
+			
+		case MSG_IDLE:
+			break;
+	}
+	return D_O_K;
+}
+
+int do_dialog(DIALOG *d)
+{
+	/* Inicialización */
+	int current_id = 0; // Resultado a retornar (id del elemento que ha salido)
+	int ret, message;
+	int status = 1; // 0 -> Cerrar, 1 -> Necesita inicializar, 2 -> Idle, 3 -> Dibujar todo, 4 -> Orden extra
+	int message_saved;
+	int mstat,x,y; // Coordenadas del ratón
+	int id_extra;
+	int is_dirty=0;
+	SDL_ShowCursor(1);
+	set_gl_mode();
+		
+	/* Main loop */
+	while(status!=0)
+	{
+		message=0;
+		current_id=0;
+		
+		if(status == 1){message=MSG_START; status = 3;}
+		else if(status == 3){message=MSG_DRAW; status = 2;}
+		
+		if(message==0) // Si aún no hay un mensaje miramos si hay algún evento
+		{
+			while(SDL_PollEvent(&sdl_event))
+			{
+				switch(sdl_event.type)
+				{
+				case SDL_QUIT:
+					/* Handle quit requests (like Ctrl-c). */
+					exit(0);
+					break;
+				case SDL_ACTIVEEVENT: /* No funciona bien... */
+					if(sdl_event.active.state==SDL_APPACTIVE)
+					{
+						window_mode=(sdl_event.active.gain==0?1:0);
+						if(window_mode==0){SDL_WM_GrabInput(SDL_GRAB_ON);}else{SDL_WM_GrabInput(SDL_GRAB_OFF);}
+						debug_printf("Minimizado: %i\n",window_mode);
+					}
+					break;
+					/*
+				case SDL_KEYDOWN:
+					key_handle(sdl_event.key.keysym.sym, sdl_event.key.keysym.mod);
+					break;
+				case SDL_KEYUP:
+					key_up_handle(sdl_event.key.keysym.sym, sdl_event.key.keysym.mod);
+					break;
+					*/
+				case SDL_MOUSEMOTION: // Se mueve el ratón o se aprieta un botón
+				case SDL_MOUSEBUTTONDOWN:
+					mstat = SDL_GetMouseState(&x,&y);
+					id_extra=0;
+					while(d[id_extra].df!=NULL)
+					{
+						// Si está sobre un objeto
+						if((x >= d[id_extra].x && x <= d[id_extra].x + d[id_extra].w) && (y >= d[id_extra].y && y <= d[id_extra].y + d[id_extra].h))
+						{
+							if(mstat & SDL_BUTTON(SDL_BUTTON_LEFT))
+							{
+								if(d[id_extra].df(MSG_LPRESS,&d[id_extra],0)==D_CLOSE)status=0;
+							}
+							
+							if(!(d[id_extra].flag &= D_GOTMOUSE))
+							{
+								d[id_extra].flag |= D_GOTMOUSE;
+								ret=d[id_extra].df(MSG_GOTMOUSE,&d[id_extra],0);
+								switch (ret)
+								{
+								case D_CLOSE:
+									status=0;
+									break;
+								case D_REDRAW_ALL:
+								case D_REDRAW: // Dibujar todo
+									message=MSG_DRAW;
+									break;
+								case D_REDRAWME:
+									if(d[id_extra].df(MSG_DRAW,&d[id_extra],0)==D_CLOSE)status=0;
+									break;
+								}
+							}
+						}
+						else // no está en ese objeto
+						{
+							if(d[id_extra].flag &= D_GOTMOUSE)
+							{
+								d[id_extra].flag &= !D_GOTMOUSE;
+								
+								ret=d[id_extra].df(MSG_LOSTMOUSE,&d[id_extra],0);
+								
+								switch (ret)
+								{
+								case D_CLOSE:
+									status=0;
+									break;
+								case D_REDRAW_ALL:
+								case D_REDRAW: // Dibujar todo
+									message=MSG_DRAW;
+									break;
+								case D_REDRAWME:
+									if(d[id_extra].df(MSG_DRAW,&d[id_extra],0)==D_CLOSE)status=0;
+									break;
+								}
+							}
+						}
+						id_extra++;
+					}
+				}
+			}
+		}
+		
+		if(message==0){SDL_Delay(20); message=MSG_IDLE;} // Aún no hay mensaje? pues IDLE
+		current_id=0;
+		while(d[current_id].df!=NULL)
+		{
+			if(status==0)break; // Se ha dicho de cerrar, se cierra ya!
+			
+			ret=d[current_id].df(message,&d[current_id],0);
+			if(status == 4){message = message_saved; status = 2;} // Si es una orden extra volvemos a poner la de verdad
+			
+			is_dirty=0;
+			if(d[current_id].flag & D_DIRTY){d[current_id].flag &= !D_DIRTY; is_dirty=1;}
+			
+			switch(ret)
+			{
+				case D_O_K: // Continuar como si no si nada
+					break;
+				case D_CLOSE: // Cerrar el dialog
+					status=0;
+					break;
+				case D_REDRAW_ALL:
+				case D_REDRAW: // Dibujar todo
+					status=3;
+					break;
+				case D_REDRAWME:
+					current_id--; // Evitamos que pase al siguiente elemento
+					status=4;
+					message_saved=message;
+					message=MSG_DRAW;
+					break;
+				case D_WANTFOCUS: // No lo uso
+					break;
+				case D_USED_CHAR: // Por ahora este tampoco
+					break;
+				case D_DONTWANTMOUSE:
+					break;
+			}
+			current_id++;
+		}
+		if(is_dirty){glEnd();SDL_GL_SwapBuffers();}
+	}
+	
+	/* Desinicialización */
+	ret=current_id;
+	current_id=0;
+	while(d[current_id].df!=NULL)
+	{
+		ret=d[current_id].df(MSG_END,&d[current_id],0);
+		current_id++;
+	}
+	restore_gl_mode();
+	return ret;
 }

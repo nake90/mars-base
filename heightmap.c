@@ -24,7 +24,6 @@
  * \brief Carga los heightmaps (mapas)
  * \author Alfonso Arbona Gimeno
 */
-
 #include "heightmap.h"
 #include <pthread.h>
 

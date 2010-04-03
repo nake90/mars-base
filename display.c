@@ -27,7 +27,6 @@
  * display, de limpieza de pantalla.
  * \author Alfonso Arbona Gimeno
 */
-
 #include "display.h"
 #include "overlay.h"
 

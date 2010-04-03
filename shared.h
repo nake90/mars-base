@@ -164,6 +164,14 @@ int nfloor(float val);
 int nceil(float val);
 int nsgn(float val);
 
+void randomize(float seed);
+
+int irand(int max); // Integer random [0 - max]
+int sirand(int max); // Signed integer random [(-max) - (+max)]
+float frand(void); // Float random [0 - 1]
+float sfrand(void); // Signed float random [(-1) - (+1)]
+#define rfrand(M,m) (frand()*((M)-(m))+(m))
+
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
 void draw_sprite (float x, float y, float z, t_texture textura, float size);
 

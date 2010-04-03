@@ -5,11 +5,11 @@
 #define MARS_BASE_PRIVATE_H
 
 /* VERSION DEFINITIONS */
-#define VER_STRING	"0.2.3.3137"
+#define VER_STRING	"0.2.3.3295"
 #define VER_MAJOR	0
 #define VER_MINOR	2
 #define VER_RELEASE	3
-#define VER_BUILD	3137
+#define VER_BUILD	3295
 #define COMPANY_NAME	""
 #define FILE_VERSION	""
 #define FILE_DESCRIPTION	"Design, build and maintain your own Mars-base"

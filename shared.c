@@ -19,7 +19,6 @@
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
 */
-
 /** \file shared.c
  * \brief Funciones compartidas por todos los módulos
  * Este archivo contiene todo el código de las funciones que son necesarias por todos los
@@ -132,7 +131,19 @@ static void scr_init_push (void)
 		scr_message_index--;
 	}
 }
-
+typedef struct st_Dialog
+{
+	int (*df)(int msg, struct st_Dialog * d, int c);
+	int x, y;
+	int w, h;
+	COLORf fg, bg;
+	int key;
+	int flag;
+	int d1, d2;
+	void *dp, *dp2, *dp3;
+}DIALOG;
+extern int d_image_proc(int msg, struct st_Dialog * d, int c);
+extern int draw_element(DIALOG d);
 void scr_init_printf (const char *fmt, ...)
 {
 	char buf[MAX_SCREEN_MESSAGES_LEN];
@@ -144,6 +155,13 @@ void scr_init_printf (const char *fmt, ...)
 	str_cpyl(scr_messages[scr_message_index],MAX_SCREEN_MESSAGES_LEN,buf);
 	scr_message_index++;
 	/* Printing */
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (config.show_fondo)
+	{
+		/* DIALOG:         {(*df),        x, y, w,                  h,                fg,              bg, key, flag,            d1, d2, *dp, *dp2, *dp3} */
+		DIALOG fondo_dlg = {d_image_proc, 0, 0, scr_width, scr_height, {128,128,128,128}, {128,128,128,128}, 0, 0, fondo.texture[0], 0, NULL, NULL, NULL};
+		draw_element(fondo_dlg);
+	}
 	
 	if (scr_message_debug)
 	{
@@ -155,7 +173,6 @@ void scr_init_printf (const char *fmt, ...)
 	}
 	int i;
 	int pos=1;
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (i=scr_message_index-1; i>=0; i--)
 	{
 		hud_printf (12, pos*12, scr_messages[i]);
@@ -164,6 +181,7 @@ void scr_init_printf (const char *fmt, ...)
 	glFinish();
 	SDL_GL_SwapBuffers();
 }
+
 
 void scr_init_reprintf (const char *fmt, ...)
 {
@@ -181,22 +199,6 @@ void scr_init_reprintf (const char *fmt, ...)
 	int i;
 	int pos=1;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	if (config.show_fondo)
-	{
-		set_gl_mode();
-		glColor3f(1,0,0);
-		//use_texture(fondo);
-		glBindTexture(GL_TEXTURE_2D, fondo.texture[0] );
-		glBegin(GL_QUADS);
-			glTexCoord2d(0,1); glVertex3d(0,		scr_height,0.1f);
-			glTexCoord2d(1,1); glVertex3d(scr_width,scr_height,0.1f);
-			glTexCoord2d(1,0); glVertex3d(scr_width,scr_height*2,0.1f);
-			glTexCoord2d(0,0); glVertex3d(0,		scr_height*2,0.1f);
-		glEnd();
-		restore_gl_mode();
-		glFinish();
-	}
 	
 	for (i=scr_message_index-1; i>=0; i--)
 	{
@@ -618,3 +620,12 @@ void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(x-size*(sin(RAD(camera.yaw+90))), y+size*(cos(RAD(camera.yaw+90))+cos(RAD(camera.pitch))), z+size*sin(RAD(camera.pitch)));// Top Left
 	glEnd();
 }
+
+
+/* RANDOM */
+/* rand() % n da resultados uniformes de [0 - (n-1)] */
+void randomize(float seed){srand(time(NULL)*seed);}
+int irand(int max){return (rand() % (max-1));}
+int sirand(int max){return (rand() % (max-1)*2)-max;}
+float frand(void){return (rand() % 10001)/10000.0f;}
+float sfrand(void){return ((rand() % 20001)-10000)/10000.0f;}
