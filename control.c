@@ -98,7 +98,9 @@ void key_handle(SDLKey key, SDLMod mod)
 		
     case SDLK_t: /* Funciones de test */
 		spawn_dialog[2].dp2 = fntArial12;
-		do_dialog(spawn_dialog);
+		spawn_dialog[3].dp2 = fntArial12;
+		int i = do_dialog(spawn_dialog);
+		message_printf("Se ha cerrado el menú al apretar el elemento %i!",i);
 		break;
 	
 	case SDLK_UP:

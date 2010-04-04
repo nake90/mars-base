@@ -209,11 +209,14 @@ int d_line_proc(int msg, struct st_Dialog * d, int c)
 
 int d_label_proc(int msg, struct st_Dialog * d, int c)
 {
+	if(d->dp2==NULL){debug_printf("Error, d_label sin font! Dialog cerrado\n");return D_CLOSE;}
 	switch (msg)
 	{
 		case MSG_START:
-			
+			if(d->h==0){d->h=TTF_FontHeight((TTF_Font*)d->dp2)+4;}
+			if(d->w==0){TTF_SizeText((TTF_Font*)d->dp2, d->dp, &d->w, NULL); d->w += 4;}
 			break;
+			
 		case MSG_END:
 			
 			break;
@@ -222,13 +225,13 @@ int d_label_proc(int msg, struct st_Dialog * d, int c)
 			SDL_Color clrFg = {d->fg.r, d->fg.g, d->fg.b, d->fg.a}; /* Color del texto */
 			
 			glBegin(GL_QUADS);
-				glVertex2i(d->x, d->y-d->h);		/* Arriba izquierda */
-				glVertex2i(d->x, d->y);				/* Abajo izquierda */
-				glVertex2i(d->x+d->w, d->y);		/* Abajo derecha */
-				glVertex2i(d->x+d->w, d->y-d->h);	/* Arriba derecha */
+				glVertex2i(d->x, d->y);				/* Arriba izquierda */
+				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
+				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
+				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
 			glEnd();
 			
-			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x, d->y, 0.1);
+			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x+2, d->y+d->h-2, 0.1);
 			
 			d->flag |= D_DIRTY;
 			break;
@@ -331,10 +334,67 @@ int d_icon_proc(int msg, struct st_Dialog * d, int c)
 			d->flag |= D_DIRTY;
 			break;
 		case MSG_GOTMOUSE:
-			return D_REDRAW;
+			//d->flag |= D_GOTMOUSE;
+			//d->flag |= D_DIRTY;
+			return D_O_K;
 			
 		case MSG_LOSTMOUSE:
-			return D_REDRAW;
+			//d->flag &= !D_GOTMOUSE;
+			//d->flag |= D_DIRTY;
+			return D_O_K;
+			
+		case MSG_LPRESS:
+			return D_CLOSE;
+			
+		case MSG_IDLE:
+			//return D_REDRAW; No quieres descomentarlo... seguro
+			break;
+	}
+	return D_O_K;
+}
+
+int d_button_proc(int msg, struct st_Dialog * d, int c)
+{
+	if(d->dp2==NULL){debug_printf("Error, d_button sin font! Dialog cerrado\n");return D_CLOSE;}
+	
+	switch (msg)
+	{
+		case MSG_START:
+			if(d->h==0){d->h=TTF_FontHeight((TTF_Font*)d->dp2)+4;}
+			if(d->w==0){TTF_SizeText((TTF_Font*)d->dp2, d->dp, &d->w, NULL); d->w += 4;}
+			break;
+		case MSG_END:
+			
+			break;
+		case MSG_DRAW:
+			glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
+			SDL_Color clrFg = {d->fg.r, d->fg.g, d->fg.b, d->fg.a}; /* Color del texto */
+			
+			glBegin(GL_QUADS);
+				glVertex2i(d->x, d->y);				/* Arriba izquierda */
+				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
+				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
+				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
+			glEnd();
+			
+			glColor3f(0.2f, 0.4f, 0.2f); // Claro
+			glBegin(GL_LINE_STRIP);
+				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
+				glVertex2i(d->x, d->y);				/* Arriba izquierda */
+				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
+			glEnd();
+			
+			glColor3f(0.15f, 0.2f, 0.15f); // Oscuro
+			glBegin(GL_LINE_STRIP);
+				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
+				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
+				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
+			glEnd();
+			
+			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x+2, d->y+d->h-2, 0.1);
+			
+			d->flag |= D_DIRTY;
+			break;
 			
 		case MSG_LPRESS:
 			return D_CLOSE;
@@ -349,14 +409,25 @@ int do_dialog(DIALOG *d)
 {
 	/* Inicialización */
 	int current_id = 0; // Resultado a retornar (id del elemento que ha salido)
-	int ret, message;
+	int ret, message, ret_id=-1;
 	int status = 1; // 0 -> Cerrar, 1 -> Necesita inicializar, 2 -> Idle, 3 -> Dibujar todo, 4 -> Orden extra
 	int message_saved;
 	int mstat,x,y; // Coordenadas del ratón
 	int id_extra;
 	int is_dirty=0;
-	SDL_ShowCursor(1);
+	SDL_ShowCursor(0); // No mostramos el ratón al guardar la imagen de la pantalla
 	set_gl_mode();
+	glEnable(GL_TEXTURE_2D);
+	/* Guardamos una foto de la pantalla tal como estaba para ponerla de fondo (Que cutre eeh? Pues funciona y es rápido!) */
+	
+	ILuint pantalla; // Foto de la pantalla
+	GLuint pantalla_gl; // Foto de la pantalla copiada a opengl
+	ilGenImages(1,&pantalla); // Iniciamos la imagen
+	ilBindImage(pantalla); // La seleccionamos
+	ilutGLScreen(); // Hacemos la foto y la guardamos en 'pantalla'
+	
+	
+	SDL_ShowCursor(1);
 		
 	/* Main loop */
 	while(status!=0)
@@ -364,8 +435,28 @@ int do_dialog(DIALOG *d)
 		message=0;
 		current_id=0;
 		
-		if(status == 1){message=MSG_START; status = 3;}
-		else if(status == 3){message=MSG_DRAW; status = 2;}
+		if(status == 1)
+		{
+			message=MSG_START;
+			status = 3;
+			glEnable(GL_TEXTURE_2D);
+			glColor3d(1.0,1.0,1.0);
+			ilBindImage(pantalla);
+			ilutGLBindTexImage();
+			glBegin(GL_QUADS);
+			    glTexCoord2i(0, 1); glVertex2i(0,   0);
+			    glTexCoord2i(0, 0); glVertex2i(0,   scr_height);
+			    glTexCoord2i(1, 0); glVertex2i(scr_width, scr_height);
+			    glTexCoord2i(1, 1); glVertex2i(scr_width, 0);
+		    glEnd();
+			glFinish();
+			SDL_GL_SwapBuffers();
+		}
+		else if(status == 3)
+		{
+			message=MSG_DRAW;
+			status = 2;
+		}
 		
 		if(message==0) // Si aún no hay un mensaje miramos si hay algún evento
 		{
@@ -404,17 +495,25 @@ int do_dialog(DIALOG *d)
 						{
 							if(mstat & SDL_BUTTON(SDL_BUTTON_LEFT))
 							{
-								if(d[id_extra].df(MSG_LPRESS,&d[id_extra],0)==D_CLOSE)status=0;
+								if(d[id_extra].df(MSG_LPRESS,&d[id_extra],0)==D_CLOSE)
+								{
+									status=0;
+									ret_id=id_extra;
+								}
 							}
 							
-							if(!(d[id_extra].flag &= D_GOTMOUSE))
+							if(!(d[id_extra].flag & D_GOTMOUSE))
 							{
 								d[id_extra].flag |= D_GOTMOUSE;
 								ret=d[id_extra].df(MSG_GOTMOUSE,&d[id_extra],0);
+								//debug_printf(" MSG -> MSG_GOTMOUSE a %i, ret %i\n",id_extra,ret);
+								message=MSG_DRAW; // Pequeño apañijo para arreglar el problema de got_mouse / lost_mouse
+								
 								switch (ret)
 								{
 								case D_CLOSE:
 									status=0;
+									ret_id=id_extra;
 									break;
 								case D_REDRAW_ALL:
 								case D_REDRAW: // Dibujar todo
@@ -428,16 +527,21 @@ int do_dialog(DIALOG *d)
 						}
 						else // no está en ese objeto
 						{
-							if(d[id_extra].flag &= D_GOTMOUSE)
+							//debug_printf(" MSG -> No está sobre %i, got_mouse = %i\n",id_extra, d[id_extra].flag & D_GOTMOUSE);
+							if(d[id_extra].flag & D_GOTMOUSE)
 							{
 								d[id_extra].flag &= !D_GOTMOUSE;
 								
 								ret=d[id_extra].df(MSG_LOSTMOUSE,&d[id_extra],0);
+								//debug_printf(" MSG -> MSG_LOSTMOUSE a %i, ret %i\n",id_extra,ret);
+								message=MSG_DRAW; // Pequeño apañijo para arreglar el problema de got_mouse / lost_mouse
 								
+																
 								switch (ret)
 								{
 								case D_CLOSE:
 									status=0;
+									ret_id=id_extra;
 									break;
 								case D_REDRAW_ALL:
 								case D_REDRAW: // Dibujar todo
@@ -457,7 +561,25 @@ int do_dialog(DIALOG *d)
 		
 		if(message==0){SDL_Delay(20); message=MSG_IDLE;} // Aún no hay mensaje? pues IDLE
 		current_id=0;
-		while(d[current_id].df!=NULL)
+		
+		if(message==MSG_DRAW)
+		{
+			glEnable(GL_TEXTURE_2D);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			ilBindImage(pantalla);
+			ilutGLBindTexImage();
+			glColor3d(1.0,1.0,1.0);
+			glBegin(GL_QUADS);
+			    glTexCoord2i(0, 1); glVertex2i(0,   0);
+			    glTexCoord2i(0, 0); glVertex2i(0,   scr_height);
+			    glTexCoord2i(1, 0); glVertex2i(scr_width, scr_height);
+			    glTexCoord2i(1, 1); glVertex2i(scr_width, 0);
+		    glEnd();
+			//glFinish();
+			//SDL_GL_SwapBuffers();
+		}
+		
+		while(d[current_id].df!=NULL && status!=0)
 		{
 			if(status==0)break; // Se ha dicho de cerrar, se cierra ya!
 			
@@ -465,7 +587,11 @@ int do_dialog(DIALOG *d)
 			if(status == 4){message = message_saved; status = 2;} // Si es una orden extra volvemos a poner la de verdad
 			
 			is_dirty=0;
-			if(d[current_id].flag & D_DIRTY){d[current_id].flag &= !D_DIRTY; is_dirty=1;}
+			if(d[current_id].flag & D_DIRTY)
+			{
+				d[current_id].flag &= !D_DIRTY;
+				is_dirty=1;
+			}
 			
 			switch(ret)
 			{
@@ -473,6 +599,7 @@ int do_dialog(DIALOG *d)
 					break;
 				case D_CLOSE: // Cerrar el dialog
 					status=0;
+					ret_id=current_id;
 					break;
 				case D_REDRAW_ALL:
 				case D_REDRAW: // Dibujar todo
@@ -493,17 +620,21 @@ int do_dialog(DIALOG *d)
 			}
 			current_id++;
 		}
-		if(is_dirty){glEnd();SDL_GL_SwapBuffers();}
+		if(is_dirty)
+		{
+			glFinish();
+			SDL_GL_SwapBuffers();
+		}
 	}
 	
 	/* Desinicialización */
-	ret=current_id;
 	current_id=0;
 	while(d[current_id].df!=NULL)
 	{
-		ret=d[current_id].df(MSG_END,&d[current_id],0);
+		d[current_id].df(MSG_END,&d[current_id],0);
 		current_id++;
 	}
+	ilDeleteImages(1, &pantalla);
 	restore_gl_mode();
-	return ret;
+	return ret_id;
 }

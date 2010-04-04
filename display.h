@@ -31,20 +31,9 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
 #include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <IL/ilut.h>
-
-#include <stdio.h>
-#include <math.h>
-#include <time.h>
 #include "shared.h"
 #include "heightmap.h"
-#include "atmosferico.h"
-#include "objetos.h"
 
 SDL_Surface *screen;
 const SDL_VideoInfo* scr_info;
@@ -63,5 +52,6 @@ void video_init(void);
 void resize_window(int width, int height);
 void display(void);
 void draw_grid(t_heightmap map, float pos_x, float pos_y);
+void message_printf(const char *fmt, ...);
 
 #endif

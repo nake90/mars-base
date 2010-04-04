@@ -64,11 +64,13 @@
 #include "parser.h"
 
 
+/* Cuidado al cambiar el orden!, al texto se le añade la fuente en run-time!! */
 DIALOG spawn_dialog[]={
 /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
 {d_box_proc , 20, 120, 400, 300, {0,0,0,255}, {40,128,40,200}, 0, 0, 0, 0, NULL, NULL, NULL},
-{d_icon_proc, 40, 140, 80, 80, {255,255,255,255}, {40,255,40,255}, 0, 0, 1, 0, NULL, NULL, NULL},
-{d_label_proc, 40, 135, 0, 0, {255,255,255,255}, {40,255,40,255}, 0, 0, 0, 0, "Click en la imagen para cerrar el menu", NULL, NULL},
+{d_icon_proc, 40, 140, 80, 80, {128,128,128,255}, {40,255,40,255}, 0, 0, 1, 0, NULL, NULL, NULL},
+{d_label_proc, 40, 135, 0, 0, {255,255,255,255}, {0,0,0,0}, 0, 0, 0, 0, "Click en la imagen para cerrar el menu", NULL, NULL},
+{d_button_proc, 40, 240, 0, 0, {255,255,255,255}, {64,128,64,255}, 0, 0, 0, 0, "Cerrar", NULL, NULL},
 {NULL_DIALOG}};
 
 static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */

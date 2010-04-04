@@ -110,6 +110,7 @@ int d_line_proc(int msg, struct st_Dialog * d, int c); /* w, h son las coordenad
 int d_label_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , *dp2 la fuente a usar */
 int d_image_proc(int msg, struct st_Dialog * d, int c); /* Imagen a usar en d1 */
 int d_icon_proc(int msg, struct st_Dialog * d, int c); /* Imagen a usar en d1. Se ilumina el borde y al ser pulsado retorna exit */
+int d_button_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , *dp2 la fuente a usar, y al ser pulsado retorna exit */
 
 
 #endif

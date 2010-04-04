@@ -1,24 +1,16 @@
-!!!!Memwatch hace que se cierre el programa al cargar los objetos (debe de ser un problema decente o que hago cosas raras xD)
-!!!	Botones, menus, iconos, y todos sus correspondientes elementos de control
-	- Sistema, funciones base, structs, ... OK
-	- Funciones básicas de control de eventos (SDL) OK (falla el lost_mouse)
-	- Box OK
-	- Line OK
-	- Label OK
-	- Image OK
-	- Icon OK (falla el lost_mouse)
-	- Button
-	- TabButton ?
-	- TabFrame ?
+!!!	Menú para el spawn de objetos
+!!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA IMPLEMENTAR)
+!!!	Control de nodos
+!!	Presión atmosférica
+!!	Temperatura atmosférica
+!!	Funciones de transferencia de calor, gases y presión
 !!	TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón) y a veces falla
-!!	Menú para el spawn de objetos
-!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA IMPLEMENTAR)
+!!	Memwatch hace que se cierre el programa al cargar los objetos (debe de ser un problema decente o que hago cosas raras xD)
 !	Grid	(FALLA OFFSET)
 !	Problemas con movimiento por teclado
 !	Archivo de configuración
-!	Control de nodos
-!	Presión atmosférica
-!	Temperatura atmosférica
-!	Funciones de transferencia de calor, gases y presión
 !	Console
 !	Triángulos lejanos de mayor tamaño para aumentar el rendimiento
+!	TabButton ?
+!	TabFrame ?
+!	Scroll ?
