@@ -31,16 +31,10 @@
 #define SHARED_H
 
 #include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
-#include <IL/ilut.h>
 
-#include <stdio.h>
 #include <stdarg.h>
-#include <math.h>
-#include <time.h>
 #include "mars_base_private.h"
 
 //2*PI/360 = 0.017453292519943295769236907684886

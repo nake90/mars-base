@@ -25,7 +25,12 @@
  * diferentes módulos del programa. Está formado por funciones de bajo nivel personalizadas para la aplicación.
  * \author Alfonso Arbona Gimeno
 */
-
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <IL/ilut.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
 #include "shared.h"
 
 void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z)

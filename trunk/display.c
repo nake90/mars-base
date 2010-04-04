@@ -27,10 +27,38 @@
  * display, de limpieza de pantalla.
  * \author Alfonso Arbona Gimeno
 */
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <SDL/SDL_ttf.h>
+#include <IL/ilut.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+#include <stdarg.h>
+#include "atmosferico.h"
+#include "objetos.h"
 #include "display.h"
 #include "overlay.h"
 
+void message_printf(const char *fmt, ...)
+{
+	static char buf[256];
+    va_list args;
 
+    va_start(args, fmt);
+	(void) vsprintf (buf, fmt, args);
+    va_end(args);
+    
+    DIALOG message[]={
+	/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
+	{d_box_proc , scr_width/2-scr_width/4, scr_height/2-scr_height/4, scr_width/2, scr_height/2, {0,0,0,255}, {40,128,40,255}, 0, 0, 0, 0, NULL, NULL, NULL},
+	{d_label_proc, scr_width/2-scr_width/4, scr_height/2-scr_height/4, 0, 0, {255,255,255,255}, {0,0,0,0}, 0, 0, 0, 0, buf, fntArial12, NULL},
+	{d_button_proc, scr_width/2 - 20, scr_height/2+scr_height/4 - 20, 0, 0, {255,255,255,255}, {64,128,64,255}, 0, 0, 0, 0, "Cerrar", fntArial12, NULL},
+	{NULL_DIALOG}};
+	
+	do_dialog(message);
+}
 
 static void draw_object_list_base(t_obj_base **lista, int contador)
 {
