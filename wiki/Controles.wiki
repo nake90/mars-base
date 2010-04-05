@@ -37,6 +37,7 @@ Para subir o bajar la cámara rápidamente se debe pulsar la tecla _shift_ junto
 || V || En el mapa || Oculta la cuadrícula ||
 || B || En el mapa || Muestra los vectores normales a las cuadrículas del terreno ||
 || N || En el mapa || Oculta los vectores normales a las cuadrículas del terreno ||
+|| F10 || En el mapa || Guarda una captura de la pantalla ||
 || ESC || Siempre || Sale del juego ||
 
 == Configuración ==
