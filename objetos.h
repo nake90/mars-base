@@ -44,7 +44,7 @@
 #define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
 #define MAX_OBJETOS 2048 /*!< Número máximo de objetos */
-#define objetos_debug 0 /*!< Nivel de debug de los objetos */
+#define objetos_debug 1 /*!< Nivel de debug de los objetos */
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
  - #OK# -> Implementado y funcionando 
@@ -109,7 +109,9 @@ typedef struct
 	t_texture material[MAX_MATERIALS];
 	
 	int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
-	int draw_lists; /*!< Número de índices compilados de OpenGL */
+	int draw_lists; /*!< Número de índices compilados de OpenGL (por ahora siempre 1) */
+	
+	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
 	
 	float size; /* Valor de la escala */
 }t_model, *t_model_ptr;
@@ -119,11 +121,11 @@ typedef struct
 {
 	char name[256]; /*!< Nombre del objeto */
 	t_model *modelo; /*!< Datos de vértices y demás */
-	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
+	//int icono; Esto no debe estar aquí, es cosa del modelo.
 	VECTOR pos; /*!< Posición (en metros) */
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
-	VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
-	VECTOR velang; /*!< Velocidad angular (en rad/s) */
+	//VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
+	//VECTOR velang; /*!< Velocidad angular (en rad/s) */
 	float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisión del objeto */
 	
 	// Internos

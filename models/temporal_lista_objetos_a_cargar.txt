@@ -14,8 +14,8 @@
 // sq_t = <top (float)>;    //los objetos no se podrán solapar, y al seleccionarlos se muestra el
 // sq_b = <bottom (float)>; //rectángulo pero medio metro más grande en cada dirección.
 
-obj_1 file = models/base/hq_general_4_8x8/hq_general_4_8x8.3ds;
-//obj_1 file = models/ed_2_combinado_escalado111.3DS;
+//obj_1 file = models/base/hq_general_4_8x8/hq_general_4_8x8.3ds;
+obj_1 file = models/ed_2_combinado_escalado111.3DS;
 //obj_1 file = models/ed_1_comb.3DS;
 obj_1 x =  0;
 obj_1 y =  0;

@@ -1,0 +1,27 @@
+// Datos que necesitan todos los types
+
+// En el config
+nombre (nombre del type)
+modelo (modelo usado)
+icono (icono del spawn)
+sq_* (cuadrado de colisiones)
+cantidad de conexiones
+coordenadas conexiones
+normales conexiones
+volumen
+
+// Internas
+posición
+rotación
+reparación (nivel de daños en el objeto ([0-1]?)
+[Cantidad gases (Litros?)]
+ * CO2
+ * Ar
+ * O2
+ * CO
+ * H2O
+ * H2
+presión interna (Calculado por el volumen, la cantidad de gases y la temperatura)
+temperatura (K)
+seleccionado (true/false)
+lista conexiones (-1 si no está conectado a nada -> FUGAS!!)

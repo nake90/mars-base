@@ -1,0 +1,7 @@
+// Datos que necesita un type_corridor (Pasillos, salas, ... cosas que no generan nada ni son de algún tipo especial)
+
+ + type_all
+factor aislante (factor de pérdidas de temperatura [0-1])
+factor reparación (lo fácil que es que se estropee [0-1])
+presión máxima (presión máxima que admite el objeto, en ambas direcciones [Pa])
+temperatura máxima (temperatura antes de empezar a sufrir problemas estructurales)[K]
