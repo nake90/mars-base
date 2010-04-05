@@ -1,5 +1,5 @@
 #summary Controles y configuración del mars-base
-#labels Phase-Implementation,Phase-Support
+#labels Phase-Implementation,Phase-Support,Featured
 = Introduction =
 
 Esta es una lista de los controles y las posibles configuraciones que ofrece el mars-base, aunque hay que destacar que al ser actualizado casi cada día puede que esta lista no esté actualizada.
