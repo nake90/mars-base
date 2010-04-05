@@ -2,9 +2,9 @@ Datos que deben guardar los objetos:
 
 //Esto ya está implementado
 struct t_obj_base
-	name
-	struct modelo
-		name
+	name																							//CARGADO	<<<FALTA
+	struct modelo																					//CARGADO
+		name	(interno)
 		vertices_qty
 		poligonos_qty
 		materiales_qty
@@ -14,18 +14,17 @@ struct t_obj_base
 		lista texturas
 		draw_list_qty
 		draw_list
-		size (escala)
-	icono (textura opengl)
-	pos
-	rot
-	vel
-	velang
-	sq_a (cuadrado que define la base del objeto)
-	sq_b
-//A partir de aquí falta implementar, esto es solo teoría.
+		size (escala)																				<<<FALTA
+	icono (textura opengl)																			//CARGADO	<<<FALTA
+	pos																								//AL CREAR
+	rot																								//AL CREAR
+	//vel		NO USADO
+	//velang	NO USADO
+	sq_* (cuadrado que define la base del objeto) [* = l, r, t, b]									//CARGADO	<<<FALTA
+
 //Variables
-reparación (100%?)
-cantidad_gases
+reparación (100%?)																					//JUEGO
+cantidad_gases																						//JUEGO
 	CO2
 	Ar
 	O2
@@ -34,18 +33,15 @@ cantidad_gases
 	H2
 	...(más?)
 	--> Presión calculada de aquí
-delta_gases (igual que cantidad_gases, pero lo que cambia con el tiempo)
-	(Depende de:)
-	reparación (en función de la diferencia de presiones con el exterior y random)
-	cantidad vida dentro (plantas y personas)
-	diferentes presiones elementos conectados
-	Tuberías (fugas y entradas/salidas de gases)
-temperatura (K)
+temperatura (K)																						//JUEGO
 //Internos
-seleccionado (true/false)
-conexiones_qty (cantidad de conexiones que admite el objeto)
-lista conexiones(id del elemento conectado o -1 si no está conectado (CUIDADO PÉRDIDA PRESIÓN))
-lista coordenadas conexiones (coordenadas locales)
-lista normal conexiones (para saber el ángulo al que deben estar las conexiones)
-
--- creo que ya está todo --
+seleccionado (true/false)																			//JUEGO
+lista conexiones(id del elemento conectado o -1 si no está conectado (CUIDADO PÉRDIDA PRESIÓN))		//JUEGO / AL CREAR
+conexiones_qty (cantidad de conexiones que admite el objeto)										//CARGADO
+lista coordenadas conexiones (coordenadas locales)													//CARGADO
+lista normal conexiones (para saber el ángulo al que deben estar las conexiones)					//CARGADO
+volumen (mejor en un txt que calcularlo) (Para saber cuanto aire cabe, cuánta pérdida de temp...)	//CARGADO
+fact_aislante																						//CARGADO
+fact_reparacion																						//CARGADO
+presion_max (hacia dentro y hacia fuera!)															//CARGADO
+temp_max (temperatura máxima antes de empezar a perder mucha reparación)							//CARGADO

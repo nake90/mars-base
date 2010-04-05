@@ -96,6 +96,10 @@ void key_handle(SDLKey key, SDLMod mod)
 		camera.show_presion=0;
 		break;
 		
+    case SDLK_F10: /* Guarda una foto de la pantalla */
+		ilutGLScreenie();
+		break;
+	
     case SDLK_t: /* Funciones de test */
 		spawn_dialog[2].dp2 = fntArial12;
 		spawn_dialog[3].dp2 = fntArial12;

@@ -40,6 +40,45 @@ static int get_material_index(t_model_ptr object, const char* name)
 	return -1;
 }
 
+void debug_get_3ds_chunk_name(unsigned short id, char* name)
+{
+	switch (id)
+	{
+		case (MAIN3DS): str_cpy(name,"MAIN3DS"); return;
+		case (EDIT_MATERIAL): str_cpy(name,"EDIT_MATERIAL"); return;
+		case (MAT_NAME): str_cpy(name,"MAT_NAME"); return;
+		case (MAT_AMBIENT): str_cpy(name,"MAT_AMBIENT"); return;
+		case (MAT_DIFFUSE): str_cpy(name,"MAT_DIFFUSE"); return;
+		case (MAT_SPECULAR): str_cpy(name,"MAT_SPECULAR"); return;
+		case (MAT_SHININESS): str_cpy(name,"MAT_SHININESS"); return;
+		case (MAT_SHIN2PCT): str_cpy(name,"MAT_SHIN2PCT (DESCONOCIDO)"); return;
+		case (MAT_SHIN3PCT): str_cpy(name,"MAT_SHIN3PCT (DESCONOCIDO)"); return;
+		case (MAT_TRANSPARENCY): str_cpy(name,"MAT_TRANSPARENCY"); return;
+		case (MAT_XPFALL): str_cpy(name,"MAT_XPFALL (DESCONOCIDO)"); return;
+		case (MAT_REFBLUR): str_cpy(name,"MAT_REFBLUR (DESCONOCIDO)"); return;
+		case (MAT_TEX1): str_cpy(name,"MAT_TEX1"); return;
+		case (MAT_MASK1): str_cpy(name,"MAT_MASK1 (POSIBLE)"); return;
+		case (MAT_SUB_RGB): str_cpy(name,"MAT_SUB_RGB"); return;
+		case (MAT_SUB_PER): str_cpy(name,"MAT_SUB_PER"); return;
+		case (MAT_MAPNAME): str_cpy(name,"MAT_MAPNAME"); return;
+		case (EDIT3DS): str_cpy(name,"EDIT3DS"); return;
+		case (EDIT_OBJECT): str_cpy(name,"EDIT_OBJECT"); return;
+		case (OBJ_TRIMESH): str_cpy(name,"OBJ_TRIMESH"); return;
+		case (TRI_VERTEXL): str_cpy(name,"TRI_VERTEXL"); return;
+		case (TRI_VERTEXOPTIONS): str_cpy(name,"TRI_VERTEXOPTIONS (DESCONOCIDO)"); return;
+		case (TRI_FACEL1): str_cpy(name,"TRI_FACEL1"); return;
+		case (TRI_MATERIAL): str_cpy(name,"TRI_MATERIAL"); return;
+		case (TRI_MAPPINGCOORS): str_cpy(name,"TRI_MAPPINGCOORS"); return;
+		case (TRI_SMOOTH): str_cpy(name,"TRI_SMOOTH (POSIBLE)"); return;
+		case (TRI_LOCAL): str_cpy(name,"TRI_LOCAL (POSIBLE)"); return;
+		case (TRI_VISIBLE): str_cpy(name,"TRI_VISIBLE (POSIBLE)"); return;
+		case (TRI_MAPPINGSTANDARD): str_cpy(name,"TRI_MAPPINGSTANDARD (DESCONOCIDO)"); return;
+		default: sprintf(name,"DESCONOCIDO: %X",id); return;
+	}
+	sprintf(name,"DESCONOCIDO: %X",id);
+}
+
+
 /*! \fn int load_3DS (t_model *data, char *filename)
  *  \brief Carga los datos básicos de un objeto desde un archivo 3ds
  *  \param data Pointer al lugar donde se deben guardar los datos
@@ -63,6 +102,7 @@ int load_3DS (t_model *data, char *filename)
 	unsigned char l_char;
 	char string[80];
 	char string2[256];
+	char chunk_name[256];
 	unsigned char l_rgb[3];
 	unsigned short l_qty; /* Número de elementos en el chunk */
 
@@ -80,7 +120,11 @@ int load_3DS (t_model *data, char *filename)
 		fread (&l_chunk_id, 2, 1, l_file); /* HEADER (tipo de chunk) */
 		fread (&l_chunk_lenght, 4, 1, l_file); /* Length */
 
-		if(objetos_debug){debug_printf("DEBUG:   CHUNK: %X, LENGTH: %i bytes\n",l_chunk_id,l_chunk_lenght);}
+		if(objetos_debug)
+		{
+			debug_get_3ds_chunk_name(l_chunk_id,chunk_name);
+			debug_printf("DEBUG:   CHUNK: %X (%s), LENGTH: %i bytes\n",l_chunk_id,chunk_name,l_chunk_lenght);
+		}
 		switch (l_chunk_id)
         {
 			case MAIN3DS: /* Lenght: 0 + sub chunks */
