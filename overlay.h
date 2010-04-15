@@ -99,6 +99,18 @@ typedef struct st_Dialog
 
 #define NULL_DIALOG		NULL, 0, 0, 0, 0 ,{0,0,0,0} ,{0,0,0,0}, 0, 0, 0, 0, NULL, NULL, NULL
 
+#define SPAWN_DLG_MAX_ELEMENTS 256
+DIALOG spawn_dialog[SPAWN_DLG_MAX_ELEMENTS];// Ahora es en run-time, pero para no toquitear reallocs y tal hay un máximo de 256 elementos
+
+#define MAX_TEXT_LIST_QTY 1024
+#define MAX_TEXT_LIST_SIZE 1024
+#define TEXT_LIST_R_SPAWN_MENU 25 // Inicio ID reservado para el spawn_menu
+char lista_texto[MAX_TEXT_LIST_QTY][MAX_TEXT_LIST_SIZE]; // Lista de mensajes y texto necesario para los dialogs. Además permite mods y traducciones ;)
+/* Lugares reservados de la lista:
+0 - 25 -> Reservado programa (Aún no lo se, pero supongo que para las bichas de carga y tal)
+25 - 50 -> Spawn menu
+*/
+
 int do_dialog(DIALOG *d); // Entra en un loop interno y sale con el valor del objeto que ha cerrado el dialog
 
 int draw_dialog(DIALOG *d);

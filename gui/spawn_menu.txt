@@ -1,0 +1,17 @@
+//Configuración del menú de spawn de los objetos.
+//Esto es solo una pequeña prueba, supongo que lo haré usando LUA para que sea más customizable.
+//
+//Básicamente cada elemento tipo DIALOG necesita los siguientes datos para ser renderizado:
+//type DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3}
+// *df  -> Puntero a la función de control y dibujo
+// x,y  -> Coordenadas absolutas (0,0) es la esquina superior izquierda. En píxels!
+// w,h  -> Tamaño del objeto (algunos no lo necesitan, como el botón o el label)
+// fg   -> Color del texto, líneas, etc. Tipo RGBA: {r,g,b,a}
+// bg   -> Color del fondo, etc. Tipo RGBA: {r,g,b,a}
+// key  -> ASCII del acceso rápido por teclado (Actualmente no usado)
+// flag -> Conjunto de bits de estado
+// d1   -> Elemento tipo int 1 (Datos extra para la función *df, no todos lo usan y dependen de *df)
+// d2   -> Elemento tipo int 2
+// *dp  -> Elemento tipo (void*). Puntero a datos extra usados por *df (Por ejemplo texto a mostrar)
+// *dp2 -> Elemento tipo (void*) 2
+// *dp3 -> Elemento tipo (void*) 3

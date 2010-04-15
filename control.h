@@ -50,6 +50,8 @@ void mouse_static_but(int button, int x, int y);
 void process_events(void);
 void main_update(void);
 
+int open_spawn_dialog(void); // Retorna el valor de do_dialog
+
 int get_traced_object(VECTOR pos, VECTOR dir);
 
 int last_m_x,last_m_y;

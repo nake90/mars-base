@@ -51,7 +51,7 @@ int tam_mapa_y;
 
 #define MAX_SCREEN_MESSAGES 80
 #define MAX_SCREEN_MESSAGES_LEN 256
-char scr_messages[80][255];
+char scr_messages[MAX_SCREEN_MESSAGES][MAX_SCREEN_MESSAGES_LEN];
 int scr_message_index;
 int scr_message_debug;
 
@@ -140,7 +140,10 @@ void str_cpy(char* string1,const char* string2);
 void str_cpyl(char* string1, int len, const char* string2);
 void str_append(char* string1,const char* string2);
 int str_cmp(const char* string1,const char* string2);
+int str_ext_cmp(const char* ruta, const char* ext); // Compara la extensión (0 si son distintos, 1 si son iguales)
 void str_ruta_back(char* ruta);
+void str_ext_back(char* ruta); // Quita la extensión al nombre del archivo
+void str_ruta_get_filename(char* ruta); // Obtiene el nombre y su extensión
 int str_list_find(const char* find,const char* table[], int elementos);
 
 VECTOR p_vect(VECTOR vec1,VECTOR vec2);

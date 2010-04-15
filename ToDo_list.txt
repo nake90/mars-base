@@ -1,16 +1,14 @@
-!!!	Menú para el spawn de objetos
 !!!	Tipo: Objeto (información para nodos y datos de presión -> FALTA IMPLEMENTAR)
 !!!	Control de nodos
 !!	Presión atmosférica
 !!	Temperatura atmosférica
 !!	Funciones de transferencia de calor, gases y presión
 !!	TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón) y a veces falla
-!!	Memwatch hace que se cierre el programa al cargar los objetos (debe de ser un problema decente o que hago cosas raras xD)
 !	Grid	(FALLA OFFSET)
 !	Problemas con movimiento por teclado
 !	Archivo de configuración
 !	Console
 !	Triángulos lejanos de mayor tamaño para aumentar el rendimiento
-!	TabButton ?
-!	TabFrame ?
-!	Scroll ?
+!	GUI_TabButton ?
+!	GUI_TabFrame ?
+!	GUI_Scroll ?
