@@ -43,8 +43,9 @@
 #define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
+#define MAX_MODEL_OBJETOS 80 /*!< Número máximo de objetos dentro de cada modelo (Maybe alloc?) */
 #define MAX_OBJETOS 2048 /*!< Número máximo de objetos */
-#define objetos_debug 1 /*!< Nivel de debug de los objetos */
+#define objetos_debug 1 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->Aún más tonterías */
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
  - #OK# -> Implementado y funcionando 
@@ -98,15 +99,18 @@ typedef struct{float u,v;}t_mapcoord; /*!< Coordenadas u,v de la textura */
 /*! Datos del modelo */
 typedef struct
 {
-	char name[80]; /*!< Nombre definido en el archivo 3ds */
-	int vertices_qty; /*!< Cantidad de vertices */
-	int polygons_qty; /*!< Cantidad de polígonos */
+	char name[80]; /*!< Nombre del archivo (debería ser único) */
+	char obj_name[MAX_MODEL_OBJETOS][80]; /*!< Nombre definido en el archivo 3ds (nombre del componente del 3ds) */
+	int vertices_qty[MAX_MODEL_OBJETOS]; /*!< Cantidad de vertices */
+	int polygons_qty[MAX_MODEL_OBJETOS]; /*!< Cantidad de polígonos */
 	int materials_qty; /*!< Cantidad de materiales */
+	int model_objetos_qty; /*!< Número de objetos dentro del objeto */
 	
-	VECTOR vertex[MAX_VERTICES]; 
-	t_polygon polygon[MAX_POLYGONS];
-	t_mapcoord mapcoord[MAX_VERTICES];
+	VECTOR vertex[MAX_MODEL_OBJETOS][MAX_VERTICES]; 
+	t_polygon polygon[MAX_MODEL_OBJETOS][MAX_POLYGONS];
+	t_mapcoord mapcoord[MAX_MODEL_OBJETOS][MAX_VERTICES];
 	t_texture material[MAX_MATERIALS];
+	
 	
 	int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
 	int draw_lists; /*!< Número de índices compilados de OpenGL (por ahora siempre 1) */
@@ -121,7 +125,6 @@ typedef struct
 {
 	char name[256]; /*!< Nombre del objeto */
 	t_model *modelo; /*!< Datos de vértices y demás */
-	//int icono; Esto no debe estar aquí, es cosa del modelo.
 	VECTOR pos; /*!< Posición (en metros) */
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
 	//VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
@@ -138,11 +141,13 @@ t_obj_base **lista_objeto_base; /* Lista dinámica de punteros a objetos mallocad
 int lista_objetos_base; // Contador de la lista de objetos
 int lista_modelos; // Contador de la lista de modelos
 
+int icono_no_icon; // Nombre gracioso xD. Es la textura del icono predeterminado cuando no hay un icono a parte en el modelo.
+int null_texture;  // Textura usada si hay algún error
 
 /* - FUNCIONES de objetos - */
 int load_3DS (t_model *data, char *filename);
 void object_predraw(t_obj_base *object);
-void object_draw(t_obj_base object);
+//void object_draw(t_obj_base object); DEPRECATED
 void object_draw_l(t_obj_base *object);
 void model_unload(t_model *model);
 

@@ -180,7 +180,7 @@ void scr_init_printf (const char *fmt, ...)
 	int pos=1;
 	for (i=scr_message_index-1; i>=0; i--)
 	{
-		hud_printf (12, pos*12, scr_messages[i]);
+		hud_printf (12, pos*12 + 12, scr_messages[i]);
 		pos++;
 	}
 	glFinish();
@@ -294,6 +294,45 @@ int str_cmp(const char* string1,const char* string2)
 	return valor;
 }
 
+/*! \fn int str_ext_cmp(const char* ruta, const char* ext)
+ *  \brief Compara la extensión del archivo señalado por ruta con ext.
+ *  Básicamente coge de ruta el final hasta un '.' y compara eso con ext
+ *  \warning Si los strings son distintos el resultado retornado es la resta de
+ *	los primeros carácteres distintos. Creo que es distinto de la función de strings.h
+ *  \warning NO retorna lo mismo que las funciones de cmp!!!. Aquí es 1 si son iguales, 0 si no lo son
+ *  \param ruta El archivo a comparar (terminado en .algo)
+ *  \param ext Extensión a comparar.
+ *  \return 1 si son iguales.
+ *  \return 0 si son distintos.
+*/
+int str_ext_cmp(const char* ruta, const char* ext)
+{
+	char file_ext[256]; // La extensión sacada de ruta
+	
+	int size_ruta = str_size(ruta);
+	int pos=size_ruta;
+	int cont=0;
+	
+	while (pos>=0 && ruta[pos]!='.'){pos--;}
+	if(pos<=0){return -1;} // No tiene extensión
+	
+	pos++; // Ahora apunta al primer caracter después del '.'
+	
+	while(pos<size_ruta){file_ext[cont]=ruta[pos]; cont++; pos++;}
+	file_ext[cont]=0; // Nos aseguramos... aunque no debería de haber ningún problema porque ruta ya tiene \0 al final...
+	
+	int valor=0;
+	pos=0;
+	while (valor == 0 && file_ext[pos]!=0 && ext[pos]!=0)
+	{
+		valor=file_ext[pos]-ext[pos];
+		pos++;
+	}
+	
+	if (valor==0){return 1;}
+	return 0;
+}
+
 /*! \fn void str_ruta_back(char* ruta)
  *  \brief Borra el texto empezando desde el final hasta el primer '\' (El '\' se mantiene)
  *  \param ruta Ruta a la que se va a borrar el final
@@ -301,8 +340,40 @@ int str_cmp(const char* string1,const char* string2)
 void str_ruta_back(char* ruta)
 {
 	int pos=str_size(ruta);
-	while (pos>=0 && ruta[pos]!='\\'){pos--;}
+	while (pos>=0 && (ruta[pos]!='\\' && ruta[pos]!='/')){pos--;}
 	if(pos>0){ruta[pos+1]=0;}
+}
+
+/*! \fn void str_ruta_get_filename(char* ruta)
+ *  \brief Borra todo lo que hay hasta el último '\', dejando así el nombre final y su extensión
+ *	o el nombre de la carpeta final
+ *  \param ruta Ruta a la que se va a borrar el final
+*/
+void str_ruta_get_filename(char* ruta)
+{
+	int pos=str_size(ruta);
+	int extra=0;
+	while (pos>=0 && (ruta[pos]!='\\' && ruta[pos]!='/')){pos--;}
+	if(pos<=0){return;} // No hay una barra
+	pos++; // pos apunta a la primera letra después del '/'
+	
+	while(ruta[pos+extra]!='\0')
+	{
+		ruta[extra]=ruta[pos+extra];
+		extra++;
+	}
+	ruta[extra]=0;
+}
+
+/*! \fn void str_ext_back(char* ruta)
+ *  \brief Borra el texto empezando desde el final hasta el primer '.' inclusive
+ *  \param ruta Ruta a la que se va a borrar el final
+*/
+void str_ext_back(char* ruta)
+{
+	int pos=str_size(ruta);
+	while (pos>=0 && ruta[pos]!='.'){pos--;}
+	if(pos>0){ruta[pos]=0;}
 }
 
 /*! \fn int str_list_find(const char* find,const char* table[], int elementos)

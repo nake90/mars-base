@@ -50,6 +50,148 @@ void control(void)
 	if ((f1=altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z)-1.0)<0){camera.pos_z-=f1;}
 }
 
+#define sdh_size 3
+int open_spawn_dialog(void)
+{
+	
+	/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
+	
+	/* Inicialización del título y tal (Cuando pueda lo haré usando lua o algún otro tipo de script) */
+	
+	/* Ventana */
+	spawn_dialog[0].df = d_box_proc;
+	spawn_dialog[0].x = 20;
+	spawn_dialog[0].y = 120;
+	spawn_dialog[0].w = 400;
+	spawn_dialog[0].h = 300;
+	spawn_dialog[0].fg.r = 0;
+	spawn_dialog[0].fg.g = 0;
+	spawn_dialog[0].fg.b = 0;
+	spawn_dialog[0].fg.a = 255;
+	spawn_dialog[0].bg.r = 40;
+	spawn_dialog[0].bg.g = 128;
+	spawn_dialog[0].bg.b = 40;
+	spawn_dialog[0].bg.a = 200;
+	spawn_dialog[0].key = 0;
+	spawn_dialog[0].flag = 0;
+	spawn_dialog[0].d1 = 0;
+	spawn_dialog[0].d2 = 0;
+	spawn_dialog[0].dp = NULL;
+	spawn_dialog[0].dp2 = NULL;
+	spawn_dialog[0].dp3 = NULL;
+	
+	/* Título */
+	str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 0],MAX_TEXT_LIST_SIZE, "Click en el objeto que quieras crear");
+	
+	spawn_dialog[1].df = d_label_proc;
+	spawn_dialog[1].x = spawn_dialog[0].x + 40;
+	spawn_dialog[1].y = spawn_dialog[0].y + 5;
+	spawn_dialog[1].w = 0;
+	spawn_dialog[1].h = 0;
+	spawn_dialog[1].fg.r = 255;
+	spawn_dialog[1].fg.g = 255;
+	spawn_dialog[1].fg.b = 255;
+	spawn_dialog[1].fg.a = 255;
+	spawn_dialog[1].bg.r = 0;
+	spawn_dialog[1].bg.g = 0;
+	spawn_dialog[1].bg.b = 0;
+	spawn_dialog[1].bg.a = 0;
+	spawn_dialog[1].key = 0;
+	spawn_dialog[1].flag = 0;
+	spawn_dialog[1].d1 = 0;
+	spawn_dialog[1].d2 = 0;
+	spawn_dialog[1].dp = lista_texto[TEXT_LIST_R_SPAWN_MENU + 0];
+	spawn_dialog[1].dp2 = fntArial12;
+	spawn_dialog[1].dp3 = NULL;
+	
+	/* Botón de cancelar */
+	str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 1],MAX_TEXT_LIST_SIZE, "Cerrar");
+	
+	spawn_dialog[2].df = d_button_proc;
+	spawn_dialog[2].x = spawn_dialog[0].x+20;
+	spawn_dialog[2].y = spawn_dialog[0].y+spawn_dialog[0].h-40;
+	spawn_dialog[2].w = 0;
+	spawn_dialog[2].h = 0;
+	spawn_dialog[2].fg.r = 255;
+	spawn_dialog[2].fg.g = 255;
+	spawn_dialog[2].fg.b = 255;
+	spawn_dialog[2].fg.a = 255;
+	spawn_dialog[2].bg.r = 64;
+	spawn_dialog[2].bg.g = 128;
+	spawn_dialog[2].bg.b = 64;
+	spawn_dialog[2].bg.a = 255;
+	spawn_dialog[2].key = 0;
+	spawn_dialog[2].flag = 0;
+	spawn_dialog[2].d1 = 0;
+	spawn_dialog[2].d2 = 0;
+	spawn_dialog[2].dp = lista_texto[TEXT_LIST_R_SPAWN_MENU + 1];
+	spawn_dialog[2].dp2 = fntArial12;
+	spawn_dialog[2].dp3 = NULL;
+	
+	
+	/* Iconos */
+	int i;
+	int id=0;
+	
+	const int inix = 40 ,iniy = 150;
+	
+	int x=inix,y=iniy;
+	for(i=0;i<lista_modelos*2;i++)
+	{
+		spawn_dialog[sdh_size+i].df = d_icon_proc;
+		spawn_dialog[sdh_size+i].x = x;
+		spawn_dialog[sdh_size+i].y = y;
+		spawn_dialog[sdh_size+i].w = 80;
+		spawn_dialog[sdh_size+i].h = 80;
+		spawn_dialog[sdh_size+i].fg.r = 128;
+		spawn_dialog[sdh_size+i].fg.g = 128;
+		spawn_dialog[sdh_size+i].fg.b = 128;
+		spawn_dialog[sdh_size+i].fg.a = 255;
+		spawn_dialog[sdh_size+i].bg.r = 255;
+		spawn_dialog[sdh_size+i].bg.g = 255;
+		spawn_dialog[sdh_size+i].bg.b = 255;
+		spawn_dialog[sdh_size+i].bg.a = 255;
+		spawn_dialog[sdh_size+i].key = 0;
+		spawn_dialog[sdh_size+i].flag = 0;
+		spawn_dialog[sdh_size+i].d1 = lista_modelo[id]->icono;
+		spawn_dialog[sdh_size+i].d2 = 0;
+		spawn_dialog[sdh_size+i].dp = NULL;
+		spawn_dialog[sdh_size+i].dp2 = NULL;
+		spawn_dialog[sdh_size+i].dp3 = NULL;
+		
+		i++;
+		spawn_dialog[sdh_size+i].df = d_label_proc;
+		spawn_dialog[sdh_size+i].x = x;
+		spawn_dialog[sdh_size+i].y = y+82;
+		spawn_dialog[sdh_size+i].w = 0;
+		spawn_dialog[sdh_size+i].h = 0;
+		spawn_dialog[sdh_size+i].fg.r = 255;
+		spawn_dialog[sdh_size+i].fg.g = 255;
+		spawn_dialog[sdh_size+i].fg.b = 255;
+		spawn_dialog[sdh_size+i].fg.a = 255;
+		spawn_dialog[sdh_size+i].bg.r = 0;
+		spawn_dialog[sdh_size+i].bg.g = 0;
+		spawn_dialog[sdh_size+i].bg.b = 0;
+		spawn_dialog[sdh_size+i].bg.a = 0;
+		spawn_dialog[sdh_size+i].key = 0;
+		spawn_dialog[sdh_size+i].flag = 0;
+		spawn_dialog[sdh_size+i].d1 = 0;
+		spawn_dialog[sdh_size+i].d2 = 0;
+		spawn_dialog[sdh_size+i].dp = lista_modelo[id]->name;
+		spawn_dialog[sdh_size+i].dp2 = fntArial12;
+		spawn_dialog[sdh_size+i].dp3 = NULL;
+		
+		id++;
+		x+=120;
+		if(x>=spawn_dialog[0].x+spawn_dialog[0].w-80-inix){x=inix; y+=110;}
+		
+	}
+	//{d_icon_proc, 40, 140, 80, 80, {128,128,128,255}, {40,255,40,255}, 0, 0, 1, 0, NULL, NULL, NULL},
+	
+	spawn_dialog[sdh_size+i].df = NULL; // El elemento NULL, debe ser el último de todos y DEBE estar, si no cosas horribles pueden pasar!
+	return do_dialog(spawn_dialog);
+}
+#undef sdh_size
 
 void key_handle(SDLKey key, SDLMod mod)
 {
@@ -60,7 +202,7 @@ void key_handle(SDLKey key, SDLMod mod)
 	
 	if (SDL_GetModState() & KMOD_SHIFT){speed=200.0f;}
     
-	
+	int i;
 	
 	switch (key)
     {
@@ -98,13 +240,12 @@ void key_handle(SDLKey key, SDLMod mod)
 		
     case SDLK_F10: /* Guarda una foto de la pantalla */
 		ilutGLScreenie();
+		message_printf("Foto de la pantalla guardada en la carpeta principal");
 		break;
 	
     case SDLK_t: /* Funciones de test */
-		spawn_dialog[2].dp2 = fntArial12;
-		spawn_dialog[3].dp2 = fntArial12;
-		int i = do_dialog(spawn_dialog);
-		message_printf("Se ha cerrado el menú al apretar el elemento %i!",i);
+		i = open_spawn_dialog();
+		//message_printf("Se ha cerrado el menú al apretar el elemento %i!",i);
 		break;
 	
 	case SDLK_UP:

@@ -236,7 +236,7 @@ void display(void)
 	/* Dibujamos el HUD */
 	draw_HUD();
 	hud_printf (12, 10*12, "Altura hasta el suelo: %f",altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z));
-	hud_printf (12, 11*12, "FPS: %3.2f",FPS);
+	//hud_printf (12, 11*12, "FPS: %3.2f",FPS);
 	
 	SDL_GL_SwapBuffers();
 }

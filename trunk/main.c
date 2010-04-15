@@ -64,14 +64,15 @@
 #include "parser.h"
 
 
-/* Cuidado al cambiar el orden!, al texto se le añade la fuente en run-time!! */
-DIALOG spawn_dialog[]={
+/* Cuidado al cambiar el orden!, al texto se le añade la fuente en run-time!! ## DEFINIDO EN overlay.h ##
+DIALOG spawn_dialog[256];//={ Ahora es en run-time, pero para no toquitear reallocs y tal hay un máximo de 256 elementos
 /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
+/* SE GENERA TODO EN RUN-TIME!!!!!
 {d_box_proc , 20, 120, 400, 300, {0,0,0,255}, {40,128,40,200}, 0, 0, 0, 0, NULL, NULL, NULL},
+{d_label_proc, 40, 135, 0, 0, {255,255,255,255}, {0,0,0,0}, 0, 0, 0, 0, "Click en el objeto que quieras crear", NULL, NULL},
+{d_button_proc, 40, 240, 0, 0, {255,255,255,255}, {64,128,64,255}, 0, 0, 0, 0, "Cancelar", NULL, NULL},
 {d_icon_proc, 40, 140, 80, 80, {128,128,128,255}, {40,255,40,255}, 0, 0, 1, 0, NULL, NULL, NULL},
-{d_label_proc, 40, 135, 0, 0, {255,255,255,255}, {0,0,0,0}, 0, 0, 0, 0, "Click en la imagen para cerrar el menu", NULL, NULL},
-{d_button_proc, 40, 240, 0, 0, {255,255,255,255}, {64,128,64,255}, 0, 0, 0, 0, "Cerrar", NULL, NULL},
-{NULL_DIALOG}};
+{NULL_DIALOG}};*/
 
 static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */
 
@@ -177,11 +178,23 @@ int main(int argc, char *argv[])
 	/* Carga materiales */
 	scr_init_printf ("Cargando materiales...");
 	
+	icono_no_icon = ilutGLLoadImage("materials/no_icon.tga");
+	if(!icono_no_icon)
+	{
+		debug_printf("Error al cargar la textura del no_icon! (Error grave pero continuando...)\n");
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		ilutGLBuildMipmaps();
+	}
+	
 	i=load_material(&sand, "materials/sand_default");
 	if(i){debug_printf("Error al cargar la textura base!, RETURN:%i\n",i); exit(-1);}
 	
 	sun_texture.texture[0]=ilutGLLoadImage("materials/sun.tga");
-	if(!sun_texture.texture[0]){exit(0);}
+	if(!sun_texture.texture[0]){debug_printf("Error al cargar la textura del sol!\n"); exit(0);}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	ilutGLBuildMipmaps();
@@ -206,8 +219,13 @@ int main(int argc, char *argv[])
 	lista_modelos=0;
 	
 	int cont=1;
+	int id;
 	char key[256];
 	char buffer[256];
+	str_cpyl(buffer,256,app_path);
+	str_append(buffer,"models");
+	debug_printf("Buscando 3ds... retornado: %i\n",lista_cargar_modelo_dir(buffer));
+	
 	t_parse parse;
 	if(parse_open(&parse, "models/temporal_lista_objetos_a_cargar.txt")==0)
 	{
@@ -216,11 +234,12 @@ int main(int argc, char *argv[])
 			sprintf(key,"obj_%i file",cont);
 			if(parse_get_str(&parse, key, buffer)!=-1)
 			{
-				i = lista_cargar_modelo(buffer);
-				if (i!=0){debug_printf("Error al cargar el modelo %i (\"%s\"), retornado: %i\n",cont,buffer,i);exit(1);}
+				debug_printf("Buscando id de %s\n",buffer);
+				id = lista_modelo_get_id(buffer);//lista_cargar_modelo(buffer);
+				if (id==-1){debug_printf("Error al encontrar el modelo %i (\"%s\")\n",cont,buffer);exit(1);}
 				
-				i = lista_base_crear_elemento(cont-1);
-				if (i!=0){debug_printf("Error al cargar el objeto %i (\"%s\"), retornado: %i\n",cont,buffer,i);exit(1);}
+				i = lista_base_crear_elemento(id);
+				if (i!=0){debug_printf("Error al cargar el objeto %i (id=%i) (\"%s\"), retornado: %i\n",cont,id,buffer,i);exit(1);}
 				
 				sprintf(key,"obj_%i x",cont);
 				lista_objeto_base[cont-1]->pos.x = parse_get_float(&parse, key);
