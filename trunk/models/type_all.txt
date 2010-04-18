@@ -3,7 +3,6 @@
 // En el config
 nombre (nombre del type)
 modelo (modelo usado)
-icono (icono del spawn)
 sq_* (cuadrado de colisiones)
 cantidad de conexiones
 coordenadas conexiones
@@ -21,7 +20,7 @@ reparación (nivel de daños en el objeto ([0-1]?)
  * CO
  * H2O
  * H2
-presión interna (Calculado por el volumen, la cantidad de gases y la temperatura)
+presión interna (Calculado por el volumen, la cantidad de gases y la temperatura) <<< Usando una función
 temperatura (K)
 seleccionado (true/false)
 lista conexiones (-1 si no está conectado a nada -> FUGAS!!)

@@ -28,12 +28,6 @@
 #ifndef HEIGHTMAP_H
 #define HEIGHTMAP_H
 #include "shared.h"
-#include <stdio.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <IL/ilut.h>
 
 #define NHMAP_VERSION 2 /* Define la versión de los mapas precompilados */
 
@@ -44,7 +38,7 @@
 
 typedef struct
 {
-	GLuint list; /* list -> Terreno; list+1 -> Casillas; list+2 -> Normales; */
+	unsigned int list; /* list -> Terreno; list+1 -> Casillas; list+2 -> Normales; */
 	int tam_x;
 	int tam_y;
 	float scale;
@@ -79,5 +73,7 @@ float coord_to_real_height(t_heightmap obj, float z);
 
 int get_current_triangle (t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3);
 int size_of_texture; /* POR IMPLEMENTAR Tamaño en metros de la textura. Ej: Si la textura representa un cuadrado de 3x3m entonces vale 3 */
+
+int get_traced_coord(VECTOR pos, VECTOR dir, VECTOR *coord);
 
 #endif

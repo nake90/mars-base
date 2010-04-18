@@ -26,6 +26,7 @@
 */
 
 #include "materiales.h"
+#include <IL/ilut.h>
 
 int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #-1# -> Material not found; #-2# -> Texture not found */
 {
@@ -46,7 +47,7 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
 	//glGenTextures(1, &texture->texture[0]);
 	str_cpyl(texture->name, 80, textura);
 	texture->texture[0]=ilutGLLoadImage(textura);
-	if(!texture->texture[0]){return(-2);}
+	if(!texture->texture[0]){debug_printf("Error cargando la textura %s del material\n",textura);return(-2);}
 	
 	ilutGLBuildMipmaps();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

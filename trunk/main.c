@@ -4,7 +4,7 @@
  *
  * Mars-Base (nombre no definitivo) es un juego que estamos desarrollando que consistirá en diseñar, construir y mantener una colonia en Marte. Siendo en todo momento lo más fieles a la realidad en los aspectos químicos, físicos y topográficos.
  * Para crear la base se contará con módulos prefabricados (pasillos, puertas, habitaciones, biodomes,...) que se podrán ensamblar entre sí permitiendo bases de estructura diseñada por el jugador. A nivel más de interiores, se deberá diseñar el sistema de circuitos eléctricos (sensores, actuadores y suministro eléctrico) y de fluidos (aire, agua,...), aunque supongo que se podrán usar elementos prefabricados.
- * El juego está siendo desarrollado usando openGLUT y devIL. Por ahora tan solo puede mostrar el mapa tridimensional marciano (Valles Marineris) y cargar objetos simples, pero está siendo desarrollado con intensidad. 
+ * El juego está siendo desarrollado usando openGL, SDL y devIL. Por ahora tan solo puede mostrar el mapa tridimensional marciano (Valles Marineris) y cargar objetos, pero está siendo desarrollado con intensidad. 
  *
  * \section copyright Copyright
  * 
@@ -36,18 +36,10 @@
 */
 #include "mars_base_private.h"
 
-//#include <stdio.h> /* Archivos */
-//#include <stdarg.h> /* Argumentos variables (Como printf()) */
-//#include <math.h> /* Math */
 #include <time.h> /* Para random */
-//#include <pthread.h> /* Multithreading */
 
-/* Librerías añadidas a las carpetas 'include' y 'lib' del proyecto */
-//#include "GL/openglut.h"
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <SDL/SDL.h>
-//#include <SDL/SDL_thread.h>
 #include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
 
@@ -59,39 +51,11 @@
 #include "atmosferico.h"
 #include "control.h"
 #include "display.h"
-
-
 #include "parser.h"
 
-
-/* Cuidado al cambiar el orden!, al texto se le añade la fuente en run-time!! ## DEFINIDO EN overlay.h ##
-DIALOG spawn_dialog[256];//={ Ahora es en run-time, pero para no toquitear reallocs y tal hay un máximo de 256 elementos
-/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
-/* SE GENERA TODO EN RUN-TIME!!!!!
-{d_box_proc , 20, 120, 400, 300, {0,0,0,255}, {40,128,40,200}, 0, 0, 0, 0, NULL, NULL, NULL},
-{d_label_proc, 40, 135, 0, 0, {255,255,255,255}, {0,0,0,0}, 0, 0, 0, 0, "Click en el objeto que quieras crear", NULL, NULL},
-{d_button_proc, 40, 240, 0, 0, {255,255,255,255}, {64,128,64,255}, 0, 0, 0, 0, "Cancelar", NULL, NULL},
-{d_icon_proc, 40, 140, 80, 80, {128,128,128,255}, {40,255,40,255}, 0, 0, 1, 0, NULL, NULL, NULL},
-{NULL_DIALOG}};*/
+t_texture fondo={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
 static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */
-
-/* Niebla y atmósfera */
-GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
-GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mínima de la niebla y distancia máxima visible en metros */
-
-/* TEXTURAS BÁSICAS */
-/*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
-t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
-/*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
-t_texture sun_texture=	{{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
-t_texture fondo=		{{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
-
-/*t_model test_data;
-t_model test2_data;
-t_obj_base test;
-t_obj_base test2;*/
-
 
 static
 Uint32 time_left(void)
@@ -134,15 +98,15 @@ int main(int argc, char *argv[])
     int i;
     debug_reset();
     debug_printf("Mars_Base v." VER_STRING " (%s) - by nake\n\n",app_path);
-	tam_mapa_x = TERR_SIZE*2;
-	tam_mapa_y = TERR_SIZE*2;
     camera.show_grid=0;
     camera.show_presion=0;
     window_mode=0;
     
     
     /* - INICIACIÓN PROGRAMA - */
+    #ifdef WINDOWS
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+    #endif
 	if((SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER)==-1))
 	{ 
 		debug_printf("No se ha podido iniciar SDL: %s.\n", SDL_GetError());
@@ -201,12 +165,13 @@ int main(int argc, char *argv[])
 	
 	
 	scr_init_printf ("Iniciando variables...");
-	camera.pitch = 25;
+	camera.pitch = -25;
 	camera.yaw = 0;
 	camera.pos_x=0;
 	camera.pos_z=10;
 	camera.pos_y=-4.5;
 	camera.wasd_count=0;
+	camera.ghost_mode=0;
 	
 	scr_init_printf ("Cargando terreno...");
 	load_heightmap("heightmaps/marineris",&marte,sand);
@@ -224,58 +189,7 @@ int main(int argc, char *argv[])
 	char buffer[256];
 	str_cpyl(buffer,256,app_path);
 	str_append(buffer,"models");
-	debug_printf("Buscando 3ds... retornado: %i\n",lista_cargar_modelo_dir(buffer));
-	
-	t_parse parse;
-	if(parse_open(&parse, "models/temporal_lista_objetos_a_cargar.txt")==0)
-	{
-		do
-		{
-			sprintf(key,"obj_%i file",cont);
-			if(parse_get_str(&parse, key, buffer)!=-1)
-			{
-				debug_printf("Buscando id de %s\n",buffer);
-				id = lista_modelo_get_id(buffer);//lista_cargar_modelo(buffer);
-				if (id==-1){debug_printf("Error al encontrar el modelo %i (\"%s\")\n",cont,buffer);exit(1);}
-				
-				i = lista_base_crear_elemento(id);
-				if (i!=0){debug_printf("Error al cargar el objeto %i (id=%i) (\"%s\"), retornado: %i\n",cont,id,buffer,i);exit(1);}
-				
-				sprintf(key,"obj_%i x",cont);
-				lista_objeto_base[cont-1]->pos.x = parse_get_float(&parse, key);
-				
-				sprintf(key,"obj_%i y",cont);
-				lista_objeto_base[cont-1]->pos.y = parse_get_float(&parse, key);
-				
-				sprintf(key,"obj_%i z",cont);
-				lista_objeto_base[cont-1]->pos.z = parse_get_float(&parse, key);
-				
-				sprintf(key,"obj_%i sq_r",cont);
-				lista_objeto_base[cont-1]->sq_r = parse_get_float(&parse, key);
-				
-				sprintf(key,"obj_%i sq_l",cont);
-				lista_objeto_base[cont-1]->sq_l = parse_get_float(&parse, key);
-				
-				sprintf(key,"obj_%i sq_t",cont);
-				lista_objeto_base[cont-1]->sq_t = parse_get_float(&parse, key);
-				
-				sprintf(key,"obj_%i sq_b",cont);
-				lista_objeto_base[cont-1]->sq_b = parse_get_float(&parse, key);
-				
-				cont++;
-			}
-			else
-			{
-				break;
-			}
-		}while(1);
-		
-		parse_close(&parse);
-	}
-	else
-	{
-		debug_printf("ATENCIÓN: No se ha encontrado la lista de archivos a cargar (\"%s\")\n",buffer);
-	}
+	if(lista_cargar_modelo_dir(buffer)!=0){debug_printf("Error buscar los modelos en \"%s\"\n",buffer);}
 	
 	scr_init_printf ("Iniciado");
 	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
@@ -284,6 +198,11 @@ int main(int argc, char *argv[])
 	/* - MAIN LOOP - */
 	next_time = SDL_GetTicks() + TICK_INTERVAL;
 	
+	// MENSAJE DE INTRODUCCIÓN
+	message_printf(	"Notas de versión:\n"
+					"* No se crean objetos automáticamente, aprieta <ESPACIO> para ver el menú de objetos y haz click en el objeto que quieras crear.\n"
+					"* He cambiado todo el código relacionado con pitch yaw y roll, si observas algo incorrecto al respecto avísame.\n"
+					"* Control y creación de nodos en pruebas, deberían autoconectarse (en verde) los objetos con nodos definidos.");
 	while(1)
 	{
 		process_events();
@@ -291,6 +210,7 @@ int main(int argc, char *argv[])
 		main_update();
 		
 		display();
+		SDL_GL_SwapBuffers();
 		SDL_Delay(time_left());
 		next_time += TICK_INTERVAL;
 		

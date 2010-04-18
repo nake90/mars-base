@@ -30,6 +30,12 @@
 #ifndef SHARED_H
 #define SHARED_H
 
+#if defined (__WIN32__)
+#	define WINDOWS
+#else
+#	define LINUX
+#endif
+
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
@@ -41,13 +47,8 @@
 #define RAD(x) (float)((x)*0.01745329)
 
 #define TICK_INTERVAL 20
-/* FPS = 1000/TICK_INTERVAL => TICK_INTERVAL=1000/FPS
+/* FPS = 1000/TICK_INTERVAL => TICK_INTERVAL=1000/FPS */
 
-Realmente el tamaño es el doble de este valor #OBSOLETO... sigue estando ahí porque aún no me he encargado de atmosferico.h */
-#define TERR_SIZE 100
-
-int tam_mapa_x;
-int tam_mapa_y;
 
 #define MAX_SCREEN_MESSAGES 80
 #define MAX_SCREEN_MESSAGES_LEN 256
@@ -87,6 +88,8 @@ typedef struct
 	
 	int show_grid;
 	int show_presion;
+	
+	int ghost_mode;
 }t_camera;
 t_camera camera;
 
@@ -122,18 +125,6 @@ void restore_gl_mode(void);
 
 void use_texture (t_texture texture);
 
-/* Trace *//*
-VECTOR trace_camera(float x, float y, float z)
-{
-	VECTOR vec={0,0,0};
-	float d;
-	if (camera.pitch>=80 || camera.pitch<=-80){return vec;}
-	d=tan(RAD(camera.pitch))*z;
-	vec.y=d*cos(RAD(-camera.yaw))+y;
-	vec.x=d*sin(RAD(-camera.yaw))+x;
-	return vec;
-}*/
-
 int str_size(const char* string);
 #define str_len str_size
 void str_cpy(char* string1,const char* string2);
@@ -154,6 +145,7 @@ VECTOR vsub(VECTOR vec1, VECTOR vec2);
 float vdist(VECTOR vec1, VECTOR vec2); /* Distancia entre ambos vectores */
 float vdist_sq(VECTOR vec1, VECTOR vec2); /* Cuadrado de la distancia */
 VECTOR v_from_ang(float pitch, float yaw); /* Vector definido por pitch y yaw en radianes */
+VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll); /* Rotar el vector */
 
 float nabs(float val);
 int nround(float val);
