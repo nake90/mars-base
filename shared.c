@@ -469,12 +469,12 @@ VECTOR vsub(VECTOR vec1, VECTOR vec2)
 
 float vdist(VECTOR vec1, VECTOR vec2)
 {
-	return sqrt( (vec1.x+vec2.x)*(vec1.x+vec2.x) + (vec1.y+vec2.y)*(vec1.y+vec2.y) + (vec1.z+vec2.z)*(vec1.z+vec2.z));
+	return sqrt( (vec1.x-vec2.x)*(vec1.x-vec2.x) + (vec1.y-vec2.y)*(vec1.y-vec2.y) + (vec1.z-vec2.z)*(vec1.z-vec2.z));
 }
 
 float vdist_sq(VECTOR vec1, VECTOR vec2)
 {
-	return ((vec1.x+vec2.x)*(vec1.x+vec2.x) + (vec1.y+vec2.y)*(vec1.y+vec2.y) + (vec1.z+vec2.z)*(vec1.z+vec2.z));
+	return ((vec1.x-vec2.x)*(vec1.x-vec2.x) + (vec1.y-vec2.y)*(vec1.y-vec2.y) + (vec1.z-vec2.z)*(vec1.z-vec2.z));
 }
 
 VECTOR v_from_ang(float pitch, float yaw)
@@ -486,6 +486,25 @@ VECTOR v_from_ang(float pitch, float yaw)
 	return vec;
 }
 
+VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll)
+{
+	float sina, cosa, sinb, cosb, sing, cosg; // Para no tener que recalcularlos ya que se usan varias veces (Sin/cos de alfa, beta, gamma)
+	VECTOR resultado;
+	// Alfa = yaw, Beta = pitch, Gamma = roll
+	
+	sina = sin(yaw);
+	cosa = cos(yaw);
+	sinb = sin(pitch);
+	cosb = cos(pitch);
+	sing = sin(roll);
+	cosg = cos(roll);
+	
+	resultado.x = coord.x * (cosa * cosb) + coord.y * (sina * cosb) + coord.z * (-sinb);
+	resultado.y = coord.x * (cosa*sinb*sing - sina*cosg) + coord.y * (sina*sinb*sing + cosa*cosg) + coord.z * (cosb*sing);
+	resultado.z = coord.x * (cosa*sinb*cosg + sina*sing) + coord.y * (sina*sinb*cosg - cosa*sing) + coord.z * (cosb*cosg);
+	
+	return resultado;
+}
 
 /* - DEBUG - */
 
@@ -498,8 +517,11 @@ VECTOR v_from_ang(float pitch, float yaw)
 void debug_reset(void)
 {
     FILE* file;
+    time_t tim;
+    time(&tim);
     file=fopen("debug.log","w");
-    fprintf(file," --- DEBUG --- \n\n");
+    fprintf(file," --- DEBUG --- \n");
+    fprintf(file," LOG: %s \n\n", ctime(&tim));
     fclose(file);
 }
 
@@ -689,11 +711,23 @@ void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
 {
 	use_texture(textura);
 	glColor3f(1.0f,1.0f,1.0f);
-	glBegin(GL_QUADS);
+	/*glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f); glVertex3f(x-size*(sin(RAD(camera.yaw+90))), y+size*(cos(RAD(camera.yaw+90))-cos(RAD(camera.pitch))), z-size*sin(RAD(camera.pitch)));// Bottom Left
 		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*(sin(RAD(camera.yaw+90))), y-size*(cos(RAD(camera.yaw+90))+cos(RAD(camera.pitch))), z-size*sin(RAD(camera.pitch)));// Bottom Right
 		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+size*(sin(RAD(camera.yaw+90))), y-size*(cos(RAD(camera.yaw+90))-cos(RAD(camera.pitch))), z+size*sin(RAD(camera.pitch)));// Top Right
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(x-size*(sin(RAD(camera.yaw+90))), y+size*(cos(RAD(camera.yaw+90))+cos(RAD(camera.pitch))), z+size*sin(RAD(camera.pitch)));// Top Left
+	glEnd();
+	*/
+	VECTOR vect = {x,y,z};
+	normalize(&vect);
+	VECTOR vup = vrotate(vect, RAD(90), 0, 0);
+	VECTOR vright = vrotate(vect, 0, RAD(180), 0);
+	
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(x+size*(-vup.x-vright.x), y+size*(-vup.y-vright.y), z+size*(-vup.z-vright.z));// Bottom Left
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*(-vup.x+vright.x), y+size*(-vup.y+vright.y), z+size*(-vup.z+vright.z));// Bottom Right
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+size*(vup.x+vright.x), y+size*(vup.y+vright.y), z+size*(vup.z+vright.z));// Top Right
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(x+size*(vup.x-vright.x), y+size*(vup.y-vright.y), z+size*(vup.z-vright.z));// Top Left
 	glEnd();
 }
 

@@ -28,18 +28,6 @@
 #ifndef ATMOSFERICO_H
 #define ATMOSFERICO_H
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <IL/ilut.h>
-#include "heightmap.h"
-
-#include <stdio.h>
-#include <stdarg.h>
-#include <math.h>
-#include <time.h>
-
 #include "shared.h"
 /* Dynamic Pressure: q(Pa) = 1/2 * densidad(kg/m3) * v^2(m/s) */
 
@@ -50,27 +38,64 @@
 #define PRESION_MAX  1000
 #define PRESION_MIN   600
 
+#define TEMPERATURA_MEDIA 218
+#define TEMPERATURA_MAX   300
+#define TEMPERATURA_MIN   140
+
+#define Pa2Atm(x) (x)*9.86923e-6
+#define Atm2Pa(x) (x)/9.86923e-6
+
+#define GAS_R 0.08205746 // (Atm * l) / (mol * K)
+#define GAS_Na 6.02214179E23 // Número de Avogadro (Espero no usarlo porque mira que es grande...)
+
 //#define SKYBOX_DISTANCE   55000 /* 50000 es el máximo de niebla... */
 //GLint skybox[5]; /*!< Texturas del skybox. 0->Front; 1->Right; 2-> Back; 3-> Left; 4->Top*/
 
 /* Niebla y atmósfera */
-extern GLfloat fogColor[4];/*= {0.81f, 0.64f, 0.61f, 1.0f}; !< Color de la niebla */
-extern GLfloat fogRange[2];/*= {25000.0f, 50000.0f}; !< Distancia mínima de la niebla y distancia máxima visible en metros */
+extern float fogColor[4];/*= {0.81f, 0.64f, 0.61f, 1.0f}; !< Color de la niebla */
+extern float fogRange[2];/*= {25000.0f, 50000.0f}; !< Distancia mínima de la niebla y distancia máxima visible en metros */
 
 typedef struct
 {
-	GLfloat ambient[4];
-	GLfloat diffuse[4];
-	GLfloat specular[4];
-	GLfloat position[3];
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+	float position[3];
 	float hora[1];
-	GLint texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
+	int texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
 }t_sun;
 
-/* TEXTURAS BÁSICAS */
-/*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
-extern t_sun sun;/*={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};*/
-/*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
-extern t_texture sun_texture;/*={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};*/
+// Masas atómicas de los elementos (Definidos en el .c)
+extern const double ma_co2;
+extern const double ma_ar;
+extern const double ma_o2;
+extern const double ma_co;
+extern const double ma_h20;
+extern const double ma_h2;
+
+typedef struct
+{
+	float CO2;
+	float N2;
+	float Ar;
+	float O2;
+	float CO;
+	float H2O;
+}t_gas;	/* Lista de cantidad de moles de cada tipo de gas (PV=nRT) */
+
+
+typedef struct
+{
+	t_gas gases;	// Moles en un 1m3 de aire
+	float presion; // Se actualiza cada frame? depende de temperatura y gases
+	float temperatura;
+}t_atmosfera;
+
+extern t_atmosfera datos_atmosfera;
+
+extern t_sun sun;
+extern t_texture sun_texture;
+
+float get_presion(t_gas gases, float volumen, float temperatura);
 
 #endif

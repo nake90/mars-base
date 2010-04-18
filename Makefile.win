@@ -7,12 +7,12 @@ WINDRES = windres.exe
 RES  = mars_base_private.res
 OBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o $(RES)
 LINKOBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o $(RES)
-LIBS =  -L"I:/MinGW/lib" -mwindows -lglu32 -lopengl32 -lwinmm -lgdi32 -lmingw32 -lSDLmain -lSDL -mwindows -ldevil -lilu -lilut I:/mingw/lib/SDL_ttf.lib I:/mingw/lib/libpthreadGC2.a  
+LIBS =  -L"I:/MinGW/lib" -mwindows -lglu32 -lopengl32 -lwinmm -lgdi32 -lmingw32 -lSDLmain -lSDL -mwindows -ldevil -lilu -lilut -lSDL_ttf  
 INCS =  -I"I:/MinGW/include" 
 CXXINCS = 
 BIN  = mars_base.exe
-CXXFLAGS = $(CXXINCS) -DOPENGLUT_STATIC -IL_STATIC_LIB  
-CFLAGS = $(INCS) -DOPENGLUT_STATIC -IL_STATIC_LIB  
+CXXFLAGS = $(CXXINCS) -DOPENGLUT_STATIC -IL_STATIC_LIB   -O3
+CFLAGS = $(INCS) -DOPENGLUT_STATIC -IL_STATIC_LIB   -O3
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom

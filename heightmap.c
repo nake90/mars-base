@@ -25,7 +25,13 @@
  * \author Alfonso Arbona Gimeno
 */
 #include "heightmap.h"
-#include <pthread.h>
+#include <stdio.h>
+#include <GL/gl.h>
+#include <IL/ilut.h>
+//#include <pthread.h>
+//#include <GL/glu.h>
+//#include <SDL/SDL.h>
+//#include <SDL/SDL_ttf.h>
 
 static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 {
@@ -33,6 +39,15 @@ static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 	resultado=p_vect(vec1,vec2);
 	normalize(&resultado);
 	return resultado;
+}
+
+int get_traced_coord(VECTOR pos, VECTOR dir, VECTOR *coord)
+{
+	if(dir.z>=0)return -1;
+	coord->x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
+	coord->y = -dir.y/dir.z * pos.z + pos.y;
+	coord->z = 0;	// TODO: FALTA ESTOOOOOOO
+	return 0;
 }
 
 /*! \fn int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)

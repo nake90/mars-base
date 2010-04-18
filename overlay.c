@@ -28,6 +28,11 @@
 #include "control.h"
 #include "overlay.h"
 #include "heightmap.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
+#include <IL/ilut.h>
 
 void draw_minimap(GLuint minimap)
 {
@@ -96,13 +101,13 @@ void draw_HUD(void)
 	draw_minimap(minimapa);
 	
 	hud_printf (12, 2*12, "Mars Base - v" VER_STRING);
-	hud_printf (12, 3*12, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch-90, camera.yaw, camera.roll);
+	hud_printf (12, 3*12, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
 	hud_printf (12, 4*12, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
 	hud_printf (12, 5*12, "Flechas para moverse, shift para ir muy rápido");
 	hud_printf (12, 6*12, "WASD+QE -> Girar cámara");
 	
 		VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
-		VECTOR dir = v_from_ang(RAD(camera.pitch-90), RAD(camera.yaw));
+		VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
 		int obj = get_traced_object(pos, dir);
 		
 	hud_printf (12, 7*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
@@ -636,5 +641,10 @@ int do_dialog(DIALOG *d)
 	}
 	ilDeleteImages(1, &pantalla);
 	restore_gl_mode();
+	
+	// Esperamos un poco para que se puedan quitar el ratón y el teclado
+	SDL_Delay(50);
+	clear_cola_eventos();
+	
 	return ret_id;
 }

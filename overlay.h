@@ -105,6 +105,7 @@ DIALOG spawn_dialog[SPAWN_DLG_MAX_ELEMENTS];// Ahora es en run-time, pero para n
 #define MAX_TEXT_LIST_QTY 1024
 #define MAX_TEXT_LIST_SIZE 1024
 #define TEXT_LIST_R_SPAWN_MENU 25 // Inicio ID reservado para el spawn_menu
+#define TEXT_LIST_R_USER 50 // Inicio ID no reservado (Uso solo en funciones pequeñas)
 char lista_texto[MAX_TEXT_LIST_QTY][MAX_TEXT_LIST_SIZE]; // Lista de mensajes y texto necesario para los dialogs. Además permite mods y traducciones ;)
 /* Lugares reservados de la lista:
 0 - 25 -> Reservado programa (Aún no lo se, pero supongo que para las bichas de carga y tal)

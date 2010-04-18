@@ -30,17 +30,15 @@
 #define CONTROL_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-
-#include <stdio.h>
-#include <math.h>
-#include <time.h>
-
-#include "heightmap.h"
 #include "shared.h"
 
 // Máxima distancia al cuadrado desde la cámara hasta el objeto al hacer los traces
-#define MAX_DIST_TRACE_OBJ_SQ 1000
+#define MAX_DIST_TRACE_OBJ_SQ 5000
+// Máxima distancia al cuadrado desde la cámara hasta el objeto al hacer los traces
+#define MAX_DIST_CONX_SQ 50000
+
+/* Cantidad de elementos a parte de los iconos que hay en el spawn_dialog */
+#define SPAWN_DIALOG_HEADER_SIZE 3
 
 void control(void);
 void key_handle(SDLKey key, SDLMod mod);
@@ -48,9 +46,11 @@ void key_up_handle(SDLKey key, SDLMod mod);
 void mouse_move_but(int button, int x, int y);
 void mouse_static_but(int button, int x, int y);
 void process_events(void);
+void clear_cola_eventos(void);
 void main_update(void);
 
-int open_spawn_dialog(void); // Retorna el valor de do_dialog
+int open_spawn_dialog(void); // Retorna el id del modelo a cargar o -1
+int place_object(int id_modelo); // Ejecuta una rutina de posicionamiento del objeto, retorna 1 si se ha puesto el objeto
 
 int get_traced_object(VECTOR pos, VECTOR dir);
 

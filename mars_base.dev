@@ -12,7 +12,7 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=-DOPENGLUT_STATIC_@@_-IL_STATIC_LIB_@@_
 CppCompiler=-DOPENGLUT_STATIC_@@_-IL_STATIC_LIB_@@_
-Linker=-lglu32 -lopengl32 -lwinmm -lgdi32_@@_-lmingw32 -lSDLmain -lSDL -mwindows_@@_-ldevil_@@_-lilu_@@_-lilut_@@_I:/mingw/lib/SDL_ttf.lib_@@_I:/mingw/lib/libpthreadGC2.a_@@_
+Linker=-lglu32 -lopengl32 -lwinmm -lgdi32_@@_-lmingw32 -lSDLmain -lSDL -mwindows_@@_-ldevil_@@_-lilu_@@_-lilut_@@_-lSDL_ttf_@@_
 IsCpp=0
 Icon=mars_base.ico
 ExeOutput=..\mars_base
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000
+CompilerSettings=0000000000001000000000
 
 [Unit1]
 FileName=main.c
@@ -42,8 +42,8 @@ BuildCmd=
 [VersionInfo]
 Major=0
 Minor=2
-Release=5
-Build=3522
+Release=6
+Build=3799
 LanguageID=1033
 CharsetID=1252
 CompanyName=

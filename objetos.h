@@ -29,11 +29,6 @@
 #define OBJETOS_H
 
 #include "shared.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <IL/ilut.h>
 
 /* --- MACROS --- */
 #define obj_setpos(a,b,c,d) (a).pos.x=(b); (a).pos.y=(c); (a).pos.z=(d);
@@ -45,7 +40,10 @@
 #define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
 #define MAX_MODEL_OBJETOS 80 /*!< Número máximo de objetos dentro de cada modelo (Maybe alloc?) */
 #define MAX_OBJETOS 2048 /*!< Número máximo de objetos */
-#define objetos_debug 1 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->Aún más tonterías */
+#define objetos_debug 0 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->Aún más tonterías */
+
+
+#define MAX_CONX 128 /*!< Número máximo de conexiones posibles */
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
  - #OK# -> Implementado y funcionando 
@@ -131,6 +129,16 @@ typedef struct
 	//VECTOR velang; /*!< Velocidad angular (en rad/s) */
 	float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisión del objeto */
 	
+	/* Conexiones */
+	int conx_qty; /*!< Cantidad de conexiones (máximas) del objeto */
+	VECTOR conx_coord[MAX_CONX]; /*!< Coordenadas (locales) de las posibles conexiones del objeto */
+	VECTOR conx_norm[MAX_CONX]; /*!< Vectores normales (locales!) de las posibles conexiones del objeto */
+	int conx_id[MAX_CONX]; /*!< Id del objeto al que está conectado (-1 si no está conectado) */
+	
+	float volumen; /*!< Volumen del objeto en m3, usado para presión y uso de gases y cosas así */
+	float reparar; /*!< Nivel de daños del objeto [0->Perfecto, 1->Daños fatales] */
+	float temperatura; /*!< Temperatura interna del objeto en kelvin */
+	
 	// Internos
 	char selec; /*!< ¿Seleccionado? */
 	
@@ -146,9 +154,11 @@ int null_texture;  // Textura usada si hay algún error
 
 /* - FUNCIONES de objetos - */
 int load_3DS (t_model *data, char *filename);
-void object_predraw(t_obj_base *object);
+void model_predraw(t_model *object);
 //void object_draw(t_obj_base object); DEPRECATED
 void object_draw_l(t_obj_base *object);
+void object_draw_nodes(t_obj_base_ptr object);
+void object_draw_selected(t_obj_base_ptr object);
 void model_unload(t_model *model);
 
 /* - FUNCIONES de listas - */

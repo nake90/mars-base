@@ -32,32 +32,141 @@
 #include <GL/glext.h>
 #include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
-#include <stdio.h>
-#include <math.h>
-#include <time.h>
-#include <stdarg.h>
+//#include <stdio.h>
+//#include <math.h>
+//#include <time.h>
 #include "atmosferico.h"
 #include "objetos.h"
 #include "display.h"
 #include "overlay.h"
 
+int scr_width = -1;
+int scr_height = -1;
+int scr_bpp;
+int scr_flags = -1;
+
 void message_printf(const char *fmt, ...)
 {
-	static char buf[256];
+	char buf[1024];
+	char line[1024];
     va_list args;
 
     va_start(args, fmt);
 	(void) vsprintf (buf, fmt, args);
     va_end(args);
     
-    DIALOG message[]={
-	/* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
-	{d_box_proc , scr_width/2-scr_width/4, scr_height/2-scr_height/4, scr_width/2, scr_height/2, {0,0,0,255}, {40,128,40,255}, 0, 0, 0, 0, NULL, NULL, NULL},
-	{d_label_proc, scr_width/2-scr_width/4, scr_height/2-scr_height/4, 0, 0, {255,255,255,255}, {0,0,0,0}, 0, 0, 0, 0, buf, fntArial12, NULL},
-	{d_button_proc, scr_width/2 - 20, scr_height/2+scr_height/4 - 20, 0, 0, {255,255,255,255}, {64,128,64,255}, 0, 0, 0, 0, "Cerrar", fntArial12, NULL},
-	{NULL_DIALOG}};
+    if(str_size(buf)<=0)return;
+    
+    int lines=1;
+    int i = 0, cont=0;;
+    int max_len_size=-1;
+    int l_mas_larga =-1;
+    
+    while(buf[i]!='\0')
+	{
+		if(buf[i]=='\n')
+		{
+			if(max_len_size<cont){max_len_size=cont; l_mas_larga=lines-1;}
+			cont=-1;
+			lines++;
+		}
+		cont++;
+		i++;
+	}
+	if(max_len_size<cont){max_len_size=cont; l_mas_larga=lines-1;} // Si no está esto la última línea no se tiene en cuenta para el tamaño
 	
+	int width, height, box_h;
+	
+	cont=0;
+	int j;
+	for(i=0; i<lines; i++)
+	{
+		// Usamos el buffer 'lista_texto' empezando por TEXT_LIST_R_USER
+		j=0;
+		while(buf[cont]!='\n' && buf[cont]!='\0'){lista_texto[TEXT_LIST_R_USER+i][j]=buf[cont]; j++; cont++;}
+		lista_texto[TEXT_LIST_R_USER+i][j]='\0';
+		cont++; // Nos saltamos el '\n'
+	}
+	
+    TTF_SizeText(fntArial12, lista_texto[TEXT_LIST_R_USER+l_mas_larga], &width, &height);
+	width+=10;
+    box_h = (height + 4) * (lines+1) + 16; // Una línea más para el Cerrar, y 6 extra también para el Cerrar
+    
+    
+	DIALOG *message=malloc(sizeof(DIALOG)*(lines+4));
+	if(message==NULL){debug_printf("Error en el malloc del mensaje. Tamaño necesitado: %i\n",lines+4); return;}
+	
+	message[0].df = d_box_proc;
+	message[0].x = scr_width/2-width/2;
+	message[0].y = scr_height/2-box_h/2;
+	message[0].w = width;
+	message[0].h = box_h;
+	message[0].fg.r = 0;
+	message[0].fg.g = 0;
+	message[0].fg.b = 0;
+	message[0].fg.a = 255;
+	message[0].bg.r = 255;
+	message[0].bg.g = 255;
+	message[0].bg.b = 255;
+	message[0].bg.a = 255;
+	message[0].key = 0;
+	message[0].flag = 0;
+	message[0].d1 = 0;
+	message[0].d2 = 0;
+	message[0].dp = NULL;
+	message[0].dp2 = NULL;
+	message[0].dp3 = NULL;
+	
+	message[1].df = d_button_proc;
+	message[1].x = scr_width/2 - width/2 + 6;
+	message[1].y = scr_height/2 + box_h/2 - height - 10;
+	message[1].w = 0;
+	message[1].h = 0;
+	message[1].fg.r = 255;
+	message[1].fg.g = 255;
+	message[1].fg.b = 255;
+	message[1].fg.a = 255;
+	message[1].bg.r = 64;
+	message[1].bg.g = 128;
+	message[1].bg.b = 64;
+	message[1].bg.a = 255;
+	message[1].key = 0;
+	message[1].flag = 0;
+	message[1].d1 = 0;
+	message[1].d2 = 0;
+	message[1].dp = "Cerrar";
+	message[1].dp2 = fntArial12;
+	message[1].dp3 = NULL;
+	
+	for(i=2; i<lines+2; i++)
+	{
+		message[i].df = d_label_proc;
+		message[i].x = scr_width/2 - width/2 + 5;
+		message[i].y = scr_height/2-box_h/2 + (i-2) * (height + 4);
+		message[i].w = 0;
+		message[i].h = 0;
+		message[i].fg.r = 255;
+		message[i].fg.g = 255;
+		message[i].fg.b = 255;
+		message[i].fg.a = 255;
+		message[i].bg.r = 0;
+		message[i].bg.g = 0;
+		message[i].bg.b = 0;
+		message[i].bg.a = 0;
+		message[i].key = 0;
+		message[i].flag = 0;
+		message[i].d1 = 0;
+		message[i].d2 = 0;
+		message[i].dp = lista_texto[TEXT_LIST_R_USER+i-2];
+		message[i].dp2 = fntArial12;
+		message[i].dp3 = NULL;
+	}
+	
+	message[i].df = NULL;
+	
+	glColor4f(1.0,1.0,1.0,1.0f);
 	do_dialog(message);
+	free(message);
 }
 
 static void draw_object_list_base(t_obj_base **lista, int contador)
@@ -65,6 +174,7 @@ static void draw_object_list_base(t_obj_base **lista, int contador)
 	int i;
 	for (i=0; i<contador; i++)
 	{
+		glColor4f(1.0,1.0,1.0,1.0f);
 		object_draw_l(lista[i]);
 	}
 	/* Para la transparencia deben estar los objetos ya dibujados... */
@@ -72,15 +182,9 @@ static void draw_object_list_base(t_obj_base **lista, int contador)
 	{
 		if (lista_objeto_base[i]->selec != 0)
 		{
-			glLineWidth(2.0f);
-			glColor4f(0.0,0.0,1.0,0.8f);
-			glBegin(GL_LINE_LOOP);
-				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_l -0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_t +0.5, lista_objeto_base[i]->pos.z +0.01);
-				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_l -0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_b -0.5, lista_objeto_base[i]->pos.z +0.01);
-				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_r +0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_b -0.5, lista_objeto_base[i]->pos.z +0.01);
-				glVertex3f(lista_objeto_base[i]->pos.x + lista_objeto_base[i]->sq_r +0.5, lista_objeto_base[i]->pos.y  + lista_objeto_base[i]->sq_t +0.5, lista_objeto_base[i]->pos.z +0.01);
-			glEnd();
+			object_draw_selected(lista_objeto_base[i]);
 		}
+		object_draw_nodes(lista[i]);
 	}
 }
 
@@ -183,9 +287,16 @@ void display(void)
 
     glDisable(GL_LIGHTING);
     glDisable(GL_FOG);
-    glRotatef(-camera.pitch, 1.0f,0,0);
-    glRotatef(-camera.yaw, 0,0,1.0f);
-    glRotatef(-camera.roll, sin(RAD(-camera.yaw)),cos(RAD(-camera.yaw)),-sin(RAD(camera.pitch)));
+    //glRotatef(-camera.pitch, 1.0f,0,0);
+    //glRotatef(-camera.yaw, 0,0,1.0f);
+    //glRotatef(-camera.roll, sin(RAD(-camera.yaw)),cos(RAD(-camera.yaw)),-sin(RAD(camera.pitch)));
+    
+	
+	glRotatef(-90, 1,0,0); // Arreglamos el terreno porque estaba siempre torcido
+	
+    glRotatef(-camera.roll,   0,1,0);
+    glRotatef(-camera.pitch, 1,0,0);
+	glRotatef(-camera.yaw,  0,0,1);
 	/* Dibujos estáticos (Sky) */
 	
 	//glEnable(GL_BLEND);
@@ -238,7 +349,6 @@ void display(void)
 	hud_printf (12, 10*12, "Altura hasta el suelo: %f",altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z));
 	//hud_printf (12, 11*12, "FPS: %3.2f",FPS);
 	
-	SDL_GL_SwapBuffers();
 }
 
 
@@ -246,15 +356,25 @@ void video_init(void)
 {
 	scr_info = SDL_GetVideoInfo();
 	
-	scr_bpp = scr_info->vfmt->BitsPerPixel; /* Usamos la config del escritorio */
+	if(scr_bpp<=0)scr_bpp = scr_info->vfmt->BitsPerPixel; /* Usamos la config del escritorio */
 	
 	/* PREVIO del GL*/
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-	scr_flags = SDL_OPENGL | SDL_FULLSCREEN;
+	if(scr_flags<=0)
+	{
+		scr_flags = SDL_OPENGL | SDL_FULLSCREEN;
+	}
+	else
+	{
+		scr_flags |= SDL_OPENGL;
+	}
 	
 	/* Laarga lista de resoluciones posibles xD incluso para 16:9 . He usado las más comunes, fuente: http://en.wikipedia.org/wiki/Display_resolution */
-	scr_width = 1680;
-	scr_height = 1050;
+	if(scr_width <= 0 || scr_height <=0)
+	{
+		scr_width = 1680;
+		scr_height = 1050;
+	}
 	/* Hmmm he leido hace poco que SDL emula un modo si no lo puede hacer.. así que a la mierda la lista */
 	screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
 	if ( screen == NULL )
@@ -304,7 +424,16 @@ void video_init(void)
 	//atexit(salir);
 
 	/* DevIL init */
+	if (ilGetInteger(IL_VERSION_NUM) != IL_VERSION ||
+	  iluGetInteger(ILU_VERSION_NUM) != ILU_VERSION ||
+	  ilutGetInteger(ILUT_VERSION_NUM) != ILUT_VERSION)
+	{
+		debug_printf("ERROR, la versión de devIL no coincide!\n");
+		exit(-2);
+	} 
+	
 	ilInit();
+	iluInit();
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 	

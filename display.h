@@ -31,16 +31,17 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <stdarg.h>
 #include <SDL/SDL.h>
 #include "shared.h"
 #include "heightmap.h"
 
 SDL_Surface *screen;
 const SDL_VideoInfo* scr_info;
-int scr_width;
-int scr_height;
-int scr_bpp;
-int scr_flags;
+extern int scr_width;
+extern int scr_height;
+extern int scr_bpp;
+extern int scr_flags;
 
 #define FPS_FRAMES 10
 float FPS;
