@@ -49,6 +49,8 @@ float FPS;
 /* TEXTURAS BÁSICAS */
 t_texture sand;
 
+// Pequeño truco, como no hay un SDL_WINDOWED (o eso creo) pues usamos este y así flags está definido
+#define FLAG_WINDOWED SDL_OPENGL
 void video_init(void);
 void resize_window(int width, int height);
 void display(void);

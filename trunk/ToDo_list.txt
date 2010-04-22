@@ -1,10 +1,11 @@
+!!!!!!!!!!Error en el malloc del modelo 5
 !!!	[FIX] Colisión de los objetos no gira con el objeto (En el display si, pero no al seleccionar)
 !!!	[ADD] Trace terreno (falta z)
 !!!	[NEW] Funciones de transferencia de calor, gases y presión
 !!	[ADD] Colisiones al crear el objeto
 !!	[ADD] TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
 !!	[NEW] Menú de estado y acciones sobre objetos
-! 	[FIX] Arreglar los sprites y con ello los mensajes en el mundo (CREO QUE YA ESTÁ)
+! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
 !	[FIX] Grid	(FALLA OFFSET)
 !	[FIX] Problemas con movimiento por teclado
 !	[NEW] Archivo de configuración
@@ -14,4 +15,3 @@
 !	[NEW] GUI_TabFrame ?
 !	[NEW] GUI_Scroll ?
 !	[FIX] Unir sun con sun_texture (Tonterías mías al crearlo)
-!	[NEW] Permitir iniciar en modo ventana o forzando la resolución (casi hecho)

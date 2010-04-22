@@ -1,0 +1,4 @@
+Notas de versión:
+* No se crean objetos automáticamente, aprieta <ESPACIO> para ver el menú de objetos y haz click en el objeto que quieras crear.
+* He cambiado todo el código relacionado con pitch yaw y roll, si observas algo incorrecto al respecto avísame.
+* Control y creación de nodos en pruebas, deberían autoconectarse (en verde) los objetos con nodos definidos.

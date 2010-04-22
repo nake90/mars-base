@@ -113,6 +113,7 @@ typedef struct
 	GLint texture[1];
 }t_texture;
 
+/* DEBUG y SCREEN */
 void debug_reset (void);
 void debug_printf (const char *fmt, ...);
 void scr_init_reset (int debug_too);
@@ -123,8 +124,10 @@ void hud_printf (float x, float y, const char *fmt, ...);
 void set_gl_mode(void);
 void restore_gl_mode(void);
 
+/* TEXTURAS */
 void use_texture (t_texture texture);
 
+/* STRINGS */
 int str_size(const char* string);
 #define str_len str_size
 void str_cpy(char* string1,const char* string2);
@@ -136,7 +139,10 @@ void str_ruta_back(char* ruta);
 void str_ext_back(char* ruta); // Quita la extensión al nombre del archivo
 void str_ruta_get_filename(char* ruta); // Obtiene el nombre y su extensión
 int str_list_find(const char* find,const char* table[], int elementos);
+#define __STR2FLOAT_DEFINED
+float str2float(const char *str);
 
+/* VECTORES */
 VECTOR p_vect(VECTOR vec1,VECTOR vec2);
 float p_escalar(VECTOR vec1,VECTOR vec2);
 void normalize(VECTOR* vec1);
@@ -147,26 +153,29 @@ float vdist_sq(VECTOR vec1, VECTOR vec2); /* Cuadrado de la distancia */
 VECTOR v_from_ang(float pitch, float yaw); /* Vector definido por pitch y yaw en radianes */
 VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll); /* Rotar el vector */
 
+/* MATEMÁTICAS */
 float nabs(float val);
 int nround(float val);
 int nfloor(float val);
 int nceil(float val);
 int nsgn(float val);
 
+/* RANDOM */
 void randomize(float seed);
-
 int irand(int max); // Integer random [0 - max]
 int sirand(int max); // Signed integer random [(-max) - (+max)]
 float frand(void); // Float random [0 - 1]
 float sfrand(void); // Signed float random [(-1) - (+1)]
 #define rfrand(M,m) (frand()*((M)-(m))+(m))
 
+/* SPRITES */
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
 void draw_sprite (float x, float y, float z, t_texture textura, float size);
 
+/* TEXTO EN EL MUNDO */
 void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z);
 
-extern int scr_width, scr_height, scr_bpp;
+extern int scr_width, scr_height, scr_bpp; // Es usado en muchos sitios que no necesitan incluir display.h
 extern t_texture fondo;
 
 #endif

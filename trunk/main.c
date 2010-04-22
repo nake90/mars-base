@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
 	/* - INICIACIÓN VARIABLES - */
     str_cpy(app_path,argv[0]);
     str_ruta_back(app_path);
+        
     int i;
     debug_reset();
     debug_printf("Mars_Base v." VER_STRING " (%s) - by nake\n\n",app_path);
@@ -102,6 +103,19 @@ int main(int argc, char *argv[])
     camera.show_presion=0;
     window_mode=0;
     
+    scr_width=-1;
+    scr_height=-1;
+    scr_bpp=-1;
+    scr_flags=-1;
+    for(i=1; i<argc; i++)
+    {
+		if(argv[i]==NULL)break;
+		if(str_cmp(argv[i],"-windowed")==0){scr_flags=FLAG_WINDOWED;}
+		if(str_cmp(argv[i],"-fullscreen")==0){scr_flags=SDL_FULLSCREEN;}
+		if(str_cmp(argv[i],"-width")==0 && i+1<argc){scr_width=(int)str2float(argv[i+1]);}
+		if(str_cmp(argv[i],"-height")==0 && i+1<argc){scr_height=(int)str2float(argv[i+1]);}
+		//if(str_cmp(argv[i],"")==0){}
+	}
     
     /* - INICIACIÓN PROGRAMA - */
     #ifdef WINDOWS
@@ -128,7 +142,7 @@ int main(int argc, char *argv[])
 	{
 		fondo.texture[0] = ilutGLLoadImage("materials/fondo2.tga");
 	}
-	if(!fondo.texture[0]){debug_printf("No se ha encontrado la textura de fondo.\n",i); config.show_fondo=0;}else{config.show_fondo=1;}
+	if(!fondo.texture[0]){debug_printf("No se ha encontrado la textura de fondo.\n"); config.show_fondo=0;}else{config.show_fondo=1;}
 	/* - POSINICIALIZACIÓN (Carga elementos) - */
 	
 	
@@ -174,7 +188,7 @@ int main(int argc, char *argv[])
 	camera.ghost_mode=0;
 	
 	scr_init_printf ("Cargando terreno...");
-	load_heightmap("heightmaps/marineris",&marte,sand);
+	if(i=load_heightmap("heightmaps/marineris",&marte,sand)!=0){debug_printf("Error al cargar el terreno. Retornado %i\n",i);exit(-1);}
 	
 	scr_init_printf ("Cargando modelos...");
 	

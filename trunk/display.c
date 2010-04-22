@@ -318,7 +318,10 @@ void display(void)
 	/* Dibujamos los objetos */
 	draw_object_list_base(lista_objeto_base, lista_objetos_base);
 	
+	
 	/* Dibujamos los extras del terreno */
+	
+	//draw_sprite (0, 0, 10, sun_texture, 5);
 	
 	/* - Display Casillas - (casillas solo de la zona actual, casillas de 1x1m^2) */
    	if (camera.show_grid)
@@ -366,7 +369,7 @@ void video_init(void)
 	}
 	else
 	{
-		scr_flags |= SDL_OPENGL;
+		scr_flags |= SDL_OPENGL; // Nos aseguramos que está definido
 	}
 	
 	/* Laarga lista de resoluciones posibles xD incluso para 16:9 . He usado las más comunes, fuente: http://en.wikipedia.org/wiki/Display_resolution */
@@ -428,7 +431,7 @@ void video_init(void)
 	  iluGetInteger(ILU_VERSION_NUM) != ILU_VERSION ||
 	  ilutGetInteger(ILUT_VERSION_NUM) != ILUT_VERSION)
 	{
-		debug_printf("ERROR, la versión de devIL no coincide!\n");
+		debug_printf("ERROR, la versión de devIL no coincide\n");
 		exit(-2);
 	} 
 	
