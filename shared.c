@@ -116,6 +116,34 @@ int nsgn(float val)
 	return 0;
 }
 
+float str2float(const char *str)
+{
+      float valor=0;
+      int negativo=1;
+      float decimal=0.0;/*Necesito tipo float porque la división me sale entera y sin decimales con el tipo integer*/
+      while (((*str>=0x30 && *str<=0x39) || *str==0x2E || *str==0x2C || *str==45) && *str!='\0') /*Entre 0 y 9 ó '.' ó ',' y no es el final*/
+      {
+            if (*str==45){negativo=-1;}
+            else
+            {
+                if (*str>=0x30 && *str<=0x39)
+                {
+                   if (decimal==0)
+                   {
+                       valor*=10;
+                       valor+=((*str)-0x30);
+                   }else{
+                         valor+=(*str-0x30)/decimal;
+                         decimal*=10;
+                   }
+                }else{decimal=10;}
+            }
+            str++;
+            
+      }
+      return valor*negativo;
+}
+
 /* - SCREEN LIST PRINTF - */
 void scr_init_reset (int debug_too)
 {

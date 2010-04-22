@@ -1,0 +1,67 @@
+//Archivo de lenguaje
+// FALTA: objetos.c y overlay.c
+
+//Mensajes de error
+err_init_sdl = No se ha podido iniciar SDL: %s.\n
+err_background = No se ha encontrado la textura de fondo.\n
+err_font = Error al cargar la fuente: \"%s\"\n
+err_noicon_texture = Error al cargar la textura del no_icon! (Error grave pero continuando...)\n
+err_sand_base_texture = Error al cargar la textura base!, RETURN:%i\n
+err_sun_texture = Error al cargar la textura del sol!\n
+err_load_heightmap = Error al cargar el terreno. Retornado %i\n
+err_model_dir = Error buscar los modelos en \"%s\"\n
+err_open_map_pgm = Error al abrir \"%s\"\n
+err_open_map_info = Error al abrir \"%s\"\n
+err_map_malloc_data = ### Fallo en el malloc de los datos de altura (%i*%i)\n
+err_map_malloc_shadow = ### Fallo en el malloc de los datos de sombras (%i*%i)\n
+err_map_malloc_normal = ### Fallo en el malloc de los datos de normales (%i*%i)\n
+err_map_pgm_type = ### Fallo, no es un PGM (%c%c)\n
+err_precompiled_type = ERROR: No es un mapa precompilado\n
+err_precompiled_version = ERROR: Versión del mapa precompilado incorrecta\n
+err_message_printf_malloc = Error en el malloc del mensaje. Tamaño necesitado: %i\n
+err_video_init = No se ha podido iniciar la pantalla: %s\n
+err_ttf_init = No se ha podido iniciar el módulo de fuentes SDL_TTF: %s.\n
+err_devil_version = ERROR, la versión de devIL no coincide.\n
+err_material_load_texture = Error cargando la textura %s del material\n
+err_ghost_mode_already_started = Error, ghost_mode ya activado\n
+err_ghost_mode_model_id = Error, id_modelo incorrecto al posicionar\n
+
+
+//Mensajes de alerta
+wrn_minimap = ATENCIÓN: Minimapa no encontrado \"%s\"\n
+wrn_precompiled_not_found = ATENCIÓN: Mapa no encontrado (%s)\n
+wrn_ghost_mode_config_file = ATENCIÓN: No se ha encontrado el archivo de configuración del modelo %s en \"%s\"\n
+
+
+//Mensajes de información
+nfo_compiled_start = -- Compilando mapa --\n
+nfo_compiled_ok = Mapa compilado con éxito\n
+
+//Mensajes de carga
+scr_message_load_materials = Cargando materiales...
+scr_message_ini_variables = Iniciando variables...
+scr_message_load_terrain = Cargando terreno...
+scr_message_load_models = Cargando modelos...
+scr_message_load_terrain = Cargando terreno...
+scr_message_precompiled_fail = Fallo al cargar el mapa precompilado... Compilando
+scr_message_load_terrain_data = > Cargando alturas
+scr_message_precompiled_save = Guardando terreno compilado
+scr_message_predraw_terrain = Predibujando terreno
+scr_message_precompiled_data_load = > Cargando datos
+scr_message_map_compile = Compilando mapa
+scr_message_map_compile_init = > Iniciando compilación
+scr_message_map_compile_percent = > Calculando sombras y normales (%3.0f)
+scr_message_map_compile_done = > Finalizado
+
+
+//Texto de dialogs
+dlg_message_printf_close = Cerrar
+dlg_spawn_dialog_title = Click en el objeto que quieras crear
+dlg_spawn_dialog_close = Cerrar
+dlg_screenshot = Foto de la pantalla guardada en la carpeta principal
+
+
+//Texto de hud
+hud_to_floor = Altura hasta el suelo: %f
+hud_ghost_mode_message = Haz click donde quieras el objeto
+

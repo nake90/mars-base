@@ -89,11 +89,11 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	
 	str_cpy(str_buffer,filename);
 	str_append(str_buffer,".pgm");
-	FILE* data = fopen(str_buffer,"r"); if (!data){debug_printf("### Fallo al abrir \"%s\"",str_buffer);return 1;}
+	FILE* data = fopen(str_buffer,"r"); if (!data){debug_printf("Error al abrir \"%s\"\n",str_buffer);return 1;}
 	
 	str_cpy(str_buffer,filename);
 	str_append(str_buffer,".txt");
-	FILE* info = fopen(str_buffer,"r"); if (!info){debug_printf("### Fallo al abrir \"%s\"",str_buffer);return 2;}
+	FILE* info = fopen(str_buffer,"r"); if (!info){debug_printf("Error al abrir \"%s\"\n",str_buffer);return 2;}
 	
 	scr_init_printf ("Fallo al cargar el mapa precompilado... Compilando");
 	
@@ -119,25 +119,27 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	
 	h_buffer->list=0;
 	h_buffer->data=malloc(sizeof(unsigned char)*h_buffer->tam_y*h_buffer->tam_x);
-	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)",h_buffer->tam_y,h_buffer->tam_x);return 3;}
+	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de altura (%i*%i)\n",h_buffer->tam_y,h_buffer->tam_x);return 3;}
 	h_buffer->shadow=malloc(sizeof(float)*h_buffer->tam_y*h_buffer->tam_x);
-	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de sombras (%i*%i)",h_buffer->tam_y,h_buffer->tam_x);return 3;}
+	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de sombras (%i*%i)\n",h_buffer->tam_y,h_buffer->tam_x);return 3;}
 	h_buffer->normal=malloc(sizeof(VECTOR)*h_buffer->tam_y*h_buffer->tam_x);
-	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de normales (%i*%i)",h_buffer->tam_y,h_buffer->tam_x);return 3;}
+	if(!h_buffer->data){debug_printf("### Fallo en el malloc de los datos de normales (%i*%i)\n",h_buffer->tam_y,h_buffer->tam_x);return 3;}
 	
 	scr_init_reprintf(" > Cargando alturas");
 	
 	int i=0;
 	char val[2];
 	char line[255];
-	fscanf(data,"%c%c\n",&(val[0]),&(val[1])); if(val[0]!='P'||val[1]!='2'){debug_printf("### Fallo, no es un PGM (%c%c)",val[0],val[1]);return 4;}
+	fscanf(data,"%c%c\n",&(val[0]),&(val[1])); if(val[0]!='P'||val[1]!='2'){debug_printf("### Fallo, no es un PGM (%c%c)\n",val[0],val[1]);return 4;}
 	
 	do{fgets(line,255,data);}
 	while(line[0]=='#');/* Leemos una línea. Si hay un '#' implica que era un comentario... */
-	fscanf(data,"%i\n",&i);
+	//fscanf(data,"%i\n",&i);
 	i=0;
-	while(fscanf(data,"%c\n",&(h_buffer->data[i]))!=EOF && i<h_buffer->tam_y*h_buffer->tam_x){i++;}
+	//FILE *deb = fopen("map_debug.txt","w");
+	while(fscanf(data,"%i\n",&(h_buffer->data[i]))!=EOF && i<h_buffer->tam_y*h_buffer->tam_x){/*fprintf(deb,"%i\n",h_buffer->data[i]);*/i++;}
 	fclose(data);
+	//fclose(deb);
 	
 	
 	compile_map(h_buffer, texture);
@@ -406,7 +408,6 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	
 	debug_printf(" -- Compilando mapa --\n");
 	scr_init_printf ("Compilando mapa");
-	scr_init_printf ("Puede tardar unos minutos y puede que la pantalla se ponga en blanco");
 	scr_init_printf (" > Iniciando compilación");
 	float carga_estado=0;
 	float carga_inc=100.0/obj->tam_y;
@@ -444,11 +445,6 @@ void compile_map(t_heightmap* obj, t_texture texture)
 				
 				obj->normal[x+y*obj->tam_x]=calc_normal(vec1,vec2);
 				color=calc_shadow(x, y, ray, obj, AMBIENTE);
-				
-				if(0 && valores_guardados<20 && x==600 && y>500){valores_guardados++;
-				debug_printf("(%i) ---\n  Vector1:(%.2f,%.2f,%.2f)\n  Vector2:(%.2f,%.2f,%.2f)\n  NORMAL:(%.2f,%.2f,%.2f)\n  COORD(%i,%i)\n"
-				,valores_guardados,vec1.x,vec1.y,vec1.z,vec2.x,vec2.y,vec2.z,obj->normal[x+y*obj->tam_x].x,obj->normal[x+y*obj->tam_x].y,obj->normal[x+y*obj->tam_x].z,x,y);
-				obj->shadow[x+y*obj->tam_x]=-1;}
 		}
 		carga_estado+=carga_inc;
 	}
@@ -483,12 +479,6 @@ float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float amb
 		incrementos++;
 	}
 	cur_pos=vadd(cur_pos,incr);
-	if (0 && sombra==1){debug_printf(" -- SOMBRA:(%i,%i,%i) Corte:(%i,%i,%i) Altura:%.2f Loops: %i RAY:(%.2f,%.2f,%.2f)\n",
-					obj_x , obj_y , obj->data[obj_x+obj_y*obj->tam_x],
-					nround(cur_pos.x) , nround(cur_pos.y) , obj->data[nround(cur_pos.x)+nround(cur_pos.y)*obj->tam_x],
-					cur_pos.z,
-					incrementos,
-					ray.x,ray.y,ray.z);}
 	if (sombra==1){obj->shadow[obj_x+obj_y*obj->tam_x]=ambiente + nabs(p_escalar(obj->normal[obj_x+obj_y*obj->tam_x],incr))/10; return obj->shadow[obj_x+obj_y*obj->tam_x];}
 	
 	float resultado = nabs(p_escalar(obj->normal[obj_x+obj_y*obj->tam_x],incr)) + ambiente;

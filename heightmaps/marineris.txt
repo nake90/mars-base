@@ -10,4 +10,4 @@ min_h	= -6000
 max_h	= 6000
 ini_x	= -4750
 ini_y	= 7787
-ini_z	= 565
+ini_z	= 471

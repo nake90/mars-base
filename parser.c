@@ -51,6 +51,7 @@ static int parser_get_index(t_parse parse, const char *key)
 	return -1;
 }
 
+#ifndef __STR2FLOAT_DEFINED
 static float str2float(const char *str)
 {
       float valor=0;
@@ -78,6 +79,7 @@ static float str2float(const char *str)
       }
       return valor*negativo;
 }
+#endif
 
 int parse_open(t_parse* parse, char *ruta)
 {
