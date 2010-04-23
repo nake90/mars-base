@@ -37,8 +37,8 @@
 /* --- DEFINES --- */
 #define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
-#define MAX_MATERIALS 256 /*!< Max number of materials (Maybe alloc?) */
-#define MAX_MODEL_OBJETOS 80 /*!< Número máximo de objetos dentro de cada modelo (Maybe alloc?) */
+#define MAX_MATERIALS 128 /*!< Max number of materials (Maybe alloc?) */
+#define MAX_MODEL_OBJETOS 20 /*!< Número máximo de objetos dentro de cada modelo (Maybe alloc?) */
 #define MAX_OBJETOS 2048 /*!< Número máximo de objetos */
 #define objetos_debug 0 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->Aún más tonterías */
 
@@ -98,15 +98,15 @@ typedef struct{float u,v;}t_mapcoord; /*!< Coordenadas u,v de la textura */
 typedef struct
 {
 	char name[80]; /*!< Nombre del archivo (debería ser único) */
-	char obj_name[MAX_MODEL_OBJETOS][80]; /*!< Nombre definido en el archivo 3ds (nombre del componente del 3ds) */
-	int vertices_qty[MAX_MODEL_OBJETOS]; /*!< Cantidad de vertices */
-	int polygons_qty[MAX_MODEL_OBJETOS]; /*!< Cantidad de polígonos */
+	char **obj_name; /*!< Nombre definido en el archivo 3ds (nombre del componente del 3ds) */  //[MAX_MODEL_OBJETOS][20];
+	int *vertices_qty; /*!< Cantidad de vertices */  //[MAX_MODEL_OBJETOS];
+	int *polygons_qty; /*!< Cantidad de polígonos */  //[MAX_MODEL_OBJETOS];
 	int materials_qty; /*!< Cantidad de materiales */
 	int model_objetos_qty; /*!< Número de objetos dentro del objeto */
 	
-	VECTOR vertex[MAX_MODEL_OBJETOS][MAX_VERTICES]; 
-	t_polygon polygon[MAX_MODEL_OBJETOS][MAX_POLYGONS];
-	t_mapcoord mapcoord[MAX_MODEL_OBJETOS][MAX_VERTICES];
+	VECTOR **vertex;//[MAX_MODEL_OBJETOS][MAX_VERTICES]; 
+	t_polygon **polygon;//[MAX_MODEL_OBJETOS][MAX_POLYGONS];
+	t_mapcoord **mapcoord;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
 	t_texture material[MAX_MATERIALS];
 	
 	
@@ -150,7 +150,6 @@ int lista_objetos_base; // Contador de la lista de objetos
 int lista_modelos; // Contador de la lista de modelos
 
 int icono_no_icon; // Nombre gracioso xD. Es la textura del icono predeterminado cuando no hay un icono a parte en el modelo.
-int null_texture;  // Textura usada si hay algún error
 
 /* - FUNCIONES de objetos - */
 int load_3DS (t_model *data, char *filename);

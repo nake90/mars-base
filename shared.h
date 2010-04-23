@@ -42,6 +42,7 @@
 
 #include <stdarg.h>
 #include "mars_base_private.h"
+#include "lang.h"
 
 //2*PI/360 = 0.017453292519943295769236907684886
 #define RAD(x) (float)((x)*0.01745329)
@@ -56,7 +57,7 @@ char scr_messages[MAX_SCREEN_MESSAGES][MAX_SCREEN_MESSAGES_LEN];
 int scr_message_index;
 int scr_message_debug;
 
-char app_path[256];
+//char app_path[256];
 
 GLuint minimapa;
 
@@ -177,5 +178,6 @@ void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, flo
 
 extern int scr_width, scr_height, scr_bpp; // Es usado en muchos sitios que no necesitan incluir display.h
 extern t_texture fondo;
+int null_texture;  // Textura usada si hay algún error
 
 #endif

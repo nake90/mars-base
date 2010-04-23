@@ -146,7 +146,7 @@ int place_object(int id_modelo)
 	}
 	
 	
-	str_cpyl(lista_texto[TEXT_LIST_R_USER + 0],MAX_TEXT_LIST_SIZE, "Haz click donde quieras el objeto");
+	str_cpyl(lista_texto[TEXT_LIST_R_USER + 0],TEXT_LIST_MAX_SIZE, "Haz click donde quieras el objeto, pulsa ESC para cancelar.");
 	
 	VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
 	VECTOR dir = v_from_ang(RAD(camera.pitch-90), RAD(camera.yaw));
@@ -269,10 +269,10 @@ int open_spawn_dialog(void)
 	
 	/* Ventana */
 	spawn_dialog[0].df = d_box_proc;
-	spawn_dialog[0].x = 20;
-	spawn_dialog[0].y = 120;
-	spawn_dialog[0].w = 400;
-	spawn_dialog[0].h = 300;
+	spawn_dialog[0].x = scr_width/2 - 621/2;
+	spawn_dialog[0].y = scr_height/2 - (95 + 95 * nceil(lista_modelos/5.0))/2;
+	spawn_dialog[0].w = 621;
+	spawn_dialog[0].h = 95 + 95 * nceil(lista_modelos/5.0);
 	spawn_dialog[0].fg.r = 0;
 	spawn_dialog[0].fg.g = 0;
 	spawn_dialog[0].fg.b = 0;
@@ -290,7 +290,7 @@ int open_spawn_dialog(void)
 	spawn_dialog[0].dp3 = NULL;
 	
 	/* Título */
-	str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 0],MAX_TEXT_LIST_SIZE, "Click en el objeto que quieras crear");
+	str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 0],TEXT_LIST_MAX_SIZE, "Click en el objeto que quieras crear");
 	
 	spawn_dialog[1].df = d_label_proc;
 	spawn_dialog[1].x = spawn_dialog[0].x + 40;
@@ -314,7 +314,7 @@ int open_spawn_dialog(void)
 	spawn_dialog[1].dp3 = NULL;
 	
 	/* Botón de cancelar */
-	str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 1],MAX_TEXT_LIST_SIZE, "Cerrar");
+	str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 1],TEXT_LIST_MAX_SIZE, "Cerrar");
 	
 	spawn_dialog[2].df = d_button_proc;
 	spawn_dialog[2].x = spawn_dialog[0].x+20;
@@ -342,14 +342,14 @@ int open_spawn_dialog(void)
 	int i;
 	int id=0;
 	
-	const int inix = 40 ,iniy = 150;
+	const int inix = 40 ,iniy = 30;
 	
 	int x=inix,y=iniy;
 	for(i=0;i<lista_modelos*2;i++)
 	{
 		spawn_dialog[sdh_size+i].df = d_icon_proc;
-		spawn_dialog[sdh_size+i].x = x;
-		spawn_dialog[sdh_size+i].y = y;
+		spawn_dialog[sdh_size+i].x = spawn_dialog[0].x + x;
+		spawn_dialog[sdh_size+i].y = spawn_dialog[0].y + y;
 		spawn_dialog[sdh_size+i].w = 80;
 		spawn_dialog[sdh_size+i].h = 80;
 		spawn_dialog[sdh_size+i].fg.r = 128;
@@ -370,8 +370,8 @@ int open_spawn_dialog(void)
 		
 		i++;
 		spawn_dialog[sdh_size+i].df = d_label_proc;
-		spawn_dialog[sdh_size+i].x = x;
-		spawn_dialog[sdh_size+i].y = y+82;
+		spawn_dialog[sdh_size+i].x = spawn_dialog[0].x + x;
+		spawn_dialog[sdh_size+i].y = spawn_dialog[0].y + y+82;
 		spawn_dialog[sdh_size+i].w = 0;
 		spawn_dialog[sdh_size+i].h = 0;
 		spawn_dialog[sdh_size+i].fg.r = 255;
@@ -392,7 +392,7 @@ int open_spawn_dialog(void)
 		
 		id++;
 		x+=120;
-		if(x>=spawn_dialog[0].x+spawn_dialog[0].w-80-inix){x=inix; y+=110;}
+		if(x>=spawn_dialog[0].w-80){x=inix; y+=110;}
 		
 	}
 	spawn_dialog[sdh_size+i].df = NULL; // El elemento NULL, debe ser el último de todos y DEBE estar, si no cosas horribles pueden pasar!
@@ -456,6 +456,7 @@ void key_handle(SDLKey key, SDLMod mod)
 		break;
 	
     case SDLK_SPACE: /* Menú de spawn */
+		if(camera.ghost_mode==1)break;
 		i = open_spawn_dialog();
 		if(i>=0)
 			place_object(i);

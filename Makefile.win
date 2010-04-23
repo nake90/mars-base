@@ -5,8 +5,8 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = mars_base_private.res
-OBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o $(RES)
-LINKOBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o $(RES)
+OBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o lang.o $(RES)
+LINKOBJ  = main.o atmosferico.o shared.o heightmap.o overlay.o materiales.o objetos.o control.o display.o parser.o lang.o $(RES)
 LIBS =  -L"I:/MinGW/lib" -mwindows -lglu32 -lopengl32 -lwinmm -lgdi32 -lmingw32 -lSDLmain -lSDL -mwindows -ldevil -lilu -lilut -lSDL_ttf  
 INCS =  -I"I:/MinGW/include" 
 CXXINCS = 
@@ -55,6 +55,9 @@ display.o: display.c
 
 parser.o: parser.c
 	$(CC) -c parser.c -o parser.o $(CFLAGS)
+
+lang.o: lang.c
+	$(CC) -c lang.c -o lang.o $(CFLAGS)
 
 mars_base_private.res: mars_base_private.rc 
 	$(WINDRES) -i mars_base_private.rc --input-format=rc -o mars_base_private.res -O coff 

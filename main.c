@@ -118,6 +118,8 @@ int main(int argc, char *argv[])
 	}
     
     /* - INICIACIÓN PROGRAMA - */
+    lang_load("es");
+    
     #ifdef WINDOWS
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
     #endif
@@ -154,12 +156,24 @@ int main(int argc, char *argv[])
 	if (fntArial12==NULL){debug_printf("Error al cargar la fuente: \"arial.ttf\"\n",i); exit(-1);}
 	
 	/* Carga materiales */
-	scr_init_printf ("Cargando materiales...");
+	scr_init_printf(lista_texto[TEXT_LIST_R_SCR + 0]);
 	
 	icono_no_icon = ilutGLLoadImage("materials/no_icon.tga");
 	if(!icono_no_icon)
 	{
 		debug_printf("Error al cargar la textura del no_icon! (Error grave pero continuando...)\n");
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		ilutGLBuildMipmaps();
+	}
+	
+	null_texture = ilutGLLoadImage("materials/null.tga");
+	if(!null_texture)
+	{
+		debug_printf("Error al cargar null_texture! (Error grave pero continuando...)\n");
 	}
 	else
 	{
@@ -178,7 +192,7 @@ int main(int argc, char *argv[])
 	ilutGLBuildMipmaps();
 	
 	
-	scr_init_printf ("Iniciando variables...");
+	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 1]);
 	camera.pitch = -25;
 	camera.yaw = 0;
 	camera.pos_x=0;
@@ -187,10 +201,10 @@ int main(int argc, char *argv[])
 	camera.wasd_count=0;
 	camera.ghost_mode=0;
 	
-	scr_init_printf ("Cargando terreno...");
+	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 2]);
 	if(i=load_heightmap("heightmaps/marineris",&marte,sand)!=0){debug_printf("Error al cargar el terreno. Retornado %i\n",i);exit(-1);}
 	
-	scr_init_printf ("Cargando modelos...");
+	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 3]);
 	
 	lista_objeto_base=NULL;
 	lista_modelo=NULL;
@@ -205,7 +219,7 @@ int main(int argc, char *argv[])
 	str_append(buffer,"models");
 	if(lista_cargar_modelo_dir(buffer)!=0){debug_printf("Error buscar los modelos en \"%s\"\n",buffer);}
 	
-	scr_init_printf ("Iniciado");
+	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 13]);
 	glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
 	
 	

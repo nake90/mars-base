@@ -314,6 +314,7 @@ int str_cmp(const char* string1,const char* string2)
 {
 	int valor = 0;
 	int pos=0;
+	if(str_size(string1) != str_size(string2))return -1;
 	while (valor == 0 && string1[pos]!=0 && string2[pos]!=0)
 	{
 		valor=string1[pos]-string2[pos];
@@ -701,7 +702,15 @@ void use_texture(t_texture texture)
 	glMaterialfv(GL_FRONT, GL_DIFFUSE,   texture.diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR,  texture.specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, texture.shininess);
-	glBindTexture(GL_TEXTURE_2D, texture.texture[0] );
+	if(texture.texture[0]!=0)
+	{
+		glBindTexture(GL_TEXTURE_2D, texture.texture[0] );
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, null_texture );
+	}
+	
 }
 
 /*! \fn void draw_sprite (float x, float y, float z, t_texture textura, float size)
