@@ -1,4 +1,4 @@
-!!!!!!!!!!Error en el malloc del modelo 5
+!!!![FIX] En linux no se encuentra ningún modelo
 !!!	[FIX] Colisión de los objetos no gira con el objeto (En el display si, pero no al seleccionar)
 !!!	[ADD] Trace terreno (falta z)
 !!!	[NEW] Funciones de transferencia de calor, gases y presión

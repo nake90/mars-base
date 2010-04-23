@@ -15,4 +15,4 @@ A parte, debes de tener todas las librerías necesarias para poder incluir:
 El programa está desarrollado en Dev-C++ y compilado usando MinGW.
 Existe un archivo de proyecto del Dev-C++ (mars_base.dev).
 
-Para linux, pues haz un "make mars_base" y para jugar haz "./mars_base"
+Para linux, pues haz un "make depend", "make mars_base" y para jugar haz "./mars_base"

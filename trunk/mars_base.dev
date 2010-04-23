@@ -1,7 +1,7 @@
 [Project]
 FileName=mars_base.dev
 Name=mars_base
-UnitCount=19
+UnitCount=21
 Type=0
 Ver=1
 ObjFiles=
@@ -43,7 +43,7 @@ BuildCmd=
 Major=0
 Minor=2
 Release=6
-Build=3834
+Build=3940
 LanguageID=1033
 CharsetID=1252
 CompanyName=
@@ -229,6 +229,26 @@ BuildCmd=
 
 [Unit19]
 FileName=parser.h
+CompileCpp=0
+Folder=mars_base
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=lang.c
+CompileCpp=0
+Folder=mars_base
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit20]
+FileName=lang.h
 CompileCpp=0
 Folder=mars_base
 Compile=1

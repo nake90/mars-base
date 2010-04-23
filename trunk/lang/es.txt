@@ -1,10 +1,12 @@
 //Archivo de lenguaje
-// FALTA: objetos.c y overlay.c
+// FALTA: objetos.c y overlay.c, y algunos sueltos.
+// Añadidos al programa actualmente: Algunos mensajes de carga
 
 //Mensajes de error
 err_init_sdl = No se ha podido iniciar SDL: %s.\n
 err_background = No se ha encontrado la textura de fondo.\n
 err_font = Error al cargar la fuente: \"%s\"\n
+err_null_texture = Error al cargar null_texture! (Error grave pero continuando...)\n
 err_noicon_texture = Error al cargar la textura del no_icon! (Error grave pero continuando...)\n
 err_sand_base_texture = Error al cargar la textura base!, RETURN:%i\n
 err_sun_texture = Error al cargar la textura del sol!\n
@@ -34,6 +36,7 @@ wrn_ghost_mode_config_file = ATENCIÓN: No se ha encontrado el archivo de configu
 
 
 //Mensajes de información
+nfo_closed_ok = \nMars-base cerrado correctamente\n
 nfo_compiled_start = -- Compilando mapa --\n
 nfo_compiled_ok = Mapa compilado con éxito\n
 
@@ -42,7 +45,6 @@ scr_message_load_materials = Cargando materiales...
 scr_message_ini_variables = Iniciando variables...
 scr_message_load_terrain = Cargando terreno...
 scr_message_load_models = Cargando modelos...
-scr_message_load_terrain = Cargando terreno...
 scr_message_precompiled_fail = Fallo al cargar el mapa precompilado... Compilando
 scr_message_load_terrain_data = > Cargando alturas
 scr_message_precompiled_save = Guardando terreno compilado
@@ -52,11 +54,12 @@ scr_message_map_compile = Compilando mapa
 scr_message_map_compile_init = > Iniciando compilación
 scr_message_map_compile_percent = > Calculando sombras y normales (%3.0f)
 scr_message_map_compile_done = > Finalizado
+scr_message_done = Finalizado
 
 
 //Texto de dialogs
 dlg_message_printf_close = Cerrar
-dlg_spawn_dialog_title = Click en el objeto que quieras crear
+dlg_spawn_dialog_title = Click en el objeto que quieras crear o ESC para cancelar
 dlg_spawn_dialog_close = Cerrar
 dlg_screenshot = Foto de la pantalla guardada en la carpeta principal
 
