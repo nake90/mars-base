@@ -127,7 +127,7 @@ int load_3DS (t_model *data, char *filename)
 
 	unsigned short l_face_flags; /* Flag that stores some face information */
 
-	if ((l_file=fopen (filename, "rb"))== NULL){debug_printf("ERROR: Modelo \"%s\" no encontrado.\n",filename); return 1;}
+	if ((l_file=fopen (filename, "rb"))== NULL){debug_printf(TL_ERR_MODEL_NOT_FOUND,filename); return 1;}
 	
 	str_cpyl(string2,256,filename);
 	str_ruta_get_filename(string2);
@@ -189,34 +189,34 @@ int load_3DS (t_model *data, char *filename)
 					}
 					// obj_name
 					data->obj_name=realloc(data->obj_name,sizeof(char*)*data->model_objetos_qty);
-					if(data->obj_name==NULL){debug_printf("ERROR en el realloc de obj_name\n"); return -2;}
+					if(data->obj_name==NULL){debug_printf(TL_ERR_REALLOC, "de obj_name"); return -2;}
 					data->obj_name[data->model_objetos_qty-1]=NULL;
 					data->obj_name[data->model_objetos_qty-1]=realloc(data->obj_name[data->model_objetos_qty-1],sizeof(char)*20);
-					if(data->obj_name[data->model_objetos_qty-1]==NULL){debug_printf("ERROR en el realloc de obj_name[]\n"); return -2;}
+					if(data->obj_name[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de obj_name[]"); return -2;}
 					// vertices_qty
 					data->vertices_qty = realloc(data->vertices_qty, sizeof(int)*data->model_objetos_qty);
-					if(data->vertices_qty==NULL){debug_printf("ERROR en el realloc de vertices_qty\n"); return -2;}
+					if(data->vertices_qty==NULL){debug_printf(TL_ERR_REALLOC, "de vertices_qty"); return -2;}
 					// polygons_qty
 					data->polygons_qty = realloc(data->polygons_qty, sizeof(int)*data->model_objetos_qty);
-					if(data->polygons_qty==NULL){debug_printf("ERROR en el realloc de polygons_qty\n"); return -2;}
+					if(data->polygons_qty==NULL){debug_printf(TL_ERR_REALLOC, "de polygons_qty"); return -2;}
 					// vertex
 					data->vertex=realloc(data->vertex,sizeof(VECTOR*)*data->model_objetos_qty);
-					if(data->vertex==NULL){debug_printf("ERROR en el realloc de vertex\n"); return -2;}
+					if(data->vertex==NULL){debug_printf(TL_ERR_REALLOC, "de vertex"); return -2;}
 					data->vertex[data->model_objetos_qty-1]=NULL;
 					data->vertex[data->model_objetos_qty-1]=realloc(data->vertex[data->model_objetos_qty-1],sizeof(VECTOR)*MAX_VERTICES);
-					if(data->vertex[data->model_objetos_qty-1]==NULL){debug_printf("ERROR en el realloc de vertex[]\n"); return -2;}
+					if(data->vertex[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de vertex[]"); return -2;}
 					// polygon
 					data->polygon=realloc(data->polygon,sizeof(t_polygon*)*data->model_objetos_qty);
-					if(data->polygon==NULL){debug_printf("ERROR en el realloc de polygon\n"); return -2;}
+					if(data->polygon==NULL){debug_printf(TL_ERR_REALLOC, "de polygon"); return -2;}
 					data->polygon[data->model_objetos_qty-1]=NULL;
 					data->polygon[data->model_objetos_qty-1]=realloc(data->polygon[data->model_objetos_qty-1],sizeof(t_polygon)*MAX_POLYGONS);
-					if(data->polygon[data->model_objetos_qty-1]==NULL){debug_printf("ERROR en el realloc de polygon[]\n"); return -2;}
+					if(data->polygon[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de polygon[]"); return -2;}
 					// mapcoord
 					data->mapcoord=realloc(data->mapcoord,sizeof(t_mapcoord*)*data->model_objetos_qty);
-					if(data->mapcoord==NULL){debug_printf("ERROR en el realloc de mapcoord\n"); return -2;}
+					if(data->mapcoord==NULL){debug_printf(TL_ERR_REALLOC, "de mapcoord"); return -2;}
 					data->mapcoord[data->model_objetos_qty-1]=NULL;
 					data->mapcoord[data->model_objetos_qty-1]=realloc(data->mapcoord[data->model_objetos_qty-1],sizeof(t_mapcoord)*MAX_VERTICES);
-					if(data->mapcoord[data->model_objetos_qty-1]==NULL){debug_printf("ERROR en el realloc de mapcoord[]\n"); return -2;}
+					if(data->mapcoord[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de mapcoord[]"); return -2;}
 				/* END MALLOC'S */
 				do
 				{
@@ -392,7 +392,7 @@ int load_3DS (t_model *data, char *filename)
 						if(!ilLoadImage(string2))
 						{
 							data->material[data->materials_qty-1].texture[0]=null_texture;
-							debug_printf("ALERTA: Textura autocargada del 3ds \"%s\" no encontrada.\n",string);
+							debug_printf(lista_texto[TEXT_LIST_R_WRN + 3],string);
 							break;
 						}
 					}
@@ -601,22 +601,22 @@ void object_draw_selected(t_obj_base_ptr object)
 
 int lista_base_crear_elemento(int id_modelo)
 {
-	if (id_modelo>=lista_modelos || id_modelo<0){debug_printf("Error, id_modelo incorrecto\n"); return -3;}
+	if (id_modelo>=lista_modelos || id_modelo<0){debug_printf(TL_ERR_LIST_CREATE_MODEL_ID); return -3;}
 	
 	if(lista_objeto_base!=NULL)
 	{
 		lista_objeto_base=realloc(lista_objeto_base, sizeof(t_obj_base*)*(lista_objetos_base+1));
-		if (lista_objeto_base==NULL){debug_printf("Error en el realloc de la lista de modelos\n"); lista_objetos_base=-1; return -1;}
+		if (lista_objeto_base==NULL){debug_printf(TL_ERR_REALLOC, "de objetos"); lista_objetos_base=-1; return -1;}
 	}
 	else
 	{
 		lista_objetos_base=0;
 		lista_objeto_base=malloc(sizeof(t_obj_base*));
-		if (lista_objeto_base==NULL){debug_printf("Error en el malloc de la lista de modelos\n"); lista_objetos_base=-1; return -1;}
+		if (lista_objeto_base==NULL){debug_printf(TL_ERR_MALLOC, "de la lista de objetos"); lista_objetos_base=-1; return -1;}
 	}
 	
 	lista_objeto_base[lista_objetos_base]=malloc(sizeof(t_obj_base));
-	if (lista_objeto_base[lista_objetos_base]==NULL){debug_printf("Error en el malloc del objeto %i\n", lista_objetos_base); return -2;}
+	if (lista_objeto_base[lista_objetos_base]==NULL){debug_printf(TL_ERR_MALLOC_ID, "del objeto", lista_objetos_base); return -2;}
 	
 	//memset(lista_objeto_base[lista_objetos_base], 0, sizeof(lista_objeto_base[lista_objetos_base]));
 	
@@ -641,10 +641,21 @@ int lista_base_crear_elemento(int id_modelo)
 		lista_objeto_base[lista_objetos_base]->conx_coord[con] = vec_zero;
 		lista_objeto_base[lista_objetos_base]->conx_norm[con] = vec_zero;
 		lista_objeto_base[lista_objetos_base]->conx_id[con] = -1;
+		lista_objeto_base[lista_objetos_base]->conx_node_id[con] = -1;
+		lista_objeto_base[lista_objetos_base]->conx_size[con] = 1.0f;
 	}
-    lista_objeto_base[lista_objetos_base]->volumen = 0;
+    //lista_objeto_base[lista_objetos_base]->volumen = 0;
     lista_objeto_base[lista_objetos_base]->reparar = 0;
-	lista_objeto_base[lista_objetos_base]->temperatura = 0;
+	//lista_objeto_base[lista_objetos_base]->temperatura = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.volumen = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.temperatura = 0;
+	
+	lista_objeto_base[lista_objetos_base]->node_data.gases.CO2 = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.gases.N2 = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.gases.Ar = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.gases.O2 = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.gases.CO = 0;
+	lista_objeto_base[lista_objetos_base]->node_data.gases.H2O = 0;
 	    
 	//object_predraw(lista_objeto_base[lista_objetos_base]);
 	
@@ -680,7 +691,7 @@ int lista_cargar_modelo_dir(const char *dir)
 	str_append(dir_buffer,"/*"); // Indicamos que queremos buscar en toda la carpeta
 	
 	handle = _findfirst (dir_buffer, &datos);
-	if(handle==-1){debug_printf("Error buscando 3ds en \"%s\"\n",dir_buffer);return -1;}
+	if(handle==-1){debug_printf(TL_ERR_MODEL_DIR,dir_buffer);return -1;}
 	do
 	{
 		if( !(datos.attrib & _A_SUBDIR) && str_ext_cmp(datos.name,"3ds")==1) // Si es de tipo 3ds y no es un directorio
@@ -688,7 +699,7 @@ int lista_cargar_modelo_dir(const char *dir)
 			str_cpyl(buffer,1023,dir);
 			str_append(buffer,"/");
 			str_append(buffer,datos.name);
-			debug_printf("Autocargando \"%s\"\n",datos.name);
+			debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos.name);
 			lista_cargar_modelo(buffer);
 		}
 		else if(datos.attrib & _A_SUBDIR && str_cmp(datos.name,".")!=0 && str_cmp(datos.name,"..")!=0) // Si es una carpeta llamamos a esta misma función y au!
@@ -718,7 +729,7 @@ int lista_cargar_modelo_dir(const char *dir)
 	str_append(dir_buffer,"/*"); // Indicamos que queremos buscar en toda la carpeta
 	
 	handle = opendir(dir_buffer);
-	if(handle==NULL){debug_printf("Error buscando 3ds en \"%s\"\n",dir_buffer);return -1;}
+	if(handle==NULL){debug_printf(TL_ERR_MODEL_DIR,dir_buffer);return -1;}
 	while(datos=readdir(handle)!=NULL);
 	{
 		if( !(datos->d_type == DT_DIR) && str_ext_cmp(datos->d_name,"3ds")==1) // Si es de tipo 3ds y no es un directorio
@@ -726,7 +737,7 @@ int lista_cargar_modelo_dir(const char *dir)
 			str_cpyl(buffer,1023,dir);
 			str_append(buffer,"/");
 			str_append(buffer,datos->d_name);
-			debug_printf("Autocargando \"%s\"\n",datos->d_name);
+			debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos->d_name);
 			lista_cargar_modelo(buffer);
 		}
 		else if(datos->d_type == DT_DIR && str_cmp(datos->d_name,".")!=0 && str_cmp(datos->d_name,"..")!=0) // Si es una carpeta llamamos a esta misma función y au!
@@ -752,23 +763,23 @@ int lista_cargar_modelo(char *ruta)
 	if(lista_modelo!=NULL)
 	{
 		lista_modelo=realloc(lista_modelo, sizeof(t_model*)*(lista_modelos+1));
-		if (lista_modelo==NULL){debug_printf("Error en el realloc de la lista de modelos\n"); lista_modelos=-1; return -1;}
+		if (lista_modelo==NULL){debug_printf(TL_ERR_REALLOC, "de la lista de modelos"); lista_modelos=-1; return -1;}
 	}
 	else
 	{
 		lista_modelos=0;
 		lista_modelo=malloc(sizeof(t_model*));
-		if (lista_modelo==NULL){debug_printf("Error en el malloc de la lista de modelos\n"); lista_modelos=-1; return -1;}
+		if (lista_modelo==NULL){debug_printf(TL_ERR_MALLOC, "de la lista de modelos"); lista_modelos=-1; return -1;}
 	}
 	
 	
 	lista_modelo[lista_modelos]=malloc(sizeof(t_model));
-	if(lista_modelo[lista_modelos]==NULL){debug_printf("Error en el malloc del modelo %i\n", lista_modelos); return -2;}
+	if(lista_modelo[lista_modelos]==NULL){debug_printf(TL_ERR_MALLOC_ID, "del modelo", lista_modelos); return -2;}
 	
 	int i;
 	i=load_3DS(lista_modelo[lista_modelos], ruta);
 	
-	if (i!=0){debug_printf("Error al cargar el modelo 3DS \"%s\", retornado %i.\n",ruta,i); free(lista_modelo[lista_modelos]); return -i-10;}
+	if (i!=0){debug_printf(TL_ERR_MODEL_LOAD,ruta,i); free(lista_modelo[lista_modelos]); return -i-10;}
 	
 	// Cargamos el icono (si existe)
 	char buffer[1024];
@@ -784,7 +795,7 @@ int lista_cargar_modelo(char *ruta)
 	//if(!lista_modelo[lista_modelos]->icono)
 	if(!ilLoadImage(buffer))
 	{
-		debug_printf("Atención: Icono no encontrado: \"%s\"\n",buffer);
+		debug_printf(lista_texto[TEXT_LIST_R_WRN + 4],buffer);
 		lista_modelo[lista_modelos]->icono = icono_no_icon;
 	}
 	else
@@ -813,7 +824,7 @@ int lista_cargar_modelo(char *ruta)
 
 void lista_base_limpiar(void)
 {
-	debug_printf("Borrando %i objetos_base\n",lista_objetos_base);
+	debug_printf(lista_texto[TEXT_LIST_R_NFO + 4],lista_objetos_base);
 	lista_objetos_base--;
     while(lista_objetos_base>=0)
 	{
@@ -859,7 +870,7 @@ void model_unload(t_model *model)
 
 void lista_modelos_limpiar(void)
 {
-	debug_printf("Borrando %i modelos\n",lista_modelos);
+	debug_printf(lista_texto[TEXT_LIST_R_NFO + 5],lista_modelos);
 	lista_modelos--;
     while(lista_modelos>=0)
 	{

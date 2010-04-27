@@ -170,6 +170,7 @@ int parse_open(t_parse* parse, char *ruta)
 
 void parse_close(t_parse* parse)
 {
+	if(parse==NULL)return;
 	int i;
 	for(i=0; i<parse->entradas; i++)
 	{
@@ -200,6 +201,7 @@ void parse_debug_print(const char *ruta, t_parse parse)
 
 int parse_get_int(t_parse* parse, const char *entrada)
 {
+	if(parse==NULL)return PARSE_NOT_FOUND;
 	int index = parser_get_index(*parse, entrada);
 	if (index<0){return PARSE_NOT_FOUND;}
 	
@@ -208,6 +210,7 @@ int parse_get_int(t_parse* parse, const char *entrada)
 
 float parse_get_float(t_parse* parse, const char *entrada)
 {
+	if(parse==NULL)return PARSE_NOT_FOUND;
 	int index = parser_get_index(*parse, entrada);
 	if (index<0){return PARSE_NOT_FOUND;}
 	
@@ -216,6 +219,7 @@ float parse_get_float(t_parse* parse, const char *entrada)
 
 char parse_get_char(t_parse* parse, const char *entrada)
 {
+	if(parse==NULL)return PARSE_NOT_FOUND;
 	int index = parser_get_index(*parse, entrada);
 	if (index<0){return PARSE_NOT_FOUND;}
 	
@@ -226,6 +230,7 @@ char parse_get_char(t_parse* parse, const char *entrada)
 
 int parse_get_str(t_parse* parse, const char *entrada, char* str)
 {
+	if(parse==NULL)return PARSE_NOT_FOUND;
 	int index = parser_get_index(*parse, entrada);
 	if (index<0){return PARSE_NOT_FOUND;}
 	

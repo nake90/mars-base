@@ -33,6 +33,9 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <IL/ilut.h>
+#include <math.h>
+#include "atmosferico.h"
+#include "objetos.h"
 
 void draw_minimap(GLuint minimap)
 {
@@ -113,6 +116,21 @@ void draw_HUD(void)
 	hud_printf (12, 7*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
 	hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrícula");
 	hud_printf (12, 9*12, "B/N -> Ver/ocultar las normales");
+	
+	int i;
+	float tot;
+	for(i=0; i<lista_objetos_base; i++)
+	{
+		tot=moles_gas_total(lista_objeto_base[i]->node_data.gases);
+		hud_printf (12, (i*10+20)*12, "Objeto %i:", i);
+		hud_printf (12, (i*10+21)*12, "  Presión: %.3f", get_presion(lista_objeto_base[i]->node_data.gases, lista_objeto_base[i]->node_data.volumen, lista_objeto_base[i]->node_data.temperatura));
+		hud_printf (12, (i*10+22)*12, "  CO2 %3.2f%%", lista_objeto_base[i]->node_data.gases.CO2/tot * 100);
+		hud_printf (12, (i*10+23)*12, "  N2  %3.2f%%", lista_objeto_base[i]->node_data.gases.N2/tot * 100);
+		hud_printf (12, (i*10+24)*12, "  Ar  %3.2f%%", lista_objeto_base[i]->node_data.gases.Ar/tot * 100);
+		hud_printf (12, (i*10+25)*12, "  O2  %3.2f%%", lista_objeto_base[i]->node_data.gases.O2/tot * 100);
+		hud_printf (12, (i*10+26)*12, "  CO  %3.2f%%", lista_objeto_base[i]->node_data.gases.CO/tot * 100);
+		hud_printf (12, (i*10+27)*12, "  H2O %3.2f%%", lista_objeto_base[i]->node_data.gases.H2O/tot * 100);
+	}
 }
 
 /*! \fn int draw_dialog(DIALOG d[])
@@ -416,7 +434,7 @@ int do_dialog(DIALOG *d)
 	int current_id = 0; // Resultado a retornar (id del elemento que ha salido)
 	int ret, message, ret_id=-1;
 	int status = 1; // 0 -> Cerrar, 1 -> Necesita inicializar, 2 -> Idle, 3 -> Dibujar todo, 4 -> Orden extra
-	int message_saved;
+	int message_saved = 0; // Si lo dejo inicializado el compilador hace un warning
 	int mstat,x,y; // Coordenadas del ratón
 	int id_extra;
 	int is_dirty=0;
@@ -426,7 +444,6 @@ int do_dialog(DIALOG *d)
 	/* Guardamos una foto de la pantalla tal como estaba para ponerla de fondo (Que cutre eeh? Pues funciona y es rápido!) */
 	
 	ILuint pantalla; // Foto de la pantalla
-	GLuint pantalla_gl; // Foto de la pantalla copiada a opengl
 	ilGenImages(1,&pantalla); // Iniciamos la imagen
 	ilBindImage(pantalla); // La seleccionamos
 	ilutGLScreen(); // Hacemos la foto y la guardamos en 'pantalla'

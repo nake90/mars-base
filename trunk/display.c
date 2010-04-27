@@ -44,11 +44,17 @@ int scr_width = -1;
 int scr_height = -1;
 int scr_bpp;
 int scr_flags = -1;
-
+/*
+PFNGLMULTITEXCOORD1FARBPROC	glMultiTexCoord1fARB	= NULL;
+PFNGLMULTITEXCOORD2FARBPROC	glMultiTexCoord2fARB	= NULL;
+PFNGLMULTITEXCOORD3FARBPROC	glMultiTexCoord3fARB	= NULL;
+PFNGLMULTITEXCOORD4FARBPROC	glMultiTexCoord4fARB	= NULL;
+PFNGLACTIVETEXTUREARBPROC	glActiveTextureARB	= NULL;
+PFNGLCLIENTACTIVETEXTUREARBPROC	glClientActiveTextureARB= NULL;
+*/
 void message_printf(const char *fmt, ...)
 {
 	char buf[1024];
-	char line[1024];
     va_list args;
 
     va_start(args, fmt);
@@ -94,7 +100,7 @@ void message_printf(const char *fmt, ...)
     
     
 	DIALOG *message=malloc(sizeof(DIALOG)*(lines+4));
-	if(message==NULL){debug_printf("Error en el malloc del mensaje. Tamaño necesitado: %i\n",lines+4); return;}
+	if(message==NULL){debug_printf(TL_ERR_MALLOC,"message_printf"); return;}
 	
 	message[0].df = d_box_proc;
 	message[0].x = scr_width/2-width/2;
@@ -134,7 +140,7 @@ void message_printf(const char *fmt, ...)
 	message[1].flag = 0;
 	message[1].d1 = 0;
 	message[1].d2 = 0;
-	message[1].dp = "Cerrar";
+	message[1].dp = lista_texto[TEXT_LIST_R_DLG + 0];
 	message[1].dp2 = fntArial12;
 	message[1].dp3 = NULL;
 	
@@ -349,7 +355,7 @@ void display(void)
     
 	/* Dibujamos el HUD */
 	draw_HUD();
-	hud_printf (12, 10*12, "Altura hasta el suelo: %f",altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z));
+	hud_printf (12, 10*12, lista_texto[TEXT_LIST_R_HUD + 0],altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z));
 	//hud_printf (12, 11*12, "FPS: %3.2f",FPS);
 	
 }
@@ -407,7 +413,7 @@ void video_init(void)
 						screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
 						if ( screen == NULL )
 						{
-							debug_printf("No se ha podido iniciar la pantalla: %s\n", SDL_GetError());
+							debug_printf(TL_ERR_VIDEO_INIT, SDL_GetError());
 							exit(1);
 						}
 					}
@@ -419,7 +425,7 @@ void video_init(void)
 	
 	if (TTF_Init()!=0)
 	{
-		debug_printf("No se ha podido iniciar el módulo de fuentes SDL_TTF: %s.\n", TTF_GetError());
+		debug_printf(TL_ERR_TTF_INIT, TTF_GetError());
 		exit(-1);
 	}
 	
@@ -431,7 +437,7 @@ void video_init(void)
 	  iluGetInteger(ILU_VERSION_NUM) != ILU_VERSION ||
 	  ilutGetInteger(ILUT_VERSION_NUM) != ILUT_VERSION)
 	{
-		debug_printf("ERROR, la versión de devIL no coincide\n");
+		debug_printf(TL_ERR_DEVIL_VER);
 		exit(-2);
 	} 
 	
@@ -441,6 +447,8 @@ void video_init(void)
 	ilutRenderer(ILUT_OPENGL);
 	
 	/* OpenGL - Specific */
+	//if(!isExtensionSupported("GL_ARB_multitexture")){debug_printf("ERROR, GL_ARB_multitexture not supported"); exit(-3);}
+	
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.02f,0.1f,0.02f,1.0f);
 	
