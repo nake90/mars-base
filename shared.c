@@ -33,11 +33,67 @@
 #include <time.h>
 #include "shared.h"
 
-void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z)
+/* VARIABLES */
+int null_texture;
+t_config config;
+t_camera camera;
+GLuint minimapa;
+TTF_Font *fntCourier12;
+TTF_Font *fntArial12;
+
+int isExtensionSupported(const char *extension)
 {
+	const GLubyte *extensions = NULL;
+	const GLubyte *start;
+	GLubyte *where, *terminator;
+	
+	/* Extension names should not have spaces. */
+	where = (GLubyte *) strchr(extension, ' ');
+	if (where || *extension == '\0')
+		return 0;
+	extensions = glGetString(GL_EXTENSIONS);
+	
+	start = extensions;
+	for (;;)
+	{
+		where = (GLubyte *) strstr((const char *) start, extension);
+		if (!where)
+			break;
+		terminator = where + strlen(extension);
+		if (where == start || *(where - 1) == ' ')
+			if (*terminator == ' ' || *terminator == '\0')
+				return 1;
+		start = terminator;
+	}
+	return 0;
+}
+
+void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, float x, float y, float z)
+{
+	char *buffer = malloc(sizeof(char) * (str_size(text)+1));
+	if(buffer!=NULL)
+	{
+		int src=0;
+		int dst=0;
+		while(text[src]!='\0')
+		{
+			buffer[dst]=text[src];
+			if(text[src]=='\n'){dst--;} // Arreglar esto para que sean líneas
+			if(text[src]=='\t'){buffer[dst]=' ';buffer[dst+1]=' ';buffer[dst+2]=' ';dst+=2;} // Arreglar para que sea un tab real (mod 8 y while..)
+			dst++;
+			src++;
+		}
+		buffer[dst]='\0';
+	}
+	else
+	{
+		debug_printf(TL_ERR_MALLOC,"SDL_GL_RenderText buffer");
+		buffer=(char*)text;
+	}
+	
 	glEnable(GL_TEXTURE_2D);
 	
-	SDL_Surface *Message = TTF_RenderText_Blended(font, text, color);
+	SDL_Surface *Message = TTF_RenderText_Blended(font, buffer, color);
 	unsigned Texture = 0;
 	
 	glGenTextures(1, &Texture);
@@ -80,6 +136,7 @@ void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, flo
 	glFinish();
 	glDeleteTextures(1, &Texture);
 	SDL_FreeSurface(Message);
+	if(buffer!=text)free(buffer);
 }
 
 

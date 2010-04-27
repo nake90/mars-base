@@ -59,10 +59,11 @@ int scr_message_debug;
 
 //char app_path[256];
 
-GLuint minimapa;
+extern GLuint minimapa;
 
-TTF_Font *fntCourier12;
-TTF_Font *fntArial12;
+
+extern TTF_Font *fntCourier12;
+extern TTF_Font *fntArial12;
 
 
 typedef struct{float x; float y; float z;}VECTOR;
@@ -92,7 +93,7 @@ typedef struct
 	
 	int ghost_mode;
 }t_camera;
-t_camera camera;
+extern t_camera camera;
 
 typedef struct
 {
@@ -101,7 +102,7 @@ typedef struct
 	int show_grid;
 	int show_presion;
 }t_config;
-t_config config;
+extern t_config config;
 
 typedef struct
 {
@@ -174,10 +175,14 @@ void draw_fixsprite (float x, float y, float z, t_texture textura, float size);
 void draw_sprite (float x, float y, float z, t_texture textura, float size);
 
 /* TEXTO EN EL MUNDO */
-void SDL_GL_RenderText(char *text, TTF_Font *font, SDL_Color color, float x, float y, float z);
+void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, float x, float y, float z);
 
+/* OPENGL */
+int isExtensionSupported(const char *extension);
+
+/* VARIABLES */
 extern int scr_width, scr_height, scr_bpp; // Es usado en muchos sitios que no necesitan incluir display.h
 extern t_texture fondo;
-int null_texture;  // Textura usada si hay algún error
+extern int null_texture;  // Textura usada si hay algún error
 
 #endif

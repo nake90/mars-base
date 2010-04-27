@@ -31,10 +31,11 @@
 #define TEXT_LIST_MAX_QTY 256
 #define TEXT_LIST_MAX_SIZE 1024
 
+/* CUIDADO OVERFLOWS!! */
 #define TEXT_LIST_R_ERR 10 // Inicio ID reservado para los mensajes de error
 #define TEXT_LIST_R_WRN 50 // Inicio ID reservado para los mensajes de alerta
 #define TEXT_LIST_R_NFO 60 // Inicio ID reservado para los mensajes de información
-#define TEXT_LIST_R_SPAWN_MENU 70 // Inicio ID reservado para el spawn_menu
+#define TEXT_LIST_R_SPAWN_MENU 70 // Inicio ID reservado para el spawn_menu  *** No tengo tan claro que se use (tal vez cuando sea más complejo sí) ***
 #define TEXT_LIST_R_SCR 95 // Inicio ID reservado para los mensajes de carga
 #define TEXT_LIST_R_DLG 115 // Inicio ID reservado para los mensajes de los dialogs
 #define TEXT_LIST_R_HUD 130 // Inicio ID reservado para los mensajes del HUD
@@ -53,7 +54,37 @@ char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y 
 */
 
 /* DEFINES ÚTILES */
-#define app_path lista_texto[0]
+#define app_path					lista_texto[0]
+//
+#define TL_MOTD1					lista_texto[2]
+#define TL_MOTD2					lista_texto[3]
+#define TL_ERR_INIT_SDL				lista_texto[TEXT_LIST_R_ERR + 0]
+#define TL_ERR_BACKGROUND			lista_texto[TEXT_LIST_R_ERR + 1]
+#define TL_ERR_FONT					lista_texto[TEXT_LIST_R_ERR + 2]
+#define TL_ERR_NULL_TEXTURE			lista_texto[TEXT_LIST_R_ERR + 3]
+#define TL_ERR_NOICON_TEXTURE		lista_texto[TEXT_LIST_R_ERR + 4]
+#define TL_ERR_SANDBASE_TEXTURE		lista_texto[TEXT_LIST_R_ERR + 5]
+#define TL_ERR_SUN_TEXTURE			lista_texto[TEXT_LIST_R_ERR + 6]
+#define TL_ERR_LOAD_HEIGHTMAP		lista_texto[TEXT_LIST_R_ERR + 7]
+#define TL_ERR_MODEL_DIR			lista_texto[TEXT_LIST_R_ERR + 8]
+#define TL_ERR_GEN_OPEN				lista_texto[TEXT_LIST_R_ERR + 9]
+#define TL_ERR_MODEL_NOT_FOUND		lista_texto[TEXT_LIST_R_ERR + 10]
+#define TL_ERR_MAP_MALLOC			lista_texto[TEXT_LIST_R_ERR + 11]
+#define TL_ERR_MAP_PGM_TYPE			lista_texto[TEXT_LIST_R_ERR + 12]
+#define TL_ERR_PRECOMP_TYPE			lista_texto[TEXT_LIST_R_ERR + 13]
+#define TL_ERR_PRECOMP_VER			lista_texto[TEXT_LIST_R_ERR + 14]
+#define TL_ERR_LIST_CREATE_MODEL_ID	lista_texto[TEXT_LIST_R_ERR + 15]
+#define TL_ERR_VIDEO_INIT			lista_texto[TEXT_LIST_R_ERR + 16]
+#define TL_ERR_TTF_INIT				lista_texto[TEXT_LIST_R_ERR + 17]
+#define TL_ERR_DEVIL_VER			lista_texto[TEXT_LIST_R_ERR + 18]
+#define TL_ERR_MAT_LOAD_TEXTURE		lista_texto[TEXT_LIST_R_ERR + 19]
+#define TL_ERR_GHOST_STARTED		lista_texto[TEXT_LIST_R_ERR + 20]
+#define TL_ERR_GHOST_MODEL_ID		lista_texto[TEXT_LIST_R_ERR + 21]
+#define TL_ERR_MALLOC				lista_texto[TEXT_LIST_R_ERR + 22]
+#define TL_ERR_REALLOC				lista_texto[TEXT_LIST_R_ERR + 23]
+#define TL_ERR_MALLOC_ID			lista_texto[TEXT_LIST_R_ERR + 24]
+#define TL_ERR_MODEL_LOAD			lista_texto[TEXT_LIST_R_ERR + 25]
+
 
 /* FUNCIONES */
 

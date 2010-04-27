@@ -65,13 +65,22 @@ typedef struct
 	int texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
 }t_sun;
 
-// Masas atómicas de los elementos (Definidos en el .c)
+// Masas atómicas de las moléculas
 extern const double ma_co2;
+extern const double ma_n2;
 extern const double ma_ar;
 extern const double ma_o2;
 extern const double ma_co;
 extern const double ma_h20;
-extern const double ma_h2;
+
+// Viscosidades de los gases
+extern const double visc_co2;
+extern const double visc_n2;
+extern const double visc_ar;
+extern const double visc_o2;
+extern const double visc_co;
+extern const double visc_h20;
+extern const double visc_media;
 
 typedef struct
 {
@@ -91,11 +100,21 @@ typedef struct
 	float temperatura;
 }t_atmosfera;
 
+typedef struct
+{
+	t_gas gases;
+	float volumen;
+	float temperatura;
+}t_node_data;
+
 extern t_atmosfera datos_atmosfera;
 
 extern t_sun sun;
 extern t_texture sun_texture;
 
 float get_presion(t_gas gases, float volumen, float temperatura);
+void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time);
+float moles_gas_total(t_gas gas);
 
+void node_main_control(float step_time);
 #endif

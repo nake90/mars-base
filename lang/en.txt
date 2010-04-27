@@ -1,0 +1,75 @@
+//Archivo de lenguaje
+// Falta mucho, es solo de test
+
+//Mensajes de error
+err_init_sdl = Error, could no start SDL: %s.\n
+err_background = Error, background texture not found.\n
+err_font = Error, font not found:\"%s\".\n
+err_null_texture = Error loading null_texture!\n
+err_noicon_texture = Error loading no_icon texture!\n
+err_sand_base_texture = Error loading base sand texture!, RETURN:%i.\n
+err_sun_texture = Error loading sun texture!\n
+err_load_heightmap = Error loading map's heigthmap. Returned %i.\n
+err_model_dir = Error looking for models in \"%s\"\.n
+err_open = Error opening \"%s\"\.n
+err_map_malloc = Error in map's malloc (%s). (%i*%i).\n
+err_map_pgm_type = Error, is not a PGM (%c%c).\n
+err_precompiled_type = Error, is no a precompiled map.\n
+err_precompiled_version = Error, wrong precompiled map version.\n
+err_video_init = Error starting the video module: %s.\n
+err_ttf_init = Error loading the font module SDL_TTF: %s.\n
+err_devil_version = Error, wrong devIL version.\n
+err_material_load_texture = Error loading material's texture %s.\n
+err_ghost_mode_already_started = Error, ghost_mode already started.\n
+err_ghost_mode_model_id = Error, wrong model id while spawning\n
+err_list_create_model_id = Error, wrong model id while adding to base_list.\n
+err_malloc = Error in malloc %s\n
+err_realloc = Error in realloc %s\n
+err_model_not_found = Error, model \"%s\" not found.\n
+err_malloc_id = Error in malloc %s %i\n
+err_model_load = Error loading the 3DS model \"%s\", returned %i.\n
+
+//Mensajes de alerta
+wrn_minimap = WARNING: Minimap not found \"%s\"\n
+wrn_precompiled_not_found = WARNING: Precompiled map not found (%s)\n
+wrn_ghost_mode_config_file = WARNING: Model (%s) config file not found in \"%s\"\n
+wrn_model_load_texture_not_found = WARNING: Autoloaded texture from the 3ds \"%s\" not found.\n
+wrn_model_load_icon = WARNING: Icon not found: \"%s\"\n
+
+//Mensajes de información
+nfo_closed_ok = \nMars-base closed correctly\n
+nfo_compiled_start = -- Compiling map --\n
+nfo_compiled_ok = Map compiled succesfully\n
+nfo_model_autoload = Autoloading \"%s\"\n
+nfo_free_base_object = Freed %i base objects\n
+nfo_free_model = Freed %i models\n
+
+//Mensajes de carga
+scr_message_load_materials = Loading materials...
+scr_message_ini_variables = Initializing variables...
+scr_message_load_terrain = Loading terrain...
+scr_message_load_models = Loading models...
+scr_message_precompiled_fail = Fail while loading precompiled map... Compiling
+scr_message_load_terrain_data = > Loading heightmap
+scr_message_load_base = > Loading basic data
+scr_message_precompiled_save = Saving precompiled map
+scr_message_predraw_terrain = Predrawing terrain
+scr_message_precompiled_data_load = > Loading data
+scr_message_map_compile = Compiling map
+scr_message_map_compile_init = > Starting compilation
+scr_message_map_compile_percent = > Calculating shadows and normals (%3.0f)
+scr_message_map_compile_done = > Done
+scr_message_done = Done
+
+
+//Texto de dialogs
+dlg_message_printf_close = Close
+dlg_spawn_dialog_title = Click on the object you want to spawn
+dlg_spawn_dialog_close = Close
+dlg_screenshot = Screenshot saved
+
+
+//Texto de hud
+hud_to_floor = Distance to the floor: %f
+hud_ghost_mode_message = Click were you want the object (',' and '.' rotate) or press ESC to cancel.
+

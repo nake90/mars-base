@@ -29,6 +29,7 @@
 #define OBJETOS_H
 
 #include "shared.h"
+#include "atmosferico.h"  // Para el tipo t_gas
 
 /* --- MACROS --- */
 #define obj_setpos(a,b,c,d) (a).pos.x=(b); (a).pos.y=(c); (a).pos.z=(d);
@@ -43,7 +44,7 @@
 #define objetos_debug 0 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->Aún más tonterías */
 
 
-#define MAX_CONX 128 /*!< Número máximo de conexiones posibles */
+#define MAX_CONX 16 /*!< Número máximo de conexiones posibles */
 
 /*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
  - #OK# -> Implementado y funcionando 
@@ -134,10 +135,13 @@ typedef struct
 	VECTOR conx_coord[MAX_CONX]; /*!< Coordenadas (locales) de las posibles conexiones del objeto */
 	VECTOR conx_norm[MAX_CONX]; /*!< Vectores normales (locales!) de las posibles conexiones del objeto */
 	int conx_id[MAX_CONX]; /*!< Id del objeto al que está conectado (-1 si no está conectado) */
+	int conx_node_id[MAX_CONX]; /*!< Id del nodo del objeto al que está conectado (-1 si no está conectado) */
+	float conx_size[MAX_CONX]; /*!< Tamaño de la conexión en metros. Deben coincidir para conectarse e influye en la transmisión de gases. */
 	
-	float volumen; /*!< Volumen del objeto en m3, usado para presión y uso de gases y cosas así */
+	//float volumen; /*!< Volumen del objeto en m3, usado para presión y uso de gases y cosas así */
 	float reparar; /*!< Nivel de daños del objeto [0->Perfecto, 1->Daños fatales] */
-	float temperatura; /*!< Temperatura interna del objeto en kelvin */
+	//float temperatura; /*!< Temperatura interna del objeto en kelvin */
+	t_node_data node_data;
 	
 	// Internos
 	char selec; /*!< ¿Seleccionado? */
@@ -163,6 +167,7 @@ void model_unload(t_model *model);
 /* - FUNCIONES de listas - */
 int lista_cargar_modelo(char *ruta); // Carga a la lista de modelos un modelo
 int lista_base_crear_elemento(int id_modelo);
+int lista_cargar_modelo_dir(const char *dir);
 
 int lista_modelo_get_id(const char* nombre_modelo); // Obtiene el id de un modelo por su nombre
 

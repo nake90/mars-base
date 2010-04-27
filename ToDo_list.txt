@@ -1,9 +1,11 @@
 !!!![FIX] En linux no se encuentra ningún modelo
+!!!![FIX] Segmentation Fault en Linux si arreglo los modelos
 !!!	[FIX] Colisión de los objetos no gira con el objeto (En el display si, pero no al seleccionar)
 !!!	[ADD] Trace terreno (falta z)
-!!!	[NEW] Funciones de transferencia de calor, gases y presión
+!!!	[NEW] Funciones de transferencia de calor, gases y presión (EN PRUEBAS, hay bastantes problemas, tengo que preguntar al profesor de mecánica de fluidos, y quizá hacer la transmisión de gases de forma independiente por presiones parciales)
 !!	[ADD] Colisiones al crear el objeto
 !!	[ADD] TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
+!!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
 !!	[NEW] Menú de estado y acciones sobre objetos
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
 !	[FIX] Grid	(FALLA OFFSET)
@@ -15,3 +17,4 @@
 !	[NEW] GUI_TabFrame ?
 !	[NEW] GUI_Scroll ?
 !	[FIX] Unir sun con sun_texture (Tonterías mías al crearlo)
+!	[NEW] Más texturas para el suelo de Marte (¿Usar un texturemap? Píxel = ID_textura con blend) [He hecho pruebas y lo veo mal]
