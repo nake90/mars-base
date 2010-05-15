@@ -21,6 +21,19 @@ Para desplazarse arriba y abajo hay que mover la rueda del ratón arriba o abajo
 Para subir o bajar la cámara rápidamente se debe pulsar la tecla _shift_ junto con el botón *derecho* del ratón.
 
 
+== Crear la base ==
+
+Para añadir un módulo de la base al mapa tan solo hay que apretar la tecla _espacio_ para que se muestre el spawn menu. Ahí saldrá una lista de todos los módulos que se pueden construir, y haciendo click saldrá en el mapa un fantasma del objeto.
+
+Actualmente el fantasma no se puede mover usando el ratón, si no que saldrá justo en el centro de la pantalla, así que para seleccionar la posición hay que girar y desplazar la cámara.
+
+Para girar el objeto se han de pulsar las teclas _._ y _,_.
+
+Durante la creación del objeto se muestran los nodos disponibles de los objetos. Para conectar un objeto a otro los nodos de ambos deben de estar en el mismo lugar y las direcciones de los nodos deben de ser opuestas.
+
+Una vez el ángulo y la posición del objeto son las correctas se ha de presionar el botón izquierdo del ratón para crear el objeto real.
+Si los nodos coinciden con nodos de otros objetos estos se conectarán automáticamente.
+
 
 == Lista de comandos ==
 
@@ -33,6 +46,9 @@ Para subir o bajar la cámara rápidamente se debe pulsar la tecla _shift_ junto
 || Flechas || En el mapa || Desplazamiento por el mapa ||
 || Flechas + Shift || En el mapa || Desplazamiento rápido por el mapa ||
 || WASDQE || En el mapa || Rotación de la cámara ||
+|| ESPACIO || En el mapa || Muestra el menú de spawn de objetos ||
+|| Botón izquierdo || En modo spawn del objeto || Crea el objeto donde está situado el objeto fantasma ||
+|| . y , || En modo spawn del objeto || Rota el objeto fantasma sobre el eje vertical ||
 || C || En el mapa || Mostrar la cuadrícula (No funciona correctamente) ||
 || V || En el mapa || Oculta la cuadrícula ||
 || B || En el mapa || Muestra los vectores normales a las cuadrículas del terreno ||
@@ -45,18 +61,25 @@ Para subir o bajar la cámara rápidamente se debe pulsar la tecla _shift_ junto
 === Introducción ===
 Actualmente la mayor parte del juego no permite ser configurado ya que apenas hay funciones como juego en sí, pero si hay pequeños archivos de configuración para el desarrollo del juego. Aunque cabe destacar que lo más seguro es que estos archivos sean temporales y acaben siendo reemplazados o eliminados.
 
-=== Carga de modelos (Temporal) ===
-En la carpeta _models_ hay un archivo llamado `temporal_lista_objetos_a_cargar.txt` donde se puede especificar qué modelos cargar y dónde situarlos, entre otras cosas.
+=== Configuración de modelos ===
+En la carpeta _data/models_ hay un archivo para cada modelo .3ds donde se puede configurar distintos datos referentes al tipo de objeto. El nombre del archivo debe ser exactamente igual que el del modelo con extensión _cfg_.
 El formato del archivo de texto es muy simple, los comentarios se indican con una doble barra ('//') al inicio de la línea. El cuerpo del archivo está formado por una clave, un signo '=' y su valor, finalizado con un ';' opcional.
 
-En este caso la clave empieza con la palabra `obj_` seguida por un número de identificación único para cada objeto (empezando por el objeto 1), un espacio en blanco y la propiedad del objeto.
-La propiedad `file` indica la ruta del modelo 3ds a cargar, _x_, _y_ y _z_ indican las coordenadas del objeto (siendo (0,0,0) el punto situado delante de la cámara).
-La propiedad sq define el tamaño del rectángulo de colisiones del objeto.
 
 Cada objeto tiene un cuadrado de colisiones asignado, en teoría estos rectángulos definen el espacio que ocupa cada objeto y no pueden solaparse con el resto de objetos. Es algo así como el recuadro verde que sale en los juegos de estrategia cuando quieres crear un edificio.
 El recuadro se usa no solo para las colisiones, también sirve para detectar si se ha seleccionado o no un objeto.
 
-Está definido por 4 valores, uno para cada distancia al lado del rectángulo desde el centro del objeto. `r` hace referencia a la distancia del centro del objeto hasta el lado derecho (right) del objeto, `t` al superior (top), `l` al izquierdo (left) y `b` al inferior (bottom). Siendo la derecha el eje 'y' positivo y arriba el eje 'x' positivo.
+Está definido por 4 valores, uno para cada distancia al lado del rectángulo desde el centro del objeto.
+
+
+La propiedad `volumen` indica el volumen de aire que hay dentro del objeto. Es decir el volumen del objeto sin contar las paredes. Este valor se usa a la hora de calcular la presión y la cantidad de aire que puede haber dentro del objeto.
+
+
+La propiedad `conexiones` indica el número de puntos de conexión (nodos) que tiene el objeto.
+Cada nodo está definido por 7 valores: Su posición local respecto del centro del objeto (x,y,z), su vector normal (dx,dy,dz) apuntando al exterior, y el tamaño de la conexión (size).
+
+El tamaño de la conexión es el tamaño del lado de la conexión en metros. Es decir, si el nodo es una puerta a un pasillo de tamaño 2x2m (2 de ancho y 2 de alto), el valor de tamaño es 2.
+
 
 === Carga de mapas ===
 Los mapas se cargan de un archivo de mapa precompilado (`.nmap`), pero si no se encuentra el archivo lo compila usando una serie de archivos de configuración.
