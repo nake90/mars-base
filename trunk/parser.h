@@ -1,3 +1,9 @@
+/*
+	parser - Small utilities to parse config files
+    By Alfonso Arbona Gimeno (nake)
+    This is released as Public Domain code
+*/
+
 #ifndef PARSER_H
 #define PARSER_H
 

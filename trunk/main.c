@@ -8,25 +8,36 @@
  *
  * \section copyright Copyright
  * 
- * mars_base - Design, build and maintain your own base on Mars
- * Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
- * If you plan to use any part of this code on a comercial game please email me at:
- *    	   nake90@terra.es
+ *	mars_base - Design, build and admin your own base on Mars
+ *  Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
+ *
+ *	MIT LICENSE
+ *	
+ *	Permission is hereby granted, free of charge, to any
+ *	person obtaining a copy of this software and associated
+ *	documentation files (the "Software"), to deal in the
+ *	Software without restriction, including without limitation
+ *	the rights to use, copy, modify, merge, publish,
+ *	distribute, sublicense, and/or sell copies of the
+ *	Software, and to permit persons to whom the Software is
+ *	furnished to do so, subject to the following conditions:
+ *
+ *	The above copyright notice and this permission notice
+ *	shall be included in all copies or substantial portions of
+ *	the Software.
+ *
+ *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ *	KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ *	WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ *	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+ *	OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ *	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ *	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ *	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *  
+ *  If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
+ *  If you plan to use any part of this code on a comercial game please email me at:
+	   	   nake90@terra.es
 */
 
 /** \file main.c
@@ -97,6 +108,7 @@ int main(int argc, char *argv[])
     str_ruta_back(app_path);
 	
     int i;
+    int with_motd=1;
     char lang_str[4]; // Máximo 3 carácteres y el \0
     str_cpyl(lang_str,4,"es"); // default spanish
     debug_reset();
@@ -117,6 +129,7 @@ int main(int argc, char *argv[])
 		if(str_cmp(argv[i],"-width")==0 && i+1<argc){scr_width=(int)str2float(argv[i+1]);}
 		if(str_cmp(argv[i],"-height")==0 && i+1<argc){scr_height=(int)str2float(argv[i+1]);}
 		if(str_cmp(argv[i],"-lang")==0 && i+1<argc){str_cpyl(lang_str,4,argv[i+1]);}
+		if(str_cmp(argv[i],"-no_motd")==0){with_motd=0;}
 		//if(str_cmp(argv[i],"")==0){}
 	}
     
@@ -244,21 +257,27 @@ int main(int argc, char *argv[])
 	next_time = SDL_GetTicks() + TICK_INTERVAL;
 	
 	// MENSAJE DE INTRODUCCIÓN
-	char *motd_text = malloc(sizeof(char) * (str_size(TL_MOTD1)+str_size(TL_MOTD2)+2)); // +2 para el \0 y por si acaso...
-	if(motd_text!=NULL)
+	if(with_motd)
 	{
-		if(str_size(TL_MOTD1) + str_size(TL_MOTD2) > 0)
+		char *motd_text = malloc(sizeof(char) * (str_size(TL_MOTD1)+str_size(TL_MOTD2)+2)); // +2 para el \0 y por si acaso...
+		if(motd_text!=NULL)
 		{
-			str_cpy(motd_text, TL_MOTD1);
-			str_append(motd_text, TL_MOTD2);
-			message_printf(motd_text);
+			if(str_size(TL_MOTD1) + str_size(TL_MOTD2) > 0)
+			{
+				str_cpy(motd_text, TL_MOTD1);
+				str_append(motd_text, TL_MOTD2);
+				message_printf(motd_text);
+			}
+			free(motd_text);
 		}
-		free(motd_text);
+		else
+		{
+			debug_printf(TL_ERR_MALLOC,"motd buffer");
+		}
 	}
-	else
-	{
-		debug_printf(TL_ERR_MALLOC,"motd buffer");
-	}
+	
+	
+	int node_main_control_loop=1;
 	while(1)
 	{
 		process_events();
@@ -269,7 +288,11 @@ int main(int argc, char *argv[])
 		SDL_GL_SwapBuffers();
 		SDL_Delay(time_left());
 		next_time += TICK_INTERVAL;
-		node_main_control(TICK_INTERVAL/1000.0);
+		if(node_main_control_loop)
+		{
+			node_main_control(TICK_INTERVAL*2/1000.0);
+			node_main_control_loop=0;
+		}else{node_main_control_loop=1;}
 		//contador++;
 		//if(contador>=FPS_FRAMES){FPS=1000.0f/(float)(next_time-SDL_GetTicks()); contador=0;}
 	}
