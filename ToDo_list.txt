@@ -2,7 +2,8 @@
 !!!![FIX] Segmentation Fault en Linux si arreglo los modelos
 !!!	[FIX] Colisión de los objetos no gira con el objeto (En el display si, pero no al seleccionar)
 !!!	[ADD] Trace terreno (falta z)
-!!!	[NEW] Funciones de transferencia de calor, gases y presión (EN PRUEBAS, hay bastantes problemas, tengo que preguntar al profesor de mecánica de fluidos, y quizá hacer la transmisión de gases de forma independiente por presiones parciales)
+!!!	[NEW] Funciones de transferencia de calor, gases y presión (Falta sacar las ecuaciones)
+!!!	[NEW] Multitasking para las funciones de transferencia.
 !!	[ADD] Colisiones al crear el objeto
 !!	[ADD] TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
@@ -10,11 +11,26 @@
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
 !	[FIX] Grid	(FALLA OFFSET)
 !	[FIX] Problemas con movimiento por teclado
+!	[NEW] Tuberías
+!	[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control,
+!	[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD)
 !	[NEW] Archivo de configuración
 !	[NEW] Console
 !	[ADD] Triángulos lejanos de mayor tamaño para aumentar el rendimiento
 !	[NEW] GUI_TabButton ?
 !	[NEW] GUI_TabFrame ?
 !	[NEW] GUI_Scroll ?
+!	[NEW] GUI_Input
+!	[NEW] GUI_Checkbox
+!	[NEW] GUI_Radial
+!	[NEW] GUI_Slide y número (Ese de +,-)
 !	[FIX] Unir sun con sun_texture (Tonterías mías al crearlo)
 !	[NEW] Más texturas para el suelo de Marte (¿Usar un texturemap? Píxel = ID_textura con blend) [He hecho pruebas y lo veo mal]
+!	[NEW] Skybox
+!	[NEW] Mejor control de la niebla: Si cerca del suelo más niebla para aumentar el rendimiento
+!	[NEW] Distancia máxima de dibujo de modelos
+!	[NEW] Mejorar acciones del ratón: Menús, botones, hud usable
+!	[NEW] Cambiar de color si el ghost está bien/mal
+!	[NEW] Controlar los \n en hud_printf y tal
+!	[NEW] Calcular y guardar función de las sombras respecto la hora del día -> Ciclos día/noche.
+!	[FIX] Densidad del H2O gas???

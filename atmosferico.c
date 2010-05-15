@@ -1,19 +1,30 @@
 /*
-	mars_base - Design, build and maintain your own base on Mars
+	mars_base - Design, build and admin your own base on Mars
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	MIT LICENSE
+	
+	Permission is hereby granted, free of charge, to any
+	person obtaining a copy of this software and associated
+	documentation files (the "Software"), to deal in the
+	Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the
+	Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	The above copyright notice and this permission notice
+	shall be included in all copies or substantial portions of
+	the Software.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+	KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+	WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+	OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
@@ -41,12 +52,22 @@ t_texture sun_texture=	{{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f,
 
 // Masas atómicas de las moléculas
 const double ma_co2		=	12.011 + 15.999 * 2;
-const double ma_n2		=	14.007 * 2;;
+const double ma_n2		=	14.007 * 2;
 const double ma_ar		=	39.948;
 const double ma_o2		=	15.999 * 2;
 const double ma_co		=	12.011 + 15.999;
 const double ma_h20		=	1.0079 * 2 + 15.999;
 //const double ma_h2		=	1.0079 * 2;
+
+
+// Densidad en *condiciones normales* de los gases [Kg/m3] (25ºC y 101337 Pa)
+const double densN_co2		=	1.842;
+const double densN_n2		=	1.165;
+const double densN_ar		=	1.661;
+const double densN_o2		=	1.331;
+const double densN_co		=	1.165;
+const double densN_h2o		=	0.755;	// ESTE ME LO HE INVENTADO.... He sumado la del H2 y la mitad del O2 ...
+//const double densN_h2		=	;
 
 // Viscosidades (En Kg/(m*s))
 const double visc_co2	=	0.00001372;
@@ -73,6 +94,19 @@ t_atmosfera datos_atmosfera =
 /* Temperatura */	TEMPERATURA_MEDIA
 };
 
+static inline float _get_node_density(t_gas gases)
+{
+	return (gases.CO2 * densN_co2 + gases.N2 * densN_n2 + gases.Ar * densN_ar
+			 + gases.O2 * densN_o2 + gases.CO * densN_co + gases.H2O * densN_h2o)
+			 / (gases.CO2 + gases.N2 + gases.Ar + gases.O2 + gases.CO + gases.H2O);
+}
+
+float get_density(float normal_density, float temperatura, float presion)
+{
+	if(temperatura<=0)return;
+	return normal_density * presion * 298.0f / (101337.0f * temperatura);
+}
+
 float get_presion(t_gas gases, float volumen, float temperatura)
 {
 	if(volumen <= 0 || temperatura <= 0)return 0;
@@ -88,6 +122,7 @@ float get_presion(t_gas gases, float volumen, float temperatura)
 	return presion;
 }
 
+#ifdef __ECUACION__ANTIGUA__
 void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time) // Size es el tamaño del lado
 {
 	if(size<=0 || step_time<=0)return;
@@ -146,6 +181,23 @@ void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float dis
 	node2->gases.CO += delta_gas.CO;
 	node2->gases.H2O += delta_gas.H2O;
 }
+#else
+void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time) // Size es el tamaño del lado
+{
+	if(size<=0 || step_time<=0)return;
+	if(distancia<1){distancia=1;} // Evitamos un dividir por 0, pero debería de estar todo bien hecho en el config del modelo
+	float pres1 = get_presion(node1->gases, node1->volumen, node1->temperatura);
+	float pres2 = get_presion(node2->gases, node2->volumen, node2->temperatura);
+	
+	// Calculamos la densidad normal de cada gas como la media ponderada de las densidades normales
+	float dens1 = get_density(_get_node_density(node1->gases), node1->temperatura, pres1);
+	float dens2 = get_density(_get_node_density(node2->gases), node2->temperatura, pres2);
+	
+	//debug_printf("Presiones: %f, %f; Densidades: %f, %f\n",pres1, pres2, dens1, dens2);
+	
+	
+}
+#endif
 
 float moles_gas_total(t_gas gas)
 {
@@ -154,7 +206,32 @@ float moles_gas_total(t_gas gas)
 
 void node_main_control(float step_time)
 {
-	int obj, p_node, o_obj, o_node;
+	int p_obj, p_node, o_obj, o_node; // Objeto y nodo propio y del otro
+	float distancia; // Distancia entre los centros de presión (Centro del objeto)
+	for(p_obj=0; p_obj<lista_objetos_base; p_obj++)
+	{
+		if(p_obj==0){lista_objeto_base[p_obj]->node_data.gases.O2+=0.1;} // Generador de oxígeno
+		
+		for(p_node=0; p_node<lista_objeto_base[p_obj]->conx_qty; p_node++) // Para cada nodo propio
+		{
+			o_obj=lista_objeto_base[p_obj]->conx_id[p_node]; // Obtenemos el ID del otro objeto
+			if(o_obj>=0) // Si el objeto existe (-1 si está desconectado)
+			{
+				o_node = lista_objeto_base[p_obj]->conx_node_id[p_node];
+				distancia = vdist(lista_objeto_base[p_obj]->pos, lista_objeto_base[o_obj]->pos); // Distancia entre centros de objeto
+				
+				node_flow_gas(	&lista_objeto_base[p_obj]->node_data,
+								&lista_objeto_base[o_obj]->node_data,
+								lista_objeto_base[p_obj]->conx_size[p_node],
+								distancia,
+								step_time/2.0); // Divido por 2 porque realmente se llama a esta función dos veces, uno por parte de cada objeto
+			}
+		}
+	}
+	
+	
+	//Hasta que no tenga la ecuación real no hago nada
+	/*int obj, p_node, o_obj, o_node;
 	float distancia;
 	for(obj=0; obj<lista_objetos_base; obj++)
 	{
@@ -175,5 +252,5 @@ void node_main_control(float step_time)
 								step_time/2.0); // Divido por 2 porque realmente se llama a esta función dos veces, uno por parte de cada objeto
 			}
 		}
-	}
+	}*/
 }
