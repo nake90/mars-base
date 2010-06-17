@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -53,16 +53,16 @@ void draw_minimap(GLuint minimap)
 	int w,h;
 	if (!minimap)return;
 	set_gl_mode();
-	
+
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, minimap);
-	
+
 	//glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
 	//glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
 	w=1024;
 	h=799;
-	
+
 	glBegin(GL_QUADS);
 		glTexCoord2f(1,1);
 		glVertex2i(scr_width-2, 2);
@@ -73,18 +73,18 @@ void draw_minimap(GLuint minimap)
 		glTexCoord2f(1,0);
 		glVertex2i(scr_width-2, h/4+2);
 	glEnd();
-	
+
 	float x, y;
 	x = (((camera.pos_x+marte.ini_x)/marte.scale) + marte.tam_x/2)/marte.tam_x  *w/4 +scr_width-w/4-2;
 	y = (-((camera.pos_y+marte.ini_y)/marte.scale) + marte.tam_y/2)/marte.tam_y  *h/4 +2;
-	
+
 	glDisable(GL_TEXTURE_2D);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glPointSize(2.0);
 	glBegin(GL_POINTS);
 		glVertex2f(x,y);
 	glEnd();
-	
+
 	glBegin(GL_TRIANGLES);
 		glColor4f(0.0f, 0.0f, 1.0f, 0.6f);
 		glVertex2f(x,y);
@@ -94,7 +94,7 @@ void draw_minimap(GLuint minimap)
 		glVertex2f(x+sin(RAD(-camera.yaw+22.5))*20 -cos(RAD(-camera.yaw))*20,
 					+y-cos(RAD(camera.yaw-22.5))*20 -sin(RAD(-camera.yaw))*20);
 	glEnd();
-	
+
 	restore_gl_mode();
 }
 
@@ -108,33 +108,33 @@ void draw_HUD(void)
 	{d_label_proc, 20, 244, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo3!", fntArial12, NULL},
 	{d_label_proc, 20, 256, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo4!", fntArial12, NULL},
 	{NULL_DIALOG}};
-	
+
 	draw_dialog(lbl_test);*/
 	draw_element(box1);
-	
+
 	draw_minimap(minimapa);
-	
+
 	hud_printf (12, 2*12, "Mars Base - v" VER_STRING);
 	hud_printf (12, 3*12, "PITCH, YAW, ROLL = (%.2f, %.2f, %.2f)",camera.pitch, camera.yaw, camera.roll);
 	hud_printf (12, 4*12, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
-	hud_printf (12, 5*12, "Flechas para moverse, shift para ir muy rápido");
-	hud_printf (12, 6*12, "WASD+QE -> Girar cámara");
-	
+	hud_printf (12, 5*12, "Flechas para moverse, shift para ir muy rÃ¡pido");
+	hud_printf (12, 6*12, "WASD+QE -> Girar cÃ¡mara");
+
 		VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
 		VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
 		int obj = get_traced_object(pos, dir);
-		
+
 	hud_printf (12, 7*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
-	hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrícula");
+	hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrÃ­cula");
 	hud_printf (12, 9*12, "B/N -> Ver/ocultar las normales");
-	
+
 	int i;
 	float tot;
 	for(i=0; i<lista_objetos_base; i++)
 	{
 		tot=moles_gas_total(lista_objeto_base[i]->node_data.gases);
 		hud_printf (12, (i*10+20)*12, "Objeto %i:", i);
-		hud_printf (12, (i*10+21)*12, "  Presión: %.3f", get_presion(lista_objeto_base[i]->node_data.gases, lista_objeto_base[i]->node_data.volumen, lista_objeto_base[i]->node_data.temperatura));
+		hud_printf (12, (i*10+21)*12, "  PresiÃ³n: %.3f", get_presion(lista_objeto_base[i]->node_data.gases, lista_objeto_base[i]->node_data.volumen, lista_objeto_base[i]->node_data.temperatura));
 		hud_printf (12, (i*10+22)*12, "  CO2 %3.2f%%", lista_objeto_base[i]->node_data.gases.CO2/tot * 100);
 		hud_printf (12, (i*10+23)*12, "  N2  %3.2f%%", lista_objeto_base[i]->node_data.gases.N2/tot * 100);
 		hud_printf (12, (i*10+24)*12, "  Ar  %3.2f%%", lista_objeto_base[i]->node_data.gases.Ar/tot * 100);
@@ -146,8 +146,8 @@ void draw_HUD(void)
 
 /*! \fn int draw_dialog(DIALOG d[])
  *  \brief Dibuja todos los elementos del dialog. NOTA: No inicializa el dialog, solo los dibuja
- *  \param d[] Matriz de dialogs, el último elemento debe ser NULL_DIALOG
- *  \return D_O_K Si todo fué bien
+ *  \param d[] Matriz de dialogs, el Ãºltimo elemento debe ser NULL_DIALOG
+ *  \return D_O_K Si todo fuÃ© bien
 */
 
 int draw_dialog(DIALOG d[])
@@ -167,9 +167,9 @@ int draw_dialog(DIALOG d[])
 }
 
 /*! \fn int draw_element(DIALOG d)
- *  \brief Envía un mensaje de dibujo al dialog. NOTA: No inicializa el elemento
+ *  \brief EnvÃ­a un mensaje de dibujo al dialog. NOTA: No inicializa el elemento
  *  \param d Dialog que se debe dibujar
- *  \return D_O_K Si todo fué bien
+ *  \return D_O_K Si todo fuÃ© bien
 */
 int draw_element(DIALOG d)
 {
@@ -186,10 +186,10 @@ int d_box_proc(int msg, struct st_Dialog * d, int c)
 	switch (msg)
 	{
 		case MSG_START:
-			
+
 			break;
 		case MSG_END:
-			
+
 			break;
 		case MSG_DRAW:
 			glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
@@ -209,7 +209,7 @@ int d_box_proc(int msg, struct st_Dialog * d, int c)
 			glEnd();
 			break;
 		case MSG_IDLE:
-			
+
 			break;
 	}
 	return D_O_K;
@@ -220,10 +220,10 @@ int d_line_proc(int msg, struct st_Dialog * d, int c)
 	switch (msg)
 	{
 		case MSG_START:
-			
+
 			break;
 		case MSG_END:
-			
+
 			break;
 		case MSG_DRAW:
 			if (d->d1>0){glLineWidth(d->d1);}else{glLineWidth(1);}
@@ -235,7 +235,7 @@ int d_line_proc(int msg, struct st_Dialog * d, int c)
 			d->flag |= D_DIRTY;
 			break;
 		case MSG_IDLE:
-			
+
 			break;
 	}
 	return D_O_K;
@@ -250,27 +250,27 @@ int d_label_proc(int msg, struct st_Dialog * d, int c)
 			if(d->h==0){d->h=TTF_FontHeight((TTF_Font*)d->dp2)+4;}
 			if(d->w==0){TTF_SizeText((TTF_Font*)d->dp2, d->dp, &d->w, NULL); d->w += 4;}
 			break;
-			
+
 		case MSG_END:
-			
+
 			break;
 		case MSG_DRAW:
 			glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
 			SDL_Color clrFg = {d->fg.r, d->fg.g, d->fg.b, d->fg.a}; /* Color del texto */
-			
+
 			glBegin(GL_QUADS);
 				glVertex2i(d->x, d->y);				/* Arriba izquierda */
 				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
 				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
 				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
 			glEnd();
-			
+
 			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x+2, d->y+d->h-2, 0.1);
-			
+
 			d->flag |= D_DIRTY;
 			break;
 		case MSG_IDLE:
-			
+
 			break;
 	}
 	return D_O_K;
@@ -281,10 +281,10 @@ int d_image_proc(int msg, struct st_Dialog * d, int c)
 	switch (msg)
 	{
 		case MSG_START:
-			
+
 			break;
 		case MSG_END:
-			
+
 			break;
 		case MSG_DRAW:
 			//glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
@@ -313,7 +313,7 @@ int d_image_proc(int msg, struct st_Dialog * d, int c)
 			d->flag |= D_DIRTY;
 			break;
 		case MSG_IDLE:
-			
+
 			break;
 	}
 	return D_O_K;
@@ -332,7 +332,7 @@ int d_icon_proc(int msg, struct st_Dialog * d, int c)
 			border_color = 0;
 			break;
 		case MSG_END:
-			
+
 			break;
 		case MSG_DRAW:
 			glColor4f(d->bg.r/color_divisor, d->bg.g/color_divisor, d->bg.b/color_divisor, d->bg.a/255.0f);
@@ -348,7 +348,7 @@ int d_icon_proc(int msg, struct st_Dialog * d, int c)
 				glTexCoord2f(1,1);
 				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
 			glEnd();
-			
+
 			glDisable(GL_TEXTURE_2D);
 			glLineWidth(2);
 			if(d->flag & D_GOTMOUSE)//border_color == 1)
@@ -371,15 +371,15 @@ int d_icon_proc(int msg, struct st_Dialog * d, int c)
 			//d->flag |= D_GOTMOUSE;
 			//d->flag |= D_DIRTY;
 			return D_O_K;
-			
+
 		case MSG_LOSTMOUSE:
 			//d->flag &= !D_GOTMOUSE;
 			//d->flag |= D_DIRTY;
 			return D_O_K;
-			
+
 		case MSG_LPRESS:
 			return D_CLOSE;
-			
+
 		case MSG_IDLE:
 			//return D_REDRAW; No quieres descomentarlo... seguro
 			break;
@@ -390,7 +390,7 @@ int d_icon_proc(int msg, struct st_Dialog * d, int c)
 int d_button_proc(int msg, struct st_Dialog * d, int c)
 {
 	if(d->dp2==NULL){debug_printf("Error, d_button sin font! Dialog cerrado\n");return D_CLOSE;}
-	
+
 	switch (msg)
 	{
 		case MSG_START:
@@ -398,41 +398,41 @@ int d_button_proc(int msg, struct st_Dialog * d, int c)
 			if(d->w==0){TTF_SizeText((TTF_Font*)d->dp2, d->dp, &d->w, NULL); d->w += 4;}
 			break;
 		case MSG_END:
-			
+
 			break;
 		case MSG_DRAW:
 			glColor4f(d->bg.r/255.0f, d->bg.g/255.0f, d->bg.b/255.0f, d->bg.a/255.0f);
 			SDL_Color clrFg = {d->fg.r, d->fg.g, d->fg.b, d->fg.a}; /* Color del texto */
-			
+
 			glBegin(GL_QUADS);
 				glVertex2i(d->x, d->y);				/* Arriba izquierda */
 				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
 				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
 				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
 			glEnd();
-			
+
 			glColor3f(0.2f, 0.4f, 0.2f); // Claro
 			glBegin(GL_LINE_STRIP);
 				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
 				glVertex2i(d->x, d->y);				/* Arriba izquierda */
 				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
 			glEnd();
-			
+
 			glColor3f(0.15f, 0.2f, 0.15f); // Oscuro
 			glBegin(GL_LINE_STRIP);
 				glVertex2i(d->x, d->y+d->h);		/* Abajo izquierda */
 				glVertex2i(d->x+d->w, d->y+d->h);	/* Abajo derecha */
 				glVertex2i(d->x+d->w, d->y);		/* Arriba derecha */
 			glEnd();
-			
+
 			SDL_GL_RenderText(d->dp, (TTF_Font*)d->dp2, clrFg, d->x+2, d->y+d->h-2, 0.1);
-			
+
 			d->flag |= D_DIRTY;
 			break;
-			
+
 		case MSG_LPRESS:
 			return D_CLOSE;
-			
+
 		case MSG_IDLE:
 			break;
 	}
@@ -441,33 +441,33 @@ int d_button_proc(int msg, struct st_Dialog * d, int c)
 
 int do_dialog(DIALOG *d)
 {
-	/* Inicialización */
+	/* InicializaciÃ³n */
 	int current_id = 0; // Resultado a retornar (id del elemento que ha salido)
 	int ret, message, ret_id=-1;
 	int status = 1; // 0 -> Cerrar, 1 -> Necesita inicializar, 2 -> Idle, 3 -> Dibujar todo, 4 -> Orden extra
 	int message_saved = 0; // Si lo dejo inicializado el compilador hace un warning
-	int mstat,x,y; // Coordenadas del ratón
+	int mstat,x,y; // Coordenadas del ratÃ³n
 	int id_extra;
 	int is_dirty=0;
-	SDL_ShowCursor(0); // No mostramos el ratón al guardar la imagen de la pantalla
+	SDL_ShowCursor(0); // No mostramos el ratÃ³n al guardar la imagen de la pantalla
 	set_gl_mode();
 	glEnable(GL_TEXTURE_2D);
-	/* Guardamos una foto de la pantalla tal como estaba para ponerla de fondo (Que cutre eeh? Pues funciona y es rápido!) */
-	
+	/* Guardamos una foto de la pantalla tal como estaba para ponerla de fondo (Que cutre eeh? Pues funciona y es rÃ¡pido!) */
+
 	ILuint pantalla; // Foto de la pantalla
 	ilGenImages(1,&pantalla); // Iniciamos la imagen
 	ilBindImage(pantalla); // La seleccionamos
 	ilutGLScreen(); // Hacemos la foto y la guardamos en 'pantalla'
-	
-	
+
+
 	SDL_ShowCursor(1);
-		
+
 	/* Main loop */
 	while(status!=0)
 	{
 		message=0;
 		current_id=0;
-		
+
 		if(status == 1)
 		{
 			message=MSG_START;
@@ -490,8 +490,8 @@ int do_dialog(DIALOG *d)
 			message=MSG_DRAW;
 			status = 2;
 		}
-		
-		if(message==0) // Si aún no hay un mensaje miramos si hay algún evento
+
+		if(message==0) // Si aÃºn no hay un mensaje miramos si hay algÃºn evento
 		{
 			while(SDL_PollEvent(&sdl_event))
 			{
@@ -517,13 +517,13 @@ int do_dialog(DIALOG *d)
 					key_up_handle(sdl_event.key.keysym.sym, sdl_event.key.keysym.mod);
 					break;
 					*/
-				case SDL_MOUSEMOTION: // Se mueve el ratón o se aprieta un botón
+				case SDL_MOUSEMOTION: // Se mueve el ratÃ³n o se aprieta un botÃ³n
 				case SDL_MOUSEBUTTONDOWN:
 					mstat = SDL_GetMouseState(&x,&y);
 					id_extra=0;
 					while(d[id_extra].df!=NULL)
 					{
-						// Si está sobre un objeto
+						// Si estÃ¡ sobre un objeto
 						if((x >= d[id_extra].x && x <= d[id_extra].x + d[id_extra].w) && (y >= d[id_extra].y && y <= d[id_extra].y + d[id_extra].h))
 						{
 							if(mstat & SDL_BUTTON(SDL_BUTTON_LEFT))
@@ -534,14 +534,14 @@ int do_dialog(DIALOG *d)
 									ret_id=id_extra;
 								}
 							}
-							
+
 							if(!(d[id_extra].flag & D_GOTMOUSE))
 							{
 								d[id_extra].flag |= D_GOTMOUSE;
 								ret=d[id_extra].df(MSG_GOTMOUSE,&d[id_extra],0);
 								//debug_printf(" MSG -> MSG_GOTMOUSE a %i, ret %i\n",id_extra,ret);
-								message=MSG_DRAW; // Pequeño apañijo para arreglar el problema de got_mouse / lost_mouse
-								
+								message=MSG_DRAW; // PequeÃ±o apaÃ±ijo para arreglar el problema de got_mouse / lost_mouse
+
 								switch (ret)
 								{
 								case D_CLOSE:
@@ -558,18 +558,18 @@ int do_dialog(DIALOG *d)
 								}
 							}
 						}
-						else // no está en ese objeto
+						else // no estÃ¡ en ese objeto
 						{
-							//debug_printf(" MSG -> No está sobre %i, got_mouse = %i\n",id_extra, d[id_extra].flag & D_GOTMOUSE);
+							//debug_printf(" MSG -> No estÃ¡ sobre %i, got_mouse = %i\n",id_extra, d[id_extra].flag & D_GOTMOUSE);
 							if(d[id_extra].flag & D_GOTMOUSE)
 							{
 								d[id_extra].flag &= !D_GOTMOUSE;
-								
+
 								ret=d[id_extra].df(MSG_LOSTMOUSE,&d[id_extra],0);
 								//debug_printf(" MSG -> MSG_LOSTMOUSE a %i, ret %i\n",id_extra,ret);
-								message=MSG_DRAW; // Pequeño apañijo para arreglar el problema de got_mouse / lost_mouse
-								
-																
+								message=MSG_DRAW; // PequeÃ±o apaÃ±ijo para arreglar el problema de got_mouse / lost_mouse
+
+
 								switch (ret)
 								{
 								case D_CLOSE:
@@ -591,10 +591,10 @@ int do_dialog(DIALOG *d)
 				}
 			}
 		}
-		
-		if(message==0){SDL_Delay(20); message=MSG_IDLE;} // Aún no hay mensaje? pues IDLE
+
+		if(message==0){SDL_Delay(20); message=MSG_IDLE;} // AÃºn no hay mensaje? pues IDLE
 		current_id=0;
-		
+
 		if(message==MSG_DRAW)
 		{
 			glEnable(GL_TEXTURE_2D);
@@ -611,21 +611,21 @@ int do_dialog(DIALOG *d)
 			//glFinish();
 			//SDL_GL_SwapBuffers();
 		}
-		
+
 		while(d[current_id].df!=NULL && status!=0)
 		{
 			if(status==0)break; // Se ha dicho de cerrar, se cierra ya!
-			
+
 			ret=d[current_id].df(message,&d[current_id],0);
 			if(status == 4){message = message_saved; status = 2;} // Si es una orden extra volvemos a poner la de verdad
-			
+
 			is_dirty=0;
 			if(d[current_id].flag & D_DIRTY)
 			{
 				d[current_id].flag &= !D_DIRTY;
 				is_dirty=1;
 			}
-			
+
 			switch(ret)
 			{
 				case D_O_K: // Continuar como si no si nada
@@ -659,8 +659,8 @@ int do_dialog(DIALOG *d)
 			SDL_GL_SwapBuffers();
 		}
 	}
-	
-	/* Desinicialización */
+
+	/* DesinicializaciÃ³n */
 	current_id=0;
 	while(d[current_id].df!=NULL)
 	{
@@ -669,10 +669,10 @@ int do_dialog(DIALOG *d)
 	}
 	ilDeleteImages(1, &pantalla);
 	restore_gl_mode();
-	
-	// Esperamos un poco para que se puedan quitar el ratón y el teclado
+
+	// Esperamos un poco para que se puedan quitar el ratÃ³n y el teclado
 	SDL_Delay(50);
 	clear_cola_eventos();
-	
+
 	return ret_id;
 }

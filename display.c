@@ -34,7 +34,7 @@
 /** \file display.h
  * \brief Funciones y definiciones de control de salida por pantalla
  * Este archivo se encarga de todas las definiciones, structs, funciones, ... que son necesarias para
- * mostrar datos por pantalla. Contiene funciones de iniciación, de mantenimiento, de control, de
+ * mostrar datos por pantalla. Contiene funciones de iniciaciÃ³n, de mantenimiento, de control, de
  * display, de limpieza de pantalla.
  * \author Alfonso Arbona Gimeno
 */
@@ -90,7 +90,7 @@ void message_printf(const char *fmt, ...)
 		cont++;
 		i++;
 	}
-	if(max_len_size<cont){max_len_size=cont; l_mas_larga=lines-1;} // Si no está esto la última línea no se tiene en cuenta para el tamaño
+	if(max_len_size<cont){max_len_size=cont; l_mas_larga=lines-1;} // Si no estÃ¡ esto la Ãºltima lÃ­nea no se tiene en cuenta para el tamaÃ±o
 	
 	int width, height, box_h;
 	
@@ -107,7 +107,7 @@ void message_printf(const char *fmt, ...)
 	
     TTF_SizeText(fntArial12, lista_texto[TEXT_LIST_R_USER+l_mas_larga], &width, &height);
 	width+=10;
-    box_h = (height + 4) * (lines+1) + 16; // Una línea más para el Cerrar, y 6 extra también para el Cerrar
+    box_h = (height + 4) * (lines+1) + 16; // Una lÃ­nea mÃ¡s para el Cerrar, y 6 extra tambiÃ©n para el Cerrar
     
     
 	DIALOG *message=malloc(sizeof(DIALOG)*(lines+4));
@@ -227,15 +227,15 @@ void draw_grid(t_heightmap map, float pos_x, float pos_y)
 	VECTOR v1, v2, v3;
 	float i;
 	int sg1, sg2;
-	float x_offset, y_offset; /* Como los triángulos no miden un número exácto (natural) de metros, dependiendo
-	de las coordenadas estarán desplazados unas décimas de metro */
+	float x_offset, y_offset; /* Como los triÃ¡ngulos no miden un nÃºmero exÃ¡cto (natural) de metros, dependiendo
+	de las coordenadas estarÃ¡n desplazados unas dÃ©cimas de metro */
 	//const float cos45 = cos(M_PI_4);
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	get_current_triangle(marte, pos_x, pos_y, &v1, &v2, &v3);
-	/* v1-> 90º; v2->Horizontal(x); v3->Vertical(y) */
+	/* v1-> 90Âº; v2->Horizontal(x); v3->Vertical(y) */
 	glPointSize(8.0f);
 	glBegin(GL_POINTS);
 		glColor4f(0.0,0.0,1.0,0.5f);
@@ -252,7 +252,7 @@ void draw_grid(t_heightmap map, float pos_x, float pos_y)
 	sg2=nsgn(v3.y-v1.y);
 	
 	
-	x_offset = (map.scale-nfloor(map.scale))*/* Distancia_extra*nºcasillas al central -> pasado a [0-1) */
+	x_offset = (map.scale-nfloor(map.scale))*/* Distancia_extra*nÂºcasillas al central -> pasado a [0-1) */
 			 (pos_a_casilla_x(map,pos_x)-pos_a_casilla_x(map,-map.ini_x));
 	x_offset = x_offset-nfloor(x_offset);
 	
@@ -268,7 +268,7 @@ void draw_grid(t_heightmap map, float pos_x, float pos_y)
 	//#warning Esto no funciona bien...
 	
 	glColor4f(0.0f,0.0f,1.0f,0.5f);
-	for (i=x_offset; i<map.scale+x_offset; i++) // map.scale es el tamaño en metros de una casilla, y por desgracia es float
+	for (i=x_offset; i<map.scale+x_offset; i++) // map.scale es el tamaÃ±o en metros de una casilla, y por desgracia es float
 	{
 		glBegin(GL_LINES);
 			/* Vertical */
@@ -311,7 +311,7 @@ void display(void)
     glRotatef(-camera.roll,   0,1,0);
     glRotatef(-camera.pitch, 1,0,0);
 	glRotatef(-camera.yaw,  0,0,1);
-	/* Dibujos estáticos (Sky) */
+	/* Dibujos estÃ¡ticos (Sky) */
 	
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
@@ -345,7 +345,7 @@ void display(void)
 	}
 	glColor3d(1.0,1.0,1.0);
 	
-	if (camera.show_grid) /* Ahora muestra la cuadrícula */
+	if (camera.show_grid) /* Ahora muestra la cuadrÃ­cula */
 	{
 		glCallList(marte.list+1);
 	}
@@ -377,20 +377,22 @@ void video_init(void)
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	if(scr_flags<=0)
 	{
+		ifdebug(DEBUG_DEBUG){debug_printf("Fullscreen\n");}
 		scr_flags = SDL_OPENGL | SDL_FULLSCREEN;
 	}
 	else
 	{
-		scr_flags |= SDL_OPENGL; // Nos aseguramos que está definido
+		ifdebug(DEBUG_DEBUG){debug_printf("Windowed\n");}
+		scr_flags |= SDL_OPENGL; // Nos aseguramos que estÃ¡ definido
 	}
 	
-	/* Laarga lista de resoluciones posibles xD incluso para 16:9 . He usado las más comunes, fuente: http://en.wikipedia.org/wiki/Display_resolution */
+	/* Laarga lista de resoluciones posibles xD incluso para 16:9 . He usado las mÃ¡s comunes, fuente: http://en.wikipedia.org/wiki/Display_resolution */
 	if(scr_width <= 0 || scr_height <=0)
 	{
 		scr_width = 1680;
 		scr_height = 1050;
 	}
-	/* Hmmm he leido hace poco que SDL emula un modo si no lo puede hacer.. así que a la mierda la lista */
+	/* Hmmm he leido hace poco que SDL emula un modo si no lo puede hacer.. asÃ­ que a la mierda la lista */
 	screen = SDL_SetVideoMode(scr_width, scr_height, scr_bpp, scr_flags);
 	if ( screen == NULL )
 	{
@@ -428,7 +430,9 @@ void video_init(void)
 		}
 	}
 	resize_window(scr_width,scr_height);
-	
+	ifdebug(DEBUG_DEBUG){debug_printf("Screenres %ix%ix%i\n",scr_width,scr_height,scr_bpp);}
+
+	ifdebug(DEBUG_DEBUG){debug_printf("TTF_Init\n");}
 	if (TTF_Init()!=0)
 	{
 		debug_printf(TL_ERR_TTF_INIT, TTF_GetError());
@@ -446,12 +450,14 @@ void video_init(void)
 		debug_printf(TL_ERR_DEVIL_VER);
 		exit(-2);
 	} 
-	
+
+	ifdebug(DEBUG_DEBUG){debug_printf("ilInit\n");}
 	ilInit();
 	iluInit();
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
-	
+
+	ifdebug(DEBUG_DEBUG){debug_printf("GL init\n");}
 	/* OpenGL - Specific */
 	//if(!isExtensionSupported("GL_ARB_multitexture")){debug_printf("ERROR, GL_ARB_multitexture not supported"); exit(-3);}
 	
@@ -488,4 +494,7 @@ void video_init(void)
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  sun.diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, sun.specular);
     glLightfv(GL_LIGHT0, GL_POSITION, sun.position);
+
+	
+	ifdebug(DEBUG_DEBUG){debug_printf("video_init OK\n");}
 }

@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -111,7 +111,7 @@ typedef struct st_Dialog
 #define NULL_DIALOG		NULL, 0, 0, 0, 0 ,{0,0,0,0} ,{0,0,0,0}, 0, 0, 0, 0, NULL, NULL, NULL
 
 #define SPAWN_DLG_MAX_ELEMENTS 256
-DIALOG spawn_dialog[SPAWN_DLG_MAX_ELEMENTS];// Ahora es en run-time, pero para no toquitear reallocs y tal hay un m·ximo de 256 elementos
+DIALOG spawn_dialog[SPAWN_DLG_MAX_ELEMENTS];// Ahora es en run-time, pero para no toquitear reallocs y tal hay un m√°ximo de 256 elementos
 
 int do_dialog(DIALOG *d); // Entra en un loop interno y sale con el valor del objeto que ha cerrado el dialog
 
@@ -120,7 +120,7 @@ int draw_element(DIALOG d);
 
 /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
 int d_box_proc(int msg, struct st_Dialog * d, int c);
-int d_line_proc(int msg, struct st_Dialog * d, int c); /* w, h son las coordenadas del segundo punto, d1 el tamaÒo */
+int d_line_proc(int msg, struct st_Dialog * d, int c); /* w, h son las coordenadas del segundo punto, d1 el tama√±o */
 int d_label_proc(int msg, struct st_Dialog * d, int c); /* Texto en *dp , *dp2 la fuente a usar */
 int d_image_proc(int msg, struct st_Dialog * d, int c); /* Imagen a usar en d1 */
 int d_icon_proc(int msg, struct st_Dialog * d, int c); /* Imagen a usar en d1. Se ilumina el borde y al ser pulsado retorna exit */

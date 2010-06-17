@@ -9,10 +9,10 @@ SRCS = main.c atmosferico.c control.c display.c heightmap.c materiales.c objetos
 # list of generated object files.
 OBJS = main.o atmosferico.o control.o display.o heightmap.o materiales.o objetos.o overlay.o parser.o shared.o lang.o
 # Compiler flags go here.
-CFLAGS = -g -DOPENGLUT_STATIC -IL_STATIC_LIB
+CFLAGS = -ggdb -DOPENGLUT_STATIC -IL_STATIC_LIB
 # Linker flags go here. Currently there aren't any, but if we'll switch to
 # code optimization, we might add "-s" here to strip debug info and symbols.
-LDFLAGS = -s -lGL -lGLU -lm -lXext -lX11 -lSDLmain -lSDL -mwindows -lIL -lILU -lILUT -lSDL_ttf
+LDFLAGS = -lGL -lGLU -lm -lXext -lX11 -lSDLmain -lSDL -mwindows -lIL -lILU -lILUT -lSDL_ttf
 # use this command to erase files.
 RM = /bin/rm -f
 
@@ -75,7 +75,7 @@ main.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
 main.o: /usr/include/SDL/SDL.h /usr/include/IL/ilut.h /usr/include/IL/il.h
 main.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
 main.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-main.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h shared.h
+main.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h shared.h lang.h
 main.o: objetos.h overlay.h heightmap.h materiales.h atmosferico.h control.h
 main.o: display.h parser.h
 atmosferico.o: atmosferico.h shared.h /usr/include/GL/gl.h
@@ -110,7 +110,7 @@ atmosferico.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 atmosferico.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 atmosferico.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 atmosferico.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-atmosferico.o: /usr/include/SDL/SDL.h mars_base_private.h
+atmosferico.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
 control.o: control.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
 control.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
 control.o: /usr/include/SDL/SDL_platform.h /usr/include/sys/types.h
@@ -142,11 +142,11 @@ control.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
 control.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
 control.o: shared.h /usr/include/GL/gl.h /usr/include/GL/glext.h
 control.o: /usr/include/SDL/SDL_ttf.h /usr/include/SDL/SDL.h
-control.o: mars_base_private.h /usr/include/IL/ilut.h /usr/include/IL/il.h
-control.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
-control.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-control.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h objetos.h
-control.o: overlay.h heightmap.h parser.h
+control.o: mars_base_private.h lang.h /usr/include/IL/ilut.h
+control.o: /usr/include/IL/il.h /usr/include/limits.h
+control.o: /usr/include/bits/posix1_lim.h /usr/include/bits/local_lim.h
+control.o: /usr/include/linux/limits.h /usr/include/bits/posix2_lim.h
+control.o: /usr/include/IL/ilu.h objetos.h overlay.h heightmap.h parser.h
 display.o: /usr/include/GL/gl.h /usr/include/GL/glext.h
 display.o: /usr/include/inttypes.h /usr/include/features.h
 display.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
@@ -182,8 +182,8 @@ display.o: /usr/include/SDL/SDL_keyboard.h /usr/include/SDL/SDL_keysym.h
 display.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 display.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 display.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
-display.o: /usr/include/SDL/SDL_version.h mars_base_private.h objetos.h
-display.o: display.h heightmap.h overlay.h
+display.o: /usr/include/SDL/SDL_version.h mars_base_private.h lang.h
+display.o: objetos.h display.h heightmap.h overlay.h
 heightmap.o: heightmap.h shared.h /usr/include/GL/gl.h
 heightmap.o: /usr/include/GL/glext.h /usr/include/inttypes.h
 heightmap.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -216,7 +216,7 @@ heightmap.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 heightmap.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 heightmap.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 heightmap.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-heightmap.o: /usr/include/SDL/SDL.h mars_base_private.h
+heightmap.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
 heightmap.o: /usr/include/IL/ilut.h /usr/include/IL/il.h
 heightmap.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
 heightmap.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
@@ -253,7 +253,7 @@ materiales.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 materiales.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 materiales.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 materiales.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-materiales.o: /usr/include/SDL/SDL.h mars_base_private.h
+materiales.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
 materiales.o: /usr/include/IL/ilut.h /usr/include/IL/il.h
 materiales.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
 materiales.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
@@ -288,11 +288,13 @@ objetos.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 objetos.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 objetos.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 objetos.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-objetos.o: /usr/include/SDL/SDL.h mars_base_private.h /usr/include/GL/glu.h
-objetos.o: /usr/include/IL/ilut.h /usr/include/IL/il.h /usr/include/limits.h
-objetos.o: /usr/include/bits/posix1_lim.h /usr/include/bits/local_lim.h
-objetos.o: /usr/include/linux/limits.h /usr/include/bits/posix2_lim.h
-objetos.o: /usr/include/IL/ilu.h
+objetos.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
+objetos.o: /usr/include/GL/glu.h /usr/include/IL/ilut.h /usr/include/IL/il.h
+objetos.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
+objetos.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
+objetos.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h
+objetos.o: /usr/include/dirent.h /usr/include/bits/dirent.h
+objetos.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
 overlay.o: control.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
 overlay.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
 overlay.o: /usr/include/SDL/SDL_platform.h /usr/include/sys/types.h
@@ -324,11 +326,11 @@ overlay.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
 overlay.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
 overlay.o: shared.h /usr/include/GL/gl.h /usr/include/GL/glext.h
 overlay.o: /usr/include/SDL/SDL_ttf.h /usr/include/SDL/SDL.h
-overlay.o: mars_base_private.h overlay.h heightmap.h /usr/include/GL/glu.h
-overlay.o: /usr/include/IL/ilut.h /usr/include/IL/il.h /usr/include/limits.h
-overlay.o: /usr/include/bits/posix1_lim.h /usr/include/bits/local_lim.h
-overlay.o: /usr/include/linux/limits.h /usr/include/bits/posix2_lim.h
-overlay.o: /usr/include/IL/ilu.h
+overlay.o: mars_base_private.h lang.h overlay.h heightmap.h
+overlay.o: /usr/include/GL/glu.h /usr/include/IL/ilut.h /usr/include/IL/il.h
+overlay.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
+overlay.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
+overlay.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h
 parser.o: parser.h /usr/include/stdio.h /usr/include/features.h
 parser.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
 parser.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
@@ -359,7 +361,7 @@ parser.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 parser.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 parser.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 parser.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-parser.o: /usr/include/SDL/SDL.h mars_base_private.h
+parser.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
 shared.o: /usr/include/GL/glu.h /usr/include/GL/gl.h /usr/include/GL/glext.h
 shared.o: /usr/include/inttypes.h /usr/include/features.h
 shared.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
@@ -397,4 +399,35 @@ shared.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 shared.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 shared.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 shared.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-shared.o: /usr/include/SDL/SDL.h mars_base_private.h
+shared.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
+lang.o: lang.h shared.h /usr/include/GL/gl.h /usr/include/GL/glext.h
+lang.o: /usr/include/inttypes.h /usr/include/features.h
+lang.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
+lang.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
+lang.o: /usr/include/stdint.h /usr/include/bits/wchar.h
+lang.o: /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+lang.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+lang.o: /usr/include/SDL/SDL_platform.h /usr/include/sys/types.h
+lang.o: /usr/include/bits/types.h /usr/include/bits/typesizes.h
+lang.o: /usr/include/time.h /usr/include/bits/time.h /usr/include/xlocale.h
+lang.o: /usr/include/endian.h /usr/include/bits/endian.h
+lang.o: /usr/include/bits/byteswap.h /usr/include/sys/select.h
+lang.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+lang.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
+lang.o: /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h
+lang.o: /usr/include/wchar.h /usr/include/bits/stdio_lim.h
+lang.o: /usr/include/bits/sys_errlist.h /usr/include/stdlib.h
+lang.o: /usr/include/alloca.h /usr/include/string.h /usr/include/strings.h
+lang.o: /usr/include/ctype.h /usr/include/iconv.h
+lang.o: /usr/include/SDL/begin_code.h /usr/include/SDL/close_code.h
+lang.o: /usr/include/SDL/SDL_audio.h /usr/include/SDL/SDL_error.h
+lang.o: /usr/include/SDL/SDL_endian.h /usr/include/SDL/SDL_mutex.h
+lang.o: /usr/include/SDL/SDL_thread.h /usr/include/SDL/SDL_rwops.h
+lang.o: /usr/include/SDL/SDL_cdrom.h /usr/include/SDL/SDL_cpuinfo.h
+lang.o: /usr/include/SDL/SDL_events.h /usr/include/SDL/SDL_active.h
+lang.o: /usr/include/SDL/SDL_keyboard.h /usr/include/SDL/SDL_keysym.h
+lang.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
+lang.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
+lang.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
+lang.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
+lang.o: /usr/include/SDL/SDL.h mars_base_private.h parser.h
