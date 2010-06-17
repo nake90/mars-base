@@ -32,9 +32,9 @@
 */
 
 /** \file control.h
- * \brief Funciones de control del programa (Entrada de teclado y ratÛn... etc
+ * \brief Funciones de control del programa (Entrada de teclado y rat√≥n... etc
  * Este archivo contiene las funciones que se encargan de controlar el estado del programa y de entrada directa
- * del usuario (teclado, ratÛn, y cosas asÌ).
+ * del usuario (teclado, rat√≥n, y cosas as√≠).
  * \author Alfonso Arbona Gimeno
 */
 #ifndef CONTROL_H
@@ -43,9 +43,8 @@
 #include <SDL/SDL.h>
 #include "shared.h"
 
-// M·xima distancia al cuadrado desde la c·mara hasta el objeto al hacer los traces
+// M√°xima distancia al cuadrado desde la c√°mara hasta el objeto al hacer los traces
 #define MAX_DIST_TRACE_OBJ_SQ 5000
-// M·xima distancia al cuadrado desde la c·mara hasta el objeto al hacer los traces
 #define MAX_DIST_CONX_SQ 50000
 
 /* Cantidad de elementos a parte de los iconos que hay en el spawn_dialog */

@@ -32,7 +32,7 @@
 */
 
 /** \file lang.c
- * \brief Código sobre las funciones de carga del texto estático
+ * \brief CÃ³digo sobre las funciones de carga del texto estÃ¡tico
  * \author Alfonso Arbona Gimeno
 */
 
@@ -89,7 +89,7 @@ void lang_load(const char* lang)
 	unsigned int i=0; // Ayuda muuucho (incrementado en el define)
 	sprintf(ruta,"lang/%s.txt",lang);
 	t_parse parse;
-	if(parse_open(&parse, ruta)!=0){parse_opened=0; debug_printf("Error, lang (%s) not found!\n",lang);} // In inglish pitinglish porque es un error al cargar la traducción de los errores xD
+	if(parse_open(&parse, ruta)!=0){parse_opened=0; debug_printf("Error, lang (%s) not found!\n",lang);} // In inglish pitinglish porque es un error al cargar la traducciÃ³n de los errores xD
 	
 	/* Cargamos los errores (TEXT_LIST_R_ERR) */
 	i=TEXT_LIST_R_ERR;
@@ -132,7 +132,7 @@ void lang_load(const char* lang)
 	_PARSE_GET("ERR");									// +5
 	lang_parse_special_chars(TEXT_LIST_R_WRN, TEXT_LIST_R_WRN + 4);
 	
-	/* Cargamos los mensajes de información (TEXT_LIST_R_NFO) */
+	/* Cargamos los mensajes de informaciï¿½n (TEXT_LIST_R_NFO) */
 	i=TEXT_LIST_R_NFO;
 	_PARSE_GET("nfo_closed_ok");						// +0
 	_PARSE_GET("nfo_compiled_start");

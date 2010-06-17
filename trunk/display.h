@@ -34,7 +34,7 @@
 /** \file display.h
  * \brief Funciones y definiciones de control de salida por pantalla
  * Este archivo se encarga de todas las definiciones, structs, funciones, ... que son necesarias para
- * mostrar datos por pantalla. Contiene funciones de iniciaciÛn, de mantenimiento, de control, de
+ * mostrar datos por pantalla. Contiene funciones de iniciaci√≥n, de mantenimiento, de control, de
  * display, de limpieza de pantalla.
  * \author Alfonso Arbona Gimeno
 */
@@ -57,10 +57,10 @@ extern int scr_flags;
 #define FPS_FRAMES 10
 float FPS;
 
-/* TEXTURAS B¡SICAS */
+/* TEXTURAS B√ÅSICAS */
 t_texture sand;
 
-// PequeÒo truco, como no hay un SDL_WINDOWED (o eso creo) pues usamos este y asÌ flags est· definido
+// Peque√±o truco, como no hay un SDL_WINDOWED (o eso creo) pues usamos este y as√≠ flags est√° definido
 #define FLAG_WINDOWED SDL_OPENGL
 void video_init(void);
 void resize_window(int width, int height);

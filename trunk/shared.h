@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,16 +25,16 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
 */
 
 /** \file shared.h
- * \brief Definiciones compartidas por todos los módulos
+ * \brief Definiciones compartidas por todos los mÃ³dulos
  * Este archivo se encarga de todas las definiciones, structs, funciones, ... que son necesarias por todos los
- * diferentes módulos del programa. Está formado por funciones de bajo nivel personalizadas para la aplicación.
+ * diferentes mÃ³dulos del programa. EstÃ¡ formado por funciones de bajo nivel personalizadas para la aplicaciÃ³n.
  * \author Alfonso Arbona Gimeno
 */
 
@@ -88,20 +88,20 @@ typedef struct
 	GLfloat pos_x;
 	GLfloat pos_y;
 	GLfloat pos_z;
-	
+
 	GLfloat vel_x;
 	GLfloat vel_y;
 	GLfloat vel_z;
-	
-	GLint wasd_count;/* Cuenta el número de teclas de movimiento presionadas. (Para la desaceleración) */
-	
+
+	GLint wasd_count;/* Cuenta el nÃºmero de teclas de movimiento presionadas. (Para la desaceleraciÃ³n) */
+
 	GLfloat pitch;
 	GLfloat yaw;
 	GLfloat roll;
-	
+
 	int show_grid;
 	int show_presion;
-	
+
 	int ghost_mode;
 }t_camera;
 extern t_camera camera;
@@ -109,7 +109,7 @@ extern t_camera camera;
 typedef struct
 {
 	int show_fondo;
-	
+
 	int show_grid;
 	int show_presion;
 }t_config;
@@ -131,7 +131,7 @@ void debug_reset (void);
 void debug_printf (const char *fmt, ...);
 void scr_init_reset (int debug_too);
 void scr_init_printf (const char *fmt, ...);
-void scr_init_reprintf (const char *fmt, ...);/* Como scr_init_printf pero sobre la última línea */
+void scr_init_reprintf (const char *fmt, ...);/* Como scr_init_printf pero sobre la Ãºltima lÃ­nea */
 void position_printf (float x, float y, float z, const char *fmt, ...);
 void hud_printf (float x, float y, const char *fmt, ...);
 void set_gl_mode(void);
@@ -147,10 +147,10 @@ void str_cpy(char* string1,const char* string2);
 void str_cpyl(char* string1, int len, const char* string2);
 void str_append(char* string1,const char* string2);
 int str_cmp(const char* string1,const char* string2);
-int str_ext_cmp(const char* ruta, const char* ext); // Compara la extensión (0 si son distintos, 1 si son iguales)
+int str_ext_cmp(const char* ruta, const char* ext); // Compara la extensiÃ³n (0 si son distintos, 1 si son iguales)
 void str_ruta_back(char* ruta);
-void str_ext_back(char* ruta); // Quita la extensión al nombre del archivo
-void str_ruta_get_filename(char* ruta); // Obtiene el nombre y su extensión
+void str_ext_back(char* ruta); // Quita la extensiÃ³n al nombre del archivo
+void str_ruta_get_filename(char* ruta); // Obtiene el nombre y su extensiÃ³n
 int str_list_find(const char* find,const char* table[], int elementos);
 #define __STR2FLOAT_DEFINED
 float str2float(const char *str);
@@ -166,7 +166,7 @@ float vdist_sq(VECTOR vec1, VECTOR vec2); /* Cuadrado de la distancia */
 VECTOR v_from_ang(float pitch, float yaw); /* Vector definido por pitch y yaw en radianes */
 VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll); /* Rotar el vector */
 
-/* MATEMÁTICAS */
+/* MATEMÃTICAS */
 float nabs(float val);
 int nround(float val);
 int nfloor(float val);
@@ -194,6 +194,12 @@ int isExtensionSupported(const char *extension);
 /* VARIABLES */
 extern int scr_width, scr_height, scr_bpp; // Es usado en muchos sitios que no necesitan incluir display.h
 extern t_texture fondo;
-extern int null_texture;  // Textura usada si hay algún error
+extern int null_texture;  // Textura usada si hay algÃºn error
+extern unsigned char debug_mode;
+#define DEBUG_NO		0
+#define DEBUG_INFO		1
+#define DEBUG_DEBUG		2
+#define DEBUG_VERBOSE	3
+#define ifdebug(x) if(debug_mode>=(x))
 
 #endif

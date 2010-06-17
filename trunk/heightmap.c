@@ -55,34 +55,34 @@ static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 int get_traced_coord(VECTOR pos, VECTOR dir, VECTOR *coord)
 {
 	if(dir.z>=0)return -1;
-	coord->x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
+	coord->x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (EstÃ¡n negados porque salen al revÃ©s...)
 	coord->y = -dir.y/dir.z * pos.z + pos.y;
 	coord->z = 0;	// TODO: FALTA ESTOOOOOOO
 	return 0;
 }
 
 /*! \fn int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)
- *  \brief Función principal para la carga de heightmaps
- *	Esta función intenta primero cargar el heightmap precompilado, si no lo encuentra lo compila y lo guarda.
- *	\warning La ruta al archivo no debe contener extensión ya que se usa la función append para añadir la extensión que
+ *  \brief FunciÃ³n principal para la carga de heightmaps
+ *	Esta funciÃ³n intenta primero cargar el heightmap precompilado, si no lo encuentra lo compila y lo guarda.
+ *	\warning La ruta al archivo no debe contener extensiÃ³n ya que se usa la funciÃ³n append para aÃ±adir la extensiÃ³n que
  *	se requiera en cada caso.
- *  \param filename Ruta a la carpeta y nombre del archivo SIN EXTENSIÓN
+ *  \param filename Ruta a la carpeta y nombre del archivo SIN EXTENSIÃ“N
  *  \param h_buffer Puntero al heightmap a crear
- *  \param texture Textura que se usará en el mapa
+ *  \param texture Textura que se usarÃ¡ en el mapa
  *  \return 0 -> Ok
  *	\return 1 -> Imagen de alturas (.pgm) no encontrado
- *	\return 2 -> Archivo de información (.txt) no encontrado
+ *	\return 2 -> Archivo de informaciÃ³n (.txt) no encontrado
  *	\return 3 -> Fallo en el malloc
  *	\return 4 -> El archivo de alturas no es un PGM
  *
 */
 int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture)
 {
-	char str_buffer[1024];/* Añade la extensión */
+	char str_buffer[1024];/* AÃ±ade la extensiÃ³n */
 	int res;
 	
 	/* Cargamos el minimapa */
-	str_cpyl(str_buffer,1024-str_len("_minimap.jpg"),filename); // Nos aseguramos que no se pasa de tamaño
+	str_cpyl(str_buffer,1024-str_len("_minimap.jpg"),filename); // Nos aseguramos que no se pasa de tamaÃ±o
 	
 	str_append(str_buffer,"_minimap.jpg");
 	minimapa=ilutGLLoadImage(str_buffer);
@@ -96,7 +96,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	if(res==0){return 0;}
 	if(res==3){return 3;}/* Fallo en el malloc */
 	
-	/* Si estamos aquí es porque no se ha podido cargar el precompilado... */
+	/* Si estamos aquÃ­ es porque no se ha podido cargar el precompilado... */
 	
 	str_cpy(str_buffer,filename);
 	str_append(str_buffer,".pgm");
@@ -109,7 +109,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 4]);
 	
 	scr_init_printf(lista_texto[TEXT_LIST_R_SCR + 14]);
-	/* Cargamos los datos básicos */
+	/* Cargamos los datos bÃ¡sicos */
 	// ToDo: Usar el parser!
 	fscanf(info,"North\t= %f\n",&(h_buffer->north));
 	fscanf(info,"South\t= %f\n",&(h_buffer->south));
@@ -144,7 +144,7 @@ int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture textur
 	fscanf(data,"%c%c\n",&(val[0]),&(val[1])); if(val[0]!='P'||val[1]!='2'){debug_printf(TL_ERR_MAP_PGM_TYPE,val[0],val[1]);return 4;}
 	
 	do{fgets(line,255,data);}
-	while(line[0]=='#');/* Leemos una línea. Si hay un '#' implica que era un comentario... */
+	while(line[0]=='#');/* Leemos una lÃ­nea. Si hay un '#' implica que era un comentario... */
 	//fscanf(data,"%i\n",&i);
 	i=0;
 	//FILE *deb = fopen("map_debug.txt","w");
@@ -174,7 +174,7 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 7]);
 	
 	/*
-	Necesitamos extensión opengl
+	Necesitamos extensiÃ³n opengl
 	max textures : glGetIntegerv(GL_MAX_TEXTURE_UNITS_ARB)
 	seleccionar textura: glActiveTextureARB(GL_TEXTUREi_ARB)
           glMultiTexCoord2fARB(GL.GL_TEXTURE0_ARB, 0, 1);
@@ -199,14 +199,14 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 			{
 				color=obj->shadow[x+y*obj->tam_x];
 				if(color>=0){glColor3f(color,color,color);}else{glColor3f(1.0,0,1.0);}
-				/* Dibujamos el primer triángulo */
+				/* Dibujamos el primer triÃ¡ngulo */
 				// Lo de obj->tam_x-x+1 es porque sale todo como en un espejo en las x's
 				glTexCoord2i( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale);
 				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y - half_y)  *obj->scale, (obj->data[x+y*obj->tam_x]-obj->zero_h)*v_scale+v_add);
 				
 				color=obj->shadow[x+(y+1)*obj->tam_x];
 				if(color>=0){glColor3f(color,color,color);}else{glColor3f(1.0,0,1.0);}
-				/* Dibujamos el segundo triángulo */
+				/* Dibujamos el segundo triÃ¡ngulo */
 				glTexCoord2i( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale);
 				glVertex3f  ( (obj->tam_x-x+1 - half_x)*obj->scale, (y+1 - half_y)*obj->scale, (obj->data[x+(y+1)*obj->tam_x]-obj->zero_h)*v_scale+v_add);
 			}
@@ -246,7 +246,7 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
 		
 		for (y=0;y<obj->tam_y-1; y++)
 		{
-			/* DIBUJO DE LAS NORMALES y la dirección del sol*/
+			/* DIBUJO DE LAS NORMALES y la direcciÃ³n del sol*/
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_LINES);
 			for (x=obj->tam_x-1;x>=0; x--)
@@ -277,10 +277,10 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 	
 	
 	/* -- Cabecera -- */
-	fread(&magic,sizeof(int),1,file);/* Cadena mágica */
+	fread(&magic,sizeof(int),1,file);/* Cadena mÃ¡gica */
 	if (magic!=magic_){fclose(file); debug_printf(TL_ERR_PRECOMP_TYPE);return -2;}
 	
-	fread(&version,sizeof(unsigned char),1,file);/* Versión del compilado */
+	fread(&version,sizeof(unsigned char),1,file);/* VersiÃ³n del compilado */
 	if (version!=NHMAP_VERSION){fclose(file); debug_printf(TL_ERR_PRECOMP_VER);return -3;}
 	
 	fread(&obj->tam_x,sizeof(int),1,file);
@@ -298,7 +298,7 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 	fread(&obj->ini_z,sizeof(int),1,file);
 	/*
 	debug_printf(" -- CARGA_MAPA --\n");
-	debug_printf("    Tamaño: %i,%i\n",obj->tam_x,obj->tam_y);
+	debug_printf("    TamaÃ±o: %i,%i\n",obj->tam_x,obj->tam_y);
 	debug_printf("    Escala: %f\n",obj->scale);
 	debug_printf("    Alturas: (Z)%i, (m)%i, M(%i)\n",obj->zero_h,obj->min_h,obj->max_h);
 	debug_printf("    Coordenadas: (N)%f, (S)%f, E(%f), O(%f)\n",obj->north,obj->south,obj->east,obj->west);
@@ -383,18 +383,18 @@ float z_to_real_height(t_heightmap obj, int z)/* Transforma una z (0-255) a su a
 	return ((z-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale;
 }
 
-float coord_to_real_height(t_heightmap obj, float z)/* Transforma una coordenada z (como la de la cámara) a su altura real */
+float coord_to_real_height(t_heightmap obj, float z)/* Transforma una coordenada z (como la de la cÃ¡mara) a su altura real */
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	return -((128-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale+obj.ini_z+z+23;
-	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
+	/* TODO: Arreglar esta funciÃ³n, ese 23 de ahÃ­.... malo malo */
 }
 
-float real_height_to_coord(t_heightmap obj, float z)/* Transforma una altura real a su coordenada z (como la de la cámara) */
+float real_height_to_coord(t_heightmap obj, float z)/* Transforma una altura real a su coordenada z (como la de la cÃ¡mara) */
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	return -((128-obj.zero_h)-(obj.data[obj.tam_x/2+obj.tam_y/2*obj.tam_x]-obj.zero_h))*v_scale+obj.ini_z+z+23;
-	/* todo: Arreglar esta función, ese 23 de ahí.... malo malo */
+	/* TODO: Arreglar esta funciÃ³n, ese 23 de ahÃ­.... malo malo */
 }
 
 /*int compile_percent;
@@ -440,9 +440,9 @@ void compile_map(t_heightmap* obj, t_texture texture)
 	float color=1.0f;
 	VECTOR ray = {0.6,0.7,-1.4};
 	
-	/* - NOTA - No uso al final las normales en reflejos porque hace muuucho lag! -> ¡Las uso en las sombras! */
-	VECTOR vec1, vec2;/* Vectores que forman las aristas de los triángulos para calcular las normales */
-	//VECTOR pos1, pos2;/* Posición de los puntos anteriores */
+	/* - NOTA - No uso al final las normales en reflejos porque hace muuucho lag! -> Â¡Las uso en las sombras! */
+	VECTOR vec1, vec2;/* Vectores que forman las aristas de los triÃ¡ngulos para calcular las normales */
+	//VECTOR pos1, pos2;/* PosiciÃ³n de los puntos anteriores */
 	
 	//compile_gl_status=1;
 	/* Primero calculamos las sombras y las normales */
@@ -454,7 +454,7 @@ void compile_map(t_heightmap* obj, t_texture texture)
 		{
 				vec1.x=-1;//pos1.x-x;
 				vec1.y=0;//pos1.y-y;
-				vec1.z = -obj->data[(x-1)+(y-0)*obj->tam_x]  +  obj->data[x+y*obj->tam_x];/*No entiendo porqué tiene que estar invertido...*/
+				vec1.z = -obj->data[(x-1)+(y-0)*obj->tam_x]  +  obj->data[x+y*obj->tam_x];/*No entiendo porquÃ© tiene que estar invertido...*/
 				
 				vec2.x=0;//pos2.x-x;
 				vec2.y=-1;//pos2.y-y;
@@ -484,7 +484,7 @@ float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float amb
 	/* Si es vertical no hace falta calcular nada */
 	if(incr.x==0 && incr.y==0){obj->shadow[obj_x+obj_y*obj->tam_x]=ambiente; return ambiente;}
 	int sombra=0;
-	const int max_incrementos = 200;/* Usado para que no tenga que recorrer todo el mapa... así es más rápido. Aumentar si el mapa tiene montañas muy grandes  */
+	const int max_incrementos = 200;/* Usado para que no tenga que recorrer todo el mapa... asÃ­ es mÃ¡s rÃ¡pido. Aumentar si el mapa tiene montaÃ±as muy grandes  */
 	int incrementos=0;
 	
 	cur_pos=vsub(cur_pos,incr);
@@ -507,7 +507,7 @@ float calc_shadow (int obj_x, int obj_y, VECTOR ray, t_heightmap* obj, float amb
 }
 
 /*! \fn float get_real_height(t_heightmap obj, float coord_x, float coord_y)
- *  \brief Función que retorna el valor exacto y real de altura en las coordenadas reales (coord_x,coord_y)
+ *  \brief FunciÃ³n que retorna el valor exacto y real de altura en las coordenadas reales (coord_x,coord_y)
  *  \param obj Mapa del terreno
  *  \param coord_x,coord_y Coordenadas reales del punto a medir
  *  \return Altura real del punto
@@ -518,8 +518,8 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 {
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	int x, y; /* Coordenadas (x,y) de la matriz de alturas */
-	float h1,h2,h3,h4,h; /* Alturas de los vértices y final */
-	float a,b; /* Son los incrementos de posición en cada eje */
+	float h1,h2,h3,h4,h; /* Alturas de los vÃ©rtices y final */
+	float a,b; /* Son los incrementos de posiciÃ³n en cada eje */
 	
 	/* h1  h2
 	   0->/|
@@ -543,11 +543,11 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 	h3=obj.data[x+(y+1)*obj.tam_x]*v_scale+obj.min_h;
 	h4=obj.data[(x+1)+(y+1)*obj.tam_x]*v_scale+obj.min_h;
 	
-	if(a+b<1)/* Primer triángulo h1,h2,h3 */
+	if(a+b<1)/* Primer triÃ¡ngulo h1,h2,h3 */
 	{
 		h=h1+(a*(h2-h1))+(b*(h3-h1));
 	}
-	else/* Segundo triángulo h4,h3,h2 */
+	else/* Segundo triÃ¡ngulo h4,h3,h2 */
 	{
 	 	h=h4+((1-b)*(h2-h4))+((1-a)*(h3-h4));
 	}
@@ -555,11 +555,11 @@ float get_real_height(t_heightmap obj, float coord_x, float coord_y)
 }
 
 /*! \fn int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3)
- *  \brief Retorna las coordenadas en el espacio (de openGL) de los vértices del triángulo en el que está situado (x,y) (Coordenadas de cámara)
- *	Nota: v1 es el vértice que forma 90º con v2 y v3, v2 con v1 es paralelo al eje x, y v3 con v1 es paralelo al eje y
+ *  \brief Retorna las coordenadas en el espacio (de openGL) de los vÃ©rtices del triÃ¡ngulo en el que estÃ¡ situado (x,y) (Coordenadas de cÃ¡mara)
+ *	Nota: v1 es el vÃ©rtice que forma 90Âº con v2 y v3, v2 con v1 es paralelo al eje x, y v3 con v1 es paralelo al eje y
  *  \param obj Mapa del terreno
- *  \param coord_x, coord_y Las coordenadas de la posición sobre la cual se quiere obtener el triángulo en el que están
- *  \param v1, v2, v3 Vectores de posición de cada vértice (En coordenadas de openGL) (SALIDA)
+ *  \param coord_x, coord_y Las coordenadas de la posiciÃ³n sobre la cual se quiere obtener el triÃ¡ngulo en el que estÃ¡n
+ *  \param v1, v2, v3 Vectores de posiciÃ³n de cada vÃ©rtice (En coordenadas de openGL) (SALIDA)
  *	\return 0: Ok
  *	\return no cero: Error
 */
@@ -568,7 +568,7 @@ int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *
 	float v_scale = (obj.max_h-obj.min_h)/255.0f;
 	int x, y; /* Coordenadas (x,y) de la matriz de alturas */
 	float h1,h2,h3,h4;
-	float a,b; /* Son los incrementos de posición en cada eje */
+	float a,b; /* Son los incrementos de posiciÃ³n en cada eje */
 	float v_add = +(obj.data[(obj.tam_x/2)+(obj.tam_y/2)*obj.tam_x]-obj.zero_h)*v_scale - obj.min_h;
 	
 	/* h1  h2
@@ -592,7 +592,7 @@ int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *
 	h3=(obj.data[x+(y+1)*obj.tam_x])*v_scale+obj.min_h+v_add;		/*(0,1)*/
 	h4=(obj.data[(x+1)+(y+1)*obj.tam_x])*v_scale+obj.min_h+v_add;	/*(1,1)*/
 	
-	if(a+b<1)/* Primer triángulo h1=v1, h2=v2, h3=v3 */
+	if(a+b<1)/* Primer triÃ¡ngulo h1=v1, h2=v2, h3=v3 */
 	{
 		v1->x= (x-1-obj.tam_x/2)*obj.scale -obj.ini_x;
 		v1->y=-(y+0-obj.tam_y/2)*obj.scale -obj.ini_y;
@@ -606,7 +606,7 @@ int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *
 		v3->y=-(y+1-obj.tam_y/2)*obj.scale -obj.ini_y;
 		v3->z=h3;
 	}
-	else/* Segundo triángulo h4=v1, h3=v2, h2=v3 */
+	else/* Segundo triÃ¡ngulo h4=v1, h3=v2, h2=v3 */
 	{
 		v1->x= (x  -obj.tam_x/2)*obj.scale -obj.ini_x;
 		v1->y=-(y+1-obj.tam_y/2)*obj.scale -obj.ini_y;

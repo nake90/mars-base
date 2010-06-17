@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -47,21 +47,21 @@
 #define obj_ptr_setpos(a,b,c,d) (a)->pos.x=(b); (a)->pos.y=(c); (a)->pos.z=(d);
 
 /* --- DEFINES --- */
-#define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
-#define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÁ DEFINIDO ASÍ EN EL FORMATO 3ds (Maybe alloc?) */
+#define MAX_VERTICES 65536 /*!< Max number of vertices - ESTÃ DEFINIDO ASÃ EN EL FORMATO 3ds (Maybe alloc?) */
+#define MAX_POLYGONS 65536 /*!< Max number of polygons - ESTÃ DEFINIDO ASÃ EN EL FORMATO 3ds (Maybe alloc?) */
 #define MAX_MATERIALS 128 /*!< Max number of materials (Maybe alloc?) */
-#define MAX_MODEL_OBJETOS 20 /*!< Número máximo de objetos dentro de cada modelo (Maybe alloc?) */
-#define MAX_OBJETOS 2048 /*!< Número máximo de objetos */
-#define objetos_debug 0 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->Aún más tonterías */
+#define MAX_MODEL_OBJETOS 20 /*!< NÃºmero mÃ¡ximo de objetos dentro de cada modelo (Maybe alloc?) */
+#define MAX_OBJETOS 2048 /*!< NÃºmero mÃ¡ximo de objetos */
+#define objetos_debug 0 /*!< Nivel de debug de los objetos 0->Nada, 1->Info, 2->Debug 3->AÃºn mÃ¡s tonterÃ­as */
 
 
-#define MAX_CONX 16 /*!< Número máximo de conexiones posibles */
+#define MAX_CONX 16 /*!< NÃºmero mÃ¡ximo de conexiones posibles */
 
-/*! Para más info sobre tamaño y uso ver: "3ds_main_inf.txt"
- - #OK# -> Implementado y funcionando 
+/*! Para mÃ¡s info sobre tamaÃ±o y uso ver: "3ds_main_inf.txt"
+ - #OK# -> Implementado y funcionando
  - #FALTA# -> Aun no implementado
- - #UNK# -> No tengo claro para qué funciona ni si lo implementaré
- - #POSIBLE# -> Posiblemente lo implementaré; aun por decidir
+ - #UNK# -> No tengo claro para quÃ© funciona ni si lo implementarÃ©
+ - #POSIBLE# -> Posiblemente lo implementarÃ©; aun por decidir
  - #TEST# -> Teoricamente bien, falta testear */
 
 /* MAIN */
@@ -103,64 +103,64 @@
 #define TRI_MAPPINGSTANDARD 0x4170	/*!< #UNK# MESH_TEXTURE_INFO */
 
 /* - TYPEDEFS usados - */
-typedef struct{int a,b,c; int texture;}t_polygon; /*!< Polígono -> Apunta a 3 vértices y a una textura */
+typedef struct{unsigned short a,b,c; int texture;}t_polygon; /*!< PolÃ­gono -> Apunta a 3 vÃ©rtices y a una textura */
 typedef struct{float u,v;}t_mapcoord; /*!< Coordenadas u,v de la textura */
 
 /*! Datos del modelo */
 typedef struct
 {
-	char name[80]; /*!< Nombre del archivo (debería ser único) */
+	char name[80]; /*!< Nombre del archivo (deberÃ­a ser Ãºnico) */
 	char **obj_name; /*!< Nombre definido en el archivo 3ds (nombre del componente del 3ds) */  //[MAX_MODEL_OBJETOS][20];
 	int *vertices_qty; /*!< Cantidad de vertices */  //[MAX_MODEL_OBJETOS];
-	int *polygons_qty; /*!< Cantidad de polígonos */  //[MAX_MODEL_OBJETOS];
+	int *polygons_qty; /*!< Cantidad de polÃ­gonos */  //[MAX_MODEL_OBJETOS];
 	int materials_qty; /*!< Cantidad de materiales */
-	int model_objetos_qty; /*!< Número de objetos dentro del objeto */
-	
-	VECTOR **vertex;//[MAX_MODEL_OBJETOS][MAX_VERTICES]; 
+	int model_objetos_qty; /*!< NÃºmero de objetos dentro del objeto */
+
+	VECTOR **vertex;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
 	t_polygon **polygon;//[MAX_MODEL_OBJETOS][MAX_POLYGONS];
 	t_mapcoord **mapcoord;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
 	t_texture material[MAX_MATERIALS];
-	
-	
-	int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
-	int draw_lists; /*!< Número de índices compilados de OpenGL (por ahora siempre 1) */
-	
+
+
+	int draw_list; /*!< Primer Ã­ndice a la lista de dibujo compilado de OpenGL */
+	int draw_lists; /*!< NÃºmero de Ã­ndices compilados de OpenGL (por ahora siempre 1) */
+
 	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
-	
+
 	float size; /* Valor de la escala */
 }t_model, *t_model_ptr;
 
-/*! Base -> Modelo base para usar como ejemplo a la hora de crear más tipos de objetos */
+/*! Base -> Modelo base para usar como ejemplo a la hora de crear mÃ¡s tipos de objetos */
 typedef struct
 {
 	char name[256]; /*!< Nombre del objeto */
-	t_model *modelo; /*!< Datos de vértices y demás */
-	VECTOR pos; /*!< Posición (en metros) */
+	t_model *modelo; /*!< Datos de vÃ©rtices y demÃ¡s */
+	VECTOR pos; /*!< PosiciÃ³n (en metros) */
 	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
 	//VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
 	//VECTOR velang; /*!< Velocidad angular (en rad/s) */
-	float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisión del objeto */
-	
+	float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisiÃ³n del objeto */
+
 	/* Conexiones */
-	int conx_qty; /*!< Cantidad de conexiones (máximas) del objeto */
+	int conx_qty; /*!< Cantidad de conexiones (mÃ¡ximas) del objeto */
 	VECTOR conx_coord[MAX_CONX]; /*!< Coordenadas (locales) de las posibles conexiones del objeto */
 	VECTOR conx_norm[MAX_CONX]; /*!< Vectores normales (locales!) de las posibles conexiones del objeto */
-	int conx_id[MAX_CONX]; /*!< Id del objeto al que está conectado (-1 si no está conectado) */
-	int conx_node_id[MAX_CONX]; /*!< Id del nodo del objeto al que está conectado (-1 si no está conectado) */
-	float conx_size[MAX_CONX]; /*!< Tamaño de la conexión en metros. Deben coincidir para conectarse e influye en la transmisión de gases. */
-	
-	//float volumen; /*!< Volumen del objeto en m3, usado para presión y uso de gases y cosas así */
-	float reparar; /*!< Nivel de daños del objeto [0->Perfecto, 1->Daños fatales] */
+	int conx_id[MAX_CONX]; /*!< Id del objeto al que estÃ¡ conectado (-1 si no estÃ¡ conectado) */
+	int conx_node_id[MAX_CONX]; /*!< Id del nodo del objeto al que estÃ¡ conectado (-1 si no estÃ¡ conectado) */
+	float conx_size[MAX_CONX]; /*!< TamaÃ±o de la conexiÃ³n en metros. Deben coincidir para conectarse e influye en la transmisiÃ³n de gases. */
+
+	//float volumen; /*!< Volumen del objeto en m3, usado para presiÃ³n y uso de gases y cosas asÃ­ */
+	float reparar; /*!< Nivel de daÃ±os del objeto [0->Perfecto, 1->DaÃ±os fatales] */
 	//float temperatura; /*!< Temperatura interna del objeto en kelvin */
 	t_node_data node_data;
-	
+
 	// Internos
-	char selec; /*!< ¿Seleccionado? */
-	
+	char selec; /*!< Â¿Seleccionado? */
+
 }t_obj_base, *t_obj_base_ptr;
 
-t_model **lista_modelo; /* Lista dinámica de punteros a modelos mallocados */
-t_obj_base **lista_objeto_base; /* Lista dinámica de punteros a objetos mallocados */
+t_model **lista_modelo; /* Lista dinÃ¡mica de punteros a modelos mallocados */
+t_obj_base **lista_objeto_base; /* Lista dinÃ¡mica de punteros a objetos mallocados */
 int lista_objetos_base; // Contador de la lista de objetos
 int lista_modelos; // Contador de la lista de modelos
 

@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,15 +25,15 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
 */
 /** \file shared.c
- * \brief Funciones compartidas por todos los mÛdulos
- * Este archivo contiene todo el cÛdigo de las funciones que son necesarias por todos los
- * diferentes mÛdulos del programa. Est· formado por funciones de bajo nivel personalizadas para la aplicaciÛn.
+ * \brief Funciones compartidas por todos los m√≥dulos
+ * Este archivo contiene todo el c√≥digo de las funciones que son necesarias por todos los
+ * diferentes m√≥dulos del programa. Est√° formado por funciones de bajo nivel personalizadas para la aplicaci√≥n.
  * \author Alfonso Arbona Gimeno
 */
 #include <GL/glu.h>
@@ -57,13 +57,13 @@ int isExtensionSupported(const char *extension)
 	const GLubyte *extensions = NULL;
 	const GLubyte *start;
 	GLubyte *where, *terminator;
-	
+
 	/* Extension names should not have spaces. */
 	where = (GLubyte *) strchr(extension, ' ');
 	if (where || *extension == '\0')
 		return 0;
 	extensions = glGetString(GL_EXTENSIONS);
-	
+
 	start = extensions;
 	for (;;)
 	{
@@ -89,7 +89,7 @@ void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, float 
 		while(text[src]!='\0')
 		{
 			buffer[dst]=text[src];
-			if(text[src]=='\n'){dst--;} // Arreglar esto para que sean lÌneas
+			if(text[src]=='\n'){dst--;} // Arreglar esto para que sean l√≠neas
 			if(text[src]=='\t'){buffer[dst]=' ';buffer[dst+1]=' ';buffer[dst+2]=' ';dst+=2;} // Arreglar para que sea un tab real (mod 8 y while..)
 			dst++;
 			src++;
@@ -101,48 +101,48 @@ void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, float 
 		debug_printf(TL_ERR_MALLOC,"SDL_GL_RenderText buffer");
 		buffer=(char*)text;
 	}
-	
+
 	glEnable(GL_TEXTURE_2D);
-	
+
 	SDL_Surface *Message = TTF_RenderText_Blended(font, buffer, color);
 	unsigned Texture = 0;
-	
+
 	glGenTextures(1, &Texture);
 	glBindTexture(GL_TEXTURE_2D, Texture);
-	
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Message->w, Message->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, Message->pixels);
-	
+
 	glPushMatrix();
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-	
+
 	int viewport[4];
     glGetIntegerv(GL_VIEWPORT,viewport);
 	glOrtho(0,viewport[2],0,viewport[3],-1,1);
 	glColor3f(1,1,1);
-	
+
 	glBegin(GL_QUADS);
 		glTexCoord2d(0, 1); glVertex3d(x,				scr_height-y,				z);
 		glTexCoord2d(1, 1); glVertex3d(x+Message->w,	scr_height-y,				z);
 		glTexCoord2d(1, 0); glVertex3d(x+Message->w,	scr_height-y+Message->h,	z);
 		glTexCoord2d(0, 0); glVertex3d(x,				scr_height-y+Message->h,	z);
-		
+
 		glColor3f(1,0,0);
 		glVertex3d(x,				scr_height-y,				z);
 		glVertex3d(x+Message->w,	scr_height-y,				z);
 		glVertex3d(x+Message->w,	scr_height-y+Message->h,	z);
 		glVertex3d(x,				scr_height-y+Message->h,	z);
 	glEnd();
-	
+
 	glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
-	
+
 	/* Bad things happen if we delete the texture before it finishes */
 	glFinish();
 	glDeleteTextures(1, &Texture);
@@ -188,8 +188,8 @@ float str2float(const char *str)
 {
       float valor=0;
       int negativo=1;
-      float decimal=0.0;/*Necesito tipo float porque la divisiÛn me sale entera y sin decimales con el tipo integer*/
-      while (((*str>=0x30 && *str<=0x39) || *str==0x2E || *str==0x2C || *str==45) && *str!='\0') /*Entre 0 y 9 Û '.' Û ',' y no es el final*/
+      float decimal=0.0;/*Necesito tipo float porque la divisi√≥n me sale entera y sin decimales con el tipo integer*/
+      while (((*str>=0x30 && *str<=0x39) || *str==0x2E || *str==0x2C || *str==45) && *str!='\0') /*Entre 0 y 9 √≥ '.' √≥ ',' y no es el final*/
       {
             if (*str==45){negativo=-1;}
             else
@@ -207,7 +207,7 @@ float str2float(const char *str)
                 }else{decimal=10;}
             }
             str++;
-            
+
       }
       return valor*negativo;
 }
@@ -217,7 +217,7 @@ void scr_init_reset (int debug_too)
 {
 	scr_message_index=-1;
 	scr_message_debug=debug_too;
-	
+
 }
 
 static void scr_init_push (void)
@@ -263,7 +263,7 @@ void scr_init_printf (const char *fmt, ...)
 		DIALOG fondo_dlg = {d_image_proc, 0, 0, scr_width, scr_height, {128,128,128,128}, {128,128,128,128}, 0, 0, fondo.texture[0], 0, NULL, NULL, NULL};
 		draw_element(fondo_dlg);
 	}
-	
+
 	if (scr_message_debug)
 	{
 		char msg[MAX_SCREEN_MESSAGES_LEN];
@@ -300,13 +300,13 @@ void scr_init_reprintf (const char *fmt, ...)
 	int i;
 	int pos=1;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	for (i=scr_message_index-1; i>=0; i--)
 	{
 		hud_printf (12, pos*12, scr_messages[i]);
 		pos++;
 	}
-	
+
 	glFinish();
 	SDL_GL_SwapBuffers();
 }
@@ -316,9 +316,9 @@ void scr_init_reprintf (const char *fmt, ...)
 /* - STRINGS - */
 
 /*! \fn int str_size(const char* string)
- *  \brief Obtiene el n˙mero de car·cteres de un string.
+ *  \brief Obtiene el n√∫mero de car√°cteres de un string.
  *  \param string String a medir
- *	\return N˙mero de car·cteres del string (Sin el \\0 final)
+ *	\return N√∫mero de car√°cteres del string (Sin el \\0 final)
 */
 int str_size(const char* string)
 {
@@ -341,12 +341,12 @@ void str_cpy(char* string1,const char* string2)
 }
 
 /*! \fn void str_cpyl(char* string1, int len, const char* string2)
- *  \brief Copia el contenido de string2 a string1 con un m·ximo de 'len' car·cteres
- * 	Es mucho m·s recomendable usar esta funciÛn para evitar salirnos del tamaÒo del string.
+ *  \brief Copia el contenido de string2 a string1 con un m√°ximo de 'len' car√°cteres
+ * 	Es mucho m√°s recomendable usar esta funci√≥n para evitar salirnos del tama√±o del string.
  * 	Siempre acaba con \\0, incluso cuando no hay espacio.
  *  \param string1 String de destino
  *  \param string2 String de origen
- *  \param len Longitud m·xima a copiar. Siempre acaba en \0, aunque corte parte del texto.
+ *  \param len Longitud m√°xima a copiar. Siempre acaba en \0, aunque corte parte del texto.
  *	\sa str_cpy
 */
 void str_cpyl(char* string1, int len, const char* string2)
@@ -357,7 +357,7 @@ void str_cpyl(char* string1, int len, const char* string2)
 }
 
 /*! \fn void str_append(char* string1,const char* string2)
- *  \brief AÒade el contenido de string2 a string1
+ *  \brief A√±ade el contenido de string2 a string1
  * 	Hay que asegurarse de que hay suficiente espacio en string1 para ambos strings
  *  \param string1 String de destino
  *  \param string2 String de origen
@@ -373,7 +373,7 @@ void str_append(char* string1,const char* string2)
 /*! \fn int str_cmp(const char* string1,const char* string2)
  *  \brief Compara el contenido de ambos strings
  *  \warning Si los strings son distintos el resultado retornado es la resta de
- *	los primeros car·cteres distintos. Creo que es distinto de la funciÛn de strings.h
+ *	los primeros car√°cteres distintos. Creo que es distinto de la funci√≥n de strings.h
  *  \param string1 String1
  *  \param string2 String2
  *  \return 0 si son iguales.
@@ -392,32 +392,32 @@ int str_cmp(const char* string1,const char* string2)
 }
 
 /*! \fn int str_ext_cmp(const char* ruta, const char* ext)
- *  \brief Compara la extensiÛn del archivo seÒalado por ruta con ext.
- *  B·sicamente coge de ruta el final hasta un '.' y compara eso con ext
+ *  \brief Compara la extensi√≥n del archivo se√±alado por ruta con ext.
+ *  B√°sicamente coge de ruta el final hasta un '.' y compara eso con ext
  *  \warning Si los strings son distintos el resultado retornado es la resta de
- *	los primeros car·cteres distintos. Creo que es distinto de la funciÛn de strings.h
- *  \warning NO retorna lo mismo que las funciones de cmp!!!. AquÌ es 1 si son iguales, 0 si no lo son
+ *	los primeros car√°cteres distintos. Creo que es distinto de la funci√≥n de strings.h
+ *  \warning NO retorna lo mismo que las funciones de cmp!!!. Aqu√≠ es 1 si son iguales, 0 si no lo son
  *  \param ruta El archivo a comparar (terminado en .algo)
- *  \param ext ExtensiÛn a comparar.
+ *  \param ext Extensi√≥n a comparar.
  *  \return 1 si son iguales.
  *  \return 0 si son distintos.
 */
 int str_ext_cmp(const char* ruta, const char* ext)
 {
-	char file_ext[256]; // La extensiÛn sacada de ruta
-	
+	char file_ext[256]; // La extensi√≥n sacada de ruta
+
 	int size_ruta = str_size(ruta);
 	int pos=size_ruta;
 	int cont=0;
-	
+
 	while (pos>=0 && ruta[pos]!='.'){pos--;}
-	if(pos<=0){return -1;} // No tiene extensiÛn
-	
-	pos++; // Ahora apunta al primer caracter despuÈs del '.'
-	
+	if(pos<=0){return -1;} // No tiene extensi√≥n
+
+	pos++; // Ahora apunta al primer caracter despu√©s del '.'
+
 	while(pos<size_ruta){file_ext[cont]=ruta[pos]; cont++; pos++;}
-	file_ext[cont]=0; // Nos aseguramos... aunque no deberÌa de haber ning˙n problema porque ruta ya tiene \0 al final...
-	
+	file_ext[cont]=0; // Nos aseguramos... aunque no deber√≠a de haber ning√∫n problema porque ruta ya tiene \0 al final...
+
 	int valor=0;
 	pos=0;
 	while (valor == 0 && file_ext[pos]!=0 && ext[pos]!=0)
@@ -425,7 +425,7 @@ int str_ext_cmp(const char* ruta, const char* ext)
 		valor=file_ext[pos]-ext[pos];
 		pos++;
 	}
-	
+
 	if (valor==0){return 1;}
 	return 0;
 }
@@ -442,7 +442,7 @@ void str_ruta_back(char* ruta)
 }
 
 /*! \fn void str_ruta_get_filename(char* ruta)
- *  \brief Borra todo lo que hay hasta el ˙ltimo '\', dejando asÌ el nombre final y su extensiÛn
+ *  \brief Borra todo lo que hay hasta el √∫ltimo '\', dejando as√≠ el nombre final y su extensi√≥n
  *	o el nombre de la carpeta final
  *  \param ruta Ruta a la que se va a borrar el final
 */
@@ -452,8 +452,8 @@ void str_ruta_get_filename(char* ruta)
 	int extra=0;
 	while (pos>=0 && (ruta[pos]!='\\' && ruta[pos]!='/')){pos--;}
 	if(pos<=0){return;} // No hay una barra
-	pos++; // pos apunta a la primera letra despuÈs del '/'
-	
+	pos++; // pos apunta a la primera letra despu√©s del '/'
+
 	while(ruta[pos+extra]!='\0')
 	{
 		ruta[extra]=ruta[pos+extra];
@@ -474,10 +474,10 @@ void str_ext_back(char* ruta)
 }
 
 /*! \fn int str_list_find(const char* find,const char* table[], int elementos)
- *  \brief Busca un string en una lista de strings y retorna la posiciÛn en la lista
+ *  \brief Busca un string en una lista de strings y retorna la posici√≥n en la lista
  *  \param find Texto a encontrar
  *  \param table Lista de strings donde se debe buscar el texto
- *  \param elementos N˙mero de elementos (o filas) en la lista 'table'
+ *  \param elementos N√∫mero de elementos (o filas) en la lista 'table'
  *  \return -1 si no se encuentra el texto
  *  \return La fila en la que se encuentra el texto. (Empezando por 0)
 */
@@ -512,7 +512,7 @@ VECTOR p_vect(VECTOR vec1,VECTOR vec2)
  *  \brief Calcula el producto escalar de dos vectores
  *  \param vec1 Vector 1
  *  \param vec2 Vector 2
- *  \return El resultado del producto escalar de dos vectores (ProyecciÛn)
+ *  \return El resultado del producto escalar de dos vectores (Proyecci√≥n)
 */
 float p_escalar(VECTOR vec1,VECTOR vec2)
 {
@@ -521,7 +521,7 @@ float p_escalar(VECTOR vec1,VECTOR vec2)
 
 /*! \fn void normalize(VECTOR* vec1)
  *  \brief Normaliza el vector. (Unitario)
- *  \param vec1 Vector a normalizar (TambiÈn es el vector de retorno)
+ *  \param vec1 Vector a normalizar (Tambi√©n es el vector de retorno)
 */
 void normalize(VECTOR* vec1)
 {
@@ -588,18 +588,18 @@ VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll)
 	float sina, cosa, sinb, cosb, sing, cosg; // Para no tener que recalcularlos ya que se usan varias veces (Sin/cos de alfa, beta, gamma)
 	VECTOR resultado;
 	// Alfa = yaw, Beta = pitch, Gamma = roll
-	
+
 	sina = sin(yaw);
 	cosa = cos(yaw);
 	sinb = sin(pitch);
 	cosb = cos(pitch);
 	sing = sin(roll);
 	cosg = cos(roll);
-	
+
 	resultado.x = coord.x * (cosa * cosb) + coord.y * (sina * cosb) + coord.z * (-sinb);
 	resultado.y = coord.x * (cosa*sinb*sing - sina*cosg) + coord.y * (sina*sinb*sing + cosa*cosg) + coord.z * (cosb*sing);
 	resultado.z = coord.x * (cosa*sinb*cosg + sina*sing) + coord.y * (sina*sinb*cosg - cosa*sing) + coord.z * (cosb*cosg);
-	
+
 	return resultado;
 }
 
@@ -607,7 +607,7 @@ VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll)
 
 /*! \fn void debug_reset(void)
  *  \brief Resetea el archivo debug.log
- *  Se debe llamar a esta funciÛn antes de usar las funciones de debug.
+ *  Se debe llamar a esta funci√≥n antes de usar las funciones de debug.
  *	Si el archivo debug.log no existe lo crea.
  *	Escribe en el archivo: " --- DEBUG --- \\n\\n"
 */
@@ -640,39 +640,39 @@ void debug_printf(const char *fmt, ...)
 
 void set_gl_mode(void)
 {
-	/* Guardamos las matrices de proyecciÛn y de modelo */
+	/* Guardamos las matrices de proyecci√≥n y de modelo */
 	glMatrixMode (GL_MODELVIEW);
 	glPushMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0,scr_width,scr_height,0);
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity();
-	
+
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_FOG);
 	glDisable(GL_DEPTH_TEST);
-	
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_CULL_FACE);
-	
+
 	glColor3f(1.0f, 1.0f, 1.0f);
-	
+
 }
 
 void restore_gl_mode(void)
 {
-	/* Cargamos las matrices de proyecciÛn y de modelo */
+	/* Cargamos las matrices de proyecci√≥n y de modelo */
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
-	
+
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_FOG);
@@ -682,9 +682,9 @@ void restore_gl_mode(void)
 
 /*! \fn void position_printf(float x, float y, float z, const char *fmt, ...)
  *  \brief Muestra texto en el mundo en 3D al estilo de printf
- *  \param x,y,z PosiciÛn del texto en el mundo
+ *  \param x,y,z Posici√≥n del texto en el mundo
  *  \param *fmt Texto de formato al estilo del printf
- *	Esta es una funciÛn muy b·sica ya que no permite girar ni cambiar el tamaÒo del texto.
+ *	Esta es una funci√≥n muy b√°sica ya que no permite girar ni cambiar el tama√±o del texto.
 */
 void position_printf(float x, float y, float z, const char *fmt, ...)
 {
@@ -696,10 +696,10 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
     va_start(args, fmt);
     (void) vsprintf (buf, fmt, args);
     va_end(args);
-    
+
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
-	
+
     glGetIntegerv(GL_VIEWPORT,viewport);
 
     //glRotatef(90, 1.0f,0,0);
@@ -714,7 +714,7 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
     //glLoadIdentity();
 
         glOrtho(0,viewport[2],0,viewport[3],-1,1);
-        
+
         glColor3d(1.0,1.0,1.0);
         /*glRasterPos2i(
               glutBitmapWidth(font, ' ') * col,
@@ -734,7 +734,7 @@ void position_printf(float x, float y, float z, const char *fmt, ...)
  *  \brief Muestra texto en el HUD (2D) al estilo de printf
  *  \param x,y Coordenadas en la que mostrar el texto
  *  \param *fmt Texto de formato al estilo del printf
- *	Esta es una funciÛn muy b·sica ya que no permite cambiar el color del texto.
+ *	Esta es una funci√≥n muy b√°sica ya que no permite cambiar el color del texto.
 */
 void hud_printf(float x, float y, const char *fmt, ...)
 {
@@ -749,9 +749,9 @@ void hud_printf(float x, float y, const char *fmt, ...)
     va_start(args, fmt);
 	(void) vsprintf (buf, fmt, args);
     va_end(args);
-    
+
 	SDL_GL_RenderText(buf, fntCourier12, clrFg, x, y, 0.1f);
-	
+
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_FOG);
@@ -778,14 +778,14 @@ void use_texture(t_texture texture)
 	{
 		glBindTexture(GL_TEXTURE_2D, null_texture );
 	}
-	
+
 }
 
 /*! \fn void draw_sprite (float x, float y, float z, t_texture textura, float size)
  *  \brief Dibuja una textura en el mundo siempre orientada al jugador.
  *  \param x,y,z Coordenadas donde se dibuja el objeto
  *  \param textura Material a dibujar
- *  \param size TamaÒo del objeto (Radio del objeto o mitad de su lado)
+ *  \param size Tama√±o del objeto (Radio del objeto o mitad de su lado)
 */
 void draw_sprite (float x, float y, float z, t_texture textura, float size)
 {
@@ -795,7 +795,7 @@ void draw_sprite (float x, float y, float z, t_texture textura, float size)
 	proy_x = (x-camera.pos_x)/mod;
 	proy_y = (y-camera.pos_y)/mod;
 	proy_z = (z-camera.pos_z)/mod;
-	
+
 	use_texture(textura);
 	glColor3f(1.0f,1.0f,1.0f);
 	glBegin(GL_QUADS);
@@ -810,7 +810,7 @@ void draw_sprite (float x, float y, float z, t_texture textura, float size)
  *  \brief Dibuja una textura en el mundo siempre orientada al jugador pero fija (como por ejemplo el Sol).
  *  \param x,y,z Coordenadas donde se dibuja el objeto
  *  \param textura Material a dibujar
- *  \param size TamaÒo del objeto (Radio del objeto o mitad de su lado)
+ *  \param size Tama√±o del objeto (Radio del objeto o mitad de su lado)
 */
 void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
 {
@@ -827,7 +827,7 @@ void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
 	normalize(&vect);
 	VECTOR vup = vrotate(vect, RAD(90), 0, 0);
 	VECTOR vright = vrotate(vect, 0, RAD(180), 0);
-	
+
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f); glVertex3f(x+size*(-vup.x-vright.x), y+size*(-vup.y-vright.y), z+size*(-vup.z-vright.z));// Bottom Left
 		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+size*(-vup.x+vright.x), y+size*(-vup.y+vright.y), z+size*(-vup.z+vright.z));// Bottom Right

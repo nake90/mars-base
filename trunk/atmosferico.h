@@ -32,7 +32,7 @@
 */
 
 /** \file atmosferico.h
- * \brief Header sobre todos los fenómenos atmosféricos y físicos del exterior
+ * \brief Header sobre todos los fenÃ³menos atmosfÃ©ricos y fÃ­sicos del exterior
  * \author Alfonso Arbona Gimeno
 */
 
@@ -44,7 +44,7 @@
 
 #define SUN_SIZE 4000.0f
 
-/* Presión media en Pascales */
+/* PresiÃ³n media en Pascales */
 #define PRESION_MEDIA 800
 #define PRESION_MAX  1000
 #define PRESION_MIN   600
@@ -57,14 +57,14 @@
 #define Atm2Pa(x) (x)/9.86923e-6
 
 #define GAS_R 0.08205746 // (Atm * l) / (mol * K)
-#define GAS_Na 6.02214179E23 // Número de Avogadro (Espero no usarlo porque mira que es grande...)
+#define GAS_Na 6.02214179E23 // NÃºmero de Avogadro (Espero no usarlo porque mira que es grande...)
 
-//#define SKYBOX_DISTANCE   55000 /* 50000 es el máximo de niebla... */
+//#define SKYBOX_DISTANCE   55000 /* 50000 es el mÃ¡ximo de niebla... */
 //GLint skybox[5]; /*!< Texturas del skybox. 0->Front; 1->Right; 2-> Back; 3-> Left; 4->Top*/
 
-/* Niebla y atmósfera */
+/* Niebla y atmÃ³sfera */
 extern float fogColor[4];/*= {0.81f, 0.64f, 0.61f, 1.0f}; !< Color de la niebla */
-extern float fogRange[2];/*= {25000.0f, 50000.0f}; !< Distancia mínima de la niebla y distancia máxima visible en metros */
+extern float fogRange[2];/*= {25000.0f, 50000.0f}; !< Distancia mÃ­nima de la niebla y distancia mÃ¡xima visible en metros */
 
 typedef struct
 {
@@ -73,10 +73,10 @@ typedef struct
 	float specular[4];
 	float position[3];
 	float hora[1];
-	int texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
+	int texture[2]; /* Textura 1 es la imÃ¡gen, textura 2 es el mask */
 }t_sun;
 
-// Masas atómicas de las moléculas
+// Masas atÃ³micas de las molÃ©culas
 extern const double ma_co2;
 extern const double ma_n2;
 extern const double ma_ar;
@@ -94,7 +94,7 @@ extern const double visc_h20;
 extern const double visc_media;
 
 
-// Masas atómicas de las moléculas
+// Densidades de las molÃ©culas
 extern const double densN_co2;
 extern const double densN_n2;
 extern const double densN_ar;

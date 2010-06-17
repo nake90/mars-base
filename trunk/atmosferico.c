@@ -32,7 +32,7 @@
 */
 
 /** \file atmosferico.c
- * \brief Controla todos los fenÛmenos atmosfÈricos y fÌsicos del exterior
+ * \brief Controla todos los fen√≥menos atmosf√©ricos y f√≠sicos del exterior
  * \author Alfonso Arbona Gimeno
 */
 
@@ -40,17 +40,17 @@
 #include "display.h"
 #include "objetos.h"
 
-/* Niebla y atmÛsfera */
+/* Niebla y atm√≥sfera */
 GLfloat fogColor[4]= {0.81f, 0.64f, 0.61f, 1.0f}; /*!< Color de la niebla */
-GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia mÌnima de la niebla y distancia m·xima visible en metros */
+GLfloat fogRange[2]= {25000.0f, 50000.0f}; /*!< Distancia m√≠nima de la niebla y distancia m√°xima visible en metros */
 
-/* TEXTURAS B¡SICAS */
+/* TEXTURAS B√ÅSICAS */
 /*					AMBIENT					DIFFUSE					SPECULAR				POSITION			HORA   TEXTURES*/
 t_sun sun={{0.5f, 0.5f, 0.5f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{10000.0f, 20000.0f, 30000.0f},{12.0f},{0,0}};
 /*							AMBIENT						DIFFUSE						SPECULAR		SHININESS TEXTURE */
 t_texture sun_texture=	{{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
-// Masas atÛmicas de las molÈculas
+// Masas at√≥micas de las mol√©culas
 const double ma_co2		=	12.011 + 15.999 * 2;
 const double ma_n2		=	14.007 * 2;
 const double ma_ar		=	39.948;
@@ -60,7 +60,7 @@ const double ma_h20		=	1.0079 * 2 + 15.999;
 //const double ma_h2		=	1.0079 * 2;
 
 
-// Densidad en *condiciones normales* de los gases [Kg/m3] (25∫C y 101337 Pa)
+// Densidad en *condiciones normales* de los gases [Kg/m3] (25¬∫C y 101337 Pa)
 const double densN_co2		=	1.842;
 const double densN_n2		=	1.165;
 const double densN_ar		=	1.661;
@@ -79,7 +79,7 @@ const double visc_h20	=	0.000013;
 const double visc_media	=	0.00001609; // Esta es la realmente usada
 //const double visc_h2	=	0.0000865;
 
-/* Datos iniciales de la atmÛsfera */
+/* Datos iniciales de la atm√≥sfera */
 t_atmosfera datos_atmosfera =
 {
 /* Gases */			{
@@ -90,7 +90,7 @@ t_atmosfera datos_atmosfera =
 /* CO */			0.0007 * PRESION_MEDIA / (GAS_R * TEMPERATURA_MEDIA),
 /* H2O */			0.0003 * PRESION_MEDIA / (GAS_R * TEMPERATURA_MEDIA),
 					},
-/* PresiÛn */		PRESION_MEDIA,
+/* Presi√≥n */		PRESION_MEDIA,
 /* Temperatura */	TEMPERATURA_MEDIA
 };
 
@@ -111,7 +111,7 @@ float get_presion(t_gas gases, float volumen, float temperatura)
 {
 	if(volumen <= 0 || temperatura <= 0)return 0;
 	float presion;
-	// PresiÛn total = Sum(Presiones parciales) y PresiÛn parcial = n * R * T / Vtot
+	// Presi√≥n total = Sum(Presiones parciales) y Presi√≥n parcial = n * R * T / Vtot
 	presion = (gases.CO2 * GAS_R * temperatura) / volumen;
 	presion += (gases.N2 * GAS_R * temperatura) / volumen;
 	presion += (gases.Ar * GAS_R * temperatura) / volumen;
@@ -123,10 +123,10 @@ float get_presion(t_gas gases, float volumen, float temperatura)
 }
 
 #ifdef __ECUACION__ANTIGUA__
-void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time) // Size es el tamaÒo del lado
+void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time) // Size es el tama√±o del lado
 {
 	if(size<=0 || step_time<=0)return;
-	if(distancia<1){distancia=1;} // Evitamos un dividir por 0, pero deberÌa de estar todo bien hecho en el config del modelo
+	if(distancia<1){distancia=1;} // Evitamos un dividir por 0, pero deber√≠a de estar todo bien hecho en el config del modelo
 	float pres1 = get_presion(node1->gases, node1->volumen, node1->temperatura);
 	float pres2 = get_presion(node2->gases, node2->volumen, node2->temperatura);
 	//float Q = (0.3333 * size - 0.5)*((((pres2 - pres1)/distancia) / (2 * visc_media)) * size * size); // Caudal
@@ -134,7 +134,7 @@ void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float dis
 	float volumen = Q * step_time; // Si volumen > 0 pasa de node1 a node2, si <0 pasa del 2 al 1
 	t_gas delta_gas;
 	float prop = ((pres1+pres2)/2) * volumen / (GAS_R * ((node1->temperatura+node2->temperatura)/2));
-	prop /= 2000000000.0; // AsÌ evitamos lo de que el caudal sea tan bestialmente grande
+	prop /= 2000000000.0; // As√≠ evitamos lo de que el caudal sea tan bestialmente grande
 	if(volumen>0)
 	{
 		delta_gas.CO2 = node1->gases.CO2 * prop;
@@ -155,8 +155,8 @@ void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float dis
 	}
 	/*
 	debug_printf("\n----------\n", pres1);
-	debug_printf("PresiÛn 1: %f Pa\n", pres1);
-	debug_printf("PresiÛn 2: %f Pa\n", pres2);
+	debug_printf("Presi√≥n 1: %f Pa\n", pres1);
+	debug_printf("Presi√≥n 2: %f Pa\n", pres2);
 	debug_printf("Caudal: %f (m3/s)\n", Q);
 	debug_printf("DELTA GASES (prop = %f):\n", prop);
 	debug_printf("  CO2: %f (%f)\n", delta_gas.CO2, node1->gases.CO2);
@@ -182,10 +182,10 @@ void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float dis
 	node2->gases.H2O += delta_gas.H2O;
 }
 #else
-void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time) // Size es el tamaÒo del lado
+void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float distancia, float step_time) // Size es el tama√±o del lado
 {
 	if(size<=0 || step_time<=0)return;
-	if(distancia<1){distancia=1;} // Evitamos un dividir por 0, pero deberÌa de estar todo bien hecho en el config del modelo
+	if(distancia<1){distancia=1;} // Evitamos un dividir por 0, pero deber√≠a de estar todo bien hecho en el config del modelo
 	float pres1 = get_presion(node1->gases, node1->volumen, node1->temperatura);
 	float pres2 = get_presion(node2->gases, node2->volumen, node2->temperatura);
 	
@@ -207,15 +207,15 @@ float moles_gas_total(t_gas gas)
 void node_main_control(float step_time)
 {
 	int p_obj, p_node, o_obj, o_node; // Objeto y nodo propio y del otro
-	float distancia; // Distancia entre los centros de presiÛn (Centro del objeto)
+	float distancia; // Distancia entre los centros de presi√≥n (Centro del objeto)
 	for(p_obj=0; p_obj<lista_objetos_base; p_obj++)
 	{
-		if(p_obj==0){lista_objeto_base[p_obj]->node_data.gases.O2+=0.1;} // Generador de oxÌgeno
+		if(p_obj==0){lista_objeto_base[p_obj]->node_data.gases.O2+=0.1;} // Generador de ox√≠geno
 		
 		for(p_node=0; p_node<lista_objeto_base[p_obj]->conx_qty; p_node++) // Para cada nodo propio
 		{
 			o_obj=lista_objeto_base[p_obj]->conx_id[p_node]; // Obtenemos el ID del otro objeto
-			if(o_obj>=0) // Si el objeto existe (-1 si est· desconectado)
+			if(o_obj>=0) // Si el objeto existe (-1 si est√° desconectado)
 			{
 				o_node = lista_objeto_base[p_obj]->conx_node_id[p_node];
 				distancia = vdist(lista_objeto_base[p_obj]->pos, lista_objeto_base[o_obj]->pos); // Distancia entre centros de objeto
@@ -224,13 +224,13 @@ void node_main_control(float step_time)
 								&lista_objeto_base[o_obj]->node_data,
 								lista_objeto_base[p_obj]->conx_size[p_node],
 								distancia,
-								step_time/2.0); // Divido por 2 porque realmente se llama a esta funciÛn dos veces, uno por parte de cada objeto
+								step_time/2.0); // Divido por 2 porque realmente se llama a esta funci√≥n dos veces, uno por parte de cada objeto
 			}
 		}
 	}
 	
 	
-	//Hasta que no tenga la ecuaciÛn real no hago nada
+	//Hasta que no tenga la ecuaci√≥n real no hago nada
 	/*int obj, p_node, o_obj, o_node;
 	float distancia;
 	for(obj=0; obj<lista_objetos_base; obj++)
@@ -249,7 +249,7 @@ void node_main_control(float step_time)
 								&lista_objeto_base[o_obj]->node_data,
 								lista_objeto_base[obj]->conx_size[p_node],
 								distancia,
-								step_time/2.0); // Divido por 2 porque realmente se llama a esta funciÛn dos veces, uno por parte de cada objeto
+								step_time/2.0); // Divido por 2 porque realmente se llama a esta funci√≥n dos veces, uno por parte de cada objeto
 			}
 		}
 	}*/

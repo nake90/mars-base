@@ -32,7 +32,7 @@
 */
 
 /** \file lang.h
- * \brief Header sobre las funciones de carga del texto estático
+ * \brief Header sobre las funciones de carga del texto estÃ¡tico
  * \author Alfonso Arbona Gimeno
 */
 
@@ -45,18 +45,18 @@
 /* CUIDADO OVERFLOWS!! */
 #define TEXT_LIST_R_ERR 10 // Inicio ID reservado para los mensajes de error
 #define TEXT_LIST_R_WRN 50 // Inicio ID reservado para los mensajes de alerta
-#define TEXT_LIST_R_NFO 60 // Inicio ID reservado para los mensajes de información
-#define TEXT_LIST_R_SPAWN_MENU 70 // Inicio ID reservado para el spawn_menu  *** No tengo tan claro que se use (tal vez cuando sea más complejo sí) ***
+#define TEXT_LIST_R_NFO 60 // Inicio ID reservado para los mensajes de informaciÃ³n
+#define TEXT_LIST_R_SPAWN_MENU 70 // Inicio ID reservado para el spawn_menu  *** No tengo tan claro que se use (tal vez cuando sea mÃ¡s complejo sÃ­) ***
 #define TEXT_LIST_R_SCR 95 // Inicio ID reservado para los mensajes de carga
 #define TEXT_LIST_R_DLG 115 // Inicio ID reservado para los mensajes de los dialogs
 #define TEXT_LIST_R_HUD 130 // Inicio ID reservado para los mensajes del HUD
-#define TEXT_LIST_R_USER 150 // Inicio ID no reservado (Uso solo en funciones pequeñas)
-char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y texto necesario para los dialogs. Además permite mods y traducciones ;)
+#define TEXT_LIST_R_USER 150 // Inicio ID no reservado (Uso solo en funciones pequeÃ±as)
+char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y texto necesario para los dialogs. AdemÃ¡s permite mods y traducciones ;)
 /* Lugares reservados de la lista:
 0 - 9 (10) -> Internos (app_path ...)
 10 - 49 (40) -> Mensajes de error
 50 - 59 (10) -> Mensajes de alerta
-60 - 69 (10) -> Mensajes de información
+60 - 69 (10) -> Mensajes de informaciÃ³n
 70 - 94 (25) -> Spawn menu
 95 - 114 (20) -> Carga
 115 - 129 (15) -> Dialogs
@@ -64,7 +64,7 @@ char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y 
 150+ -> USER
 */
 
-/* DEFINES ÚTILES */
+/* DEFINES ÃšTILES */
 #define app_path					lista_texto[0]
 //
 #define TL_MOTD1					lista_texto[2]
