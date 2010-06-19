@@ -130,7 +130,7 @@ int parse_open(t_parse* parse, char *ruta)
 				while(c1>0 && (str[c1] == ' ' || str[c1] == '\t')){c1--;}
 				if(c1==0){break;}/* La línea es errónea, no tiene nombre */
 				str[c1+1]='\0'; /* Borramos todo lo que no es el nombre del elemento */
-				len2=strlen(str);
+				len2=str_len(str);
 				parse->title[actual]=malloc(sizeof(char)*(len2+1));
 				strcpy(parse->title[actual], str);
 
@@ -156,7 +156,7 @@ int parse_open(t_parse* parse, char *ruta)
 				while(c2>0 && (str[c2]==' ' || str[c2]=='\t'))c2--;
 				str[c2+1]='\0';
 
-				len2=strlen(str);
+				len2=str_len(str);
 				parse->value[actual]=malloc(sizeof(char)*(len2+1));
 				strcpy(parse->value[actual], str);
 
@@ -240,5 +240,5 @@ int parse_get_str(t_parse* parse, const char *entrada, char* str)
 	if (index<0){return PARSE_NOT_FOUND;}
 
 	strcpy(str,parse->value[index]);
-	return strlen(parse->value[index]);
+	return str_len(parse->value[index]);
 }

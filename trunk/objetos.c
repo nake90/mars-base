@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -105,7 +105,7 @@ void debug_get_3ds_chunk_name(unsigned short id, char* name)
 
 
 /*! \fn int load_3DS (t_model *data, char *filename)
- *  \brief Carga los datos b·sicos de un objeto desde un archivo 3ds
+ *  \brief Carga los datos b√°sicos de un objeto desde un archivo 3ds
  *  \param data Pointer al lugar donde se deben guardar los datos
  *  \param filename Ruta al archivo 3ds
  *  \return 0 -> Ok
@@ -119,41 +119,41 @@ int load_3DS (t_model *data, char *filename)
 	if(objetos_debug > 0){debug_printf("\nDEBUG: - load_3DS - (debug level: %i) \"%s\"\n",objetos_debug, filename);}
 	int i;
 	int text_id;
-	
+
 	ILuint ImageName; //****
-	
+
 	FILE *l_file;
-	
+
 	unsigned short l_chunk_id;
 	unsigned int l_chunk_lenght;
 
 	unsigned short l_subchunk_id=0;
-	
+
 	unsigned char l_char;
 	char string[80];
 	char string2[256];
 	char chunk_name[256];
 	unsigned char l_rgb[3];
-	unsigned short l_qty; /* N˙mero de elementos en el chunk */
+	unsigned short l_qty; /* N√∫mero de elementos en el chunk */
 
 	unsigned short l_face_flags; /* Flag that stores some face information */
 
 	if ((l_file=fopen (filename, "rb"))== NULL){debug_printf(TL_ERR_MODEL_NOT_FOUND,filename); return 1;}
-	
+
 	str_cpyl(string2,256,filename);
 	str_ruta_get_filename(string2);
 	str_ext_back(string2);
-	
+
 	str_cpyl(data->name,256,string2); // Guardamos el nombre del archivo
 	if(objetos_debug > 0){debug_printf("INFO: - Objeto guardado como \"%s\"\n",data->name);}
-	
+
 	data->size=1.0f;
 	data->materials_qty=0;
 	data->draw_list=0;
 	data->draw_lists=0;
-	
-	data->model_objetos_qty = 0; // A˙n no hay ning˙n objeto cargado
-	
+
+	data->model_objetos_qty = 0; // A√∫n no hay ning√∫n objeto cargado
+
 	//#ifdef WINDOWS
 	//while (ftell (l_file) < filelength(fileno(l_file))) /* Leemos todo el archivo */
 	//#endif
@@ -175,12 +175,12 @@ int load_3DS (t_model *data, char *filename)
         {
 			case MAIN3DS: /* Lenght: 0 + sub chunks */
 			if(objetos_debug > 1){debug_printf("DEBUG:    MAIN3DS\n");}
-			break;    
-			
+			break;
+
 			case EDIT3DS: /* Lenght: 0 + sub chunks */
 			if(objetos_debug > 1){debug_printf("DEBUG:    EDIT3DS\n");}
 			break;
-			
+
 			case EDIT_OBJECT:
 			if(objetos_debug > 1){debug_printf("DEBUG:    EDIT_OBJECT\n");}
 				i=0;
@@ -191,38 +191,39 @@ int load_3DS (t_model *data, char *filename)
 						data->model_objetos_qty=1;
 						// Todo a NULL
 						data->obj_name=NULL;
-						//data->obj_name[0]=NULL; No aquÌ, primero hacemos el realloc grande y despuÈs inicializamos
+						//data->obj_name[0]=NULL; No aqu√≠, primero hacemos el realloc grande y despu√©s inicializamos
 						data->vertices_qty=NULL;
 						data->polygons_qty=NULL;
 						data->vertex=NULL;
 						data->polygon=NULL;
 						data->mapcoord=NULL;
 					}
-					// obj_name
+					//! obj_name
 					data->obj_name=realloc(data->obj_name,sizeof(char*)*data->model_objetos_qty);
 					if(data->obj_name==NULL){debug_printf(TL_ERR_REALLOC, "de obj_name"); return -2;}
-					data->obj_name[data->model_objetos_qty-1]=NULL;
-					data->obj_name[data->model_objetos_qty-1]=realloc(data->obj_name[data->model_objetos_qty-1],sizeof(char)*20);
+					//data->obj_name[data->model_objetos_qty-1]=NULL;
+					data->obj_name[data->model_objetos_qty-1]=malloc(/*data->obj_name[data->model_objetos_qty-1],*/sizeof(char)*20);
 					if(data->obj_name[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de obj_name[]"); return -2;}
-					// vertices_qty
+					//! vertices_qty
 					data->vertices_qty = realloc(data->vertices_qty, sizeof(int)*data->model_objetos_qty);
 					if(data->vertices_qty==NULL){debug_printf(TL_ERR_REALLOC, "de vertices_qty"); return -2;}
-					// polygons_qty
+					//! polygons_qty
 					data->polygons_qty = realloc(data->polygons_qty, sizeof(int)*data->model_objetos_qty);
 					if(data->polygons_qty==NULL){debug_printf(TL_ERR_REALLOC, "de polygons_qty"); return -2;}
-					// vertex
+					//! vertex
 					data->vertex=realloc(data->vertex,sizeof(VECTOR*)*data->model_objetos_qty);
 					if(data->vertex==NULL){debug_printf(TL_ERR_REALLOC, "de vertex"); return -2;}
 					data->vertex[data->model_objetos_qty-1]=NULL;
 					data->vertex[data->model_objetos_qty-1]=realloc(data->vertex[data->model_objetos_qty-1],sizeof(VECTOR)*MAX_VERTICES);
 					if(data->vertex[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de vertex[]"); return -2;}
-					// polygon
+					//! polygon
 					data->polygon=realloc(data->polygon,sizeof(t_polygon*)*data->model_objetos_qty);
 					if(data->polygon==NULL){debug_printf(TL_ERR_REALLOC, "de polygon"); return -2;}
 					data->polygon[data->model_objetos_qty-1]=NULL;
-					data->polygon[data->model_objetos_qty-1]=realloc(data->polygon[data->model_objetos_qty-1],sizeof(t_polygon)*MAX_POLYGONS);
+					data->polygon[data->model_objetos_qty-1]=malloc(sizeof(t_polygon)*MAX_POLYGONS);
+					memset(data->polygon[data->model_objetos_qty-1],0,sizeof(t_polygon)*MAX_POLYGONS);
 					if(data->polygon[data->model_objetos_qty-1]==NULL){debug_printf(TL_ERR_REALLOC, "de polygon[]"); return -2;}
-					// mapcoord
+					//! mapcoord
 					data->mapcoord=realloc(data->mapcoord,sizeof(t_mapcoord*)*data->model_objetos_qty);
 					if(data->mapcoord==NULL){debug_printf(TL_ERR_REALLOC, "de mapcoord"); return -2;}
 					data->mapcoord[data->model_objetos_qty-1]=NULL;
@@ -237,11 +238,11 @@ int load_3DS (t_model *data, char *filename)
                 }while(l_char != '\0' && i<20);
 			if(objetos_debug > 1){debug_printf("DEBUG:     name: \"%s\"\n",data->name);}
 			break;
-			
+
 			case OBJ_TRIMESH: /* Lenght: 0 + sub chunks */
 			if(objetos_debug > 1){debug_printf("DEBUG:    OBJ_TRIMESH\n");}
 			break;
-			
+
 			case TRI_VERTEXL:
 			if(objetos_debug > 1){debug_printf("DEBUG:    TRI_VERTEXL\n");}
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
@@ -253,7 +254,7 @@ int load_3DS (t_model *data, char *filename)
 					fread (&data->vertex[data->model_objetos_qty-1][i].z, sizeof(float), 1, l_file);
 				}
 				break;
-			
+
 			case TRI_FACEL1:
 			if(objetos_debug > 1){debug_printf("DEBUG:    TRI_FACEL1\n");}
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
@@ -264,9 +265,13 @@ int load_3DS (t_model *data, char *filename)
 					fread (&data->polygon[data->model_objetos_qty-1][i].b, sizeof (unsigned short), 1, l_file);
 					fread (&data->polygon[data->model_objetos_qty-1][i].c, sizeof (unsigned short), 1, l_file);
 					fread (&l_face_flags, sizeof (unsigned short), 1, l_file);
+					if(objetos_debug > 2){debug_printf("Polygon: {%u,%u,%u}\n",
+					  data->polygon[data->model_objetos_qty-1][i].a,
+					  data->polygon[data->model_objetos_qty-1][i].b,
+					  data->polygon[data->model_objetos_qty-1][i].c);}
 				}
                 break;
-			
+
 			case TRI_MAPPINGCOORS:
 			if(objetos_debug > 1){debug_printf("DEBUG:    TRI_MAPPINGCOORDS\n");}
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
@@ -276,7 +281,7 @@ int load_3DS (t_model *data, char *filename)
                     fread (&data->mapcoord[data->model_objetos_qty-1][i].v, sizeof (float), 1, l_file);
 				}
                 break;
-                
+
 			case TRI_MATERIAL:
 				i=0;
 				do
@@ -296,11 +301,11 @@ int load_3DS (t_model *data, char *filename)
 					if(objetos_debug > 2){debug_printf("DEBUG:     Face %i asignado al material %i, textura: %i\n",l_face_flags,text_id,data->material[text_id].texture[0]);}
 				}
                 break;
-                
+
 			case EDIT_MATERIAL: /* Lenght: 0 + sub chunks */
 			if(objetos_debug > 1){debug_printf("DEBUG:    EDIT_MATERIAL\n");}
 				break;
-			
+
 			case MAT_NAME:
 			if(objetos_debug > 1){debug_printf("DEBUG:    MAT_NAME\n");}
 				data->materials_qty++;
@@ -313,7 +318,7 @@ int load_3DS (t_model *data, char *filename)
                 }while(l_char != '\0' && i<20);
 				if(objetos_debug > 1){debug_printf("DEBUG:     name: \"%s\"\n",data->material[data->materials_qty-1].name);}
                 break;
-			
+
 			case MAT_AMBIENT:
 			case MAT_DIFFUSE:
 			case MAT_SPECULAR:
@@ -322,8 +327,8 @@ int load_3DS (t_model *data, char *filename)
 			if(objetos_debug > 1){debug_printf("DEBUG:    l_subchunk_id=%X\n",l_chunk_id);}
 				l_subchunk_id=l_chunk_id;
                 break;
-                
-                
+
+
 			case MAT_SUB_RGB:
 			if(objetos_debug > 1){debug_printf("DEBUG:    MAT_SUB_RGB (l_subchunk_id=%X)\n",l_subchunk_id);}
 				fread (l_rgb, 1, 3, l_file);
@@ -350,7 +355,7 @@ int load_3DS (t_model *data, char *filename)
 						break;
 				}
                 break;
-                
+
 			case MAT_SUB_PER:
 			if(objetos_debug > 1){debug_printf("DEBUG:    MAT_SUB_PER (l_subchunk_id=%X)\n",l_subchunk_id);}
 				fread (&l_qty, sizeof (unsigned short), 1, l_file);
@@ -364,11 +369,11 @@ int load_3DS (t_model *data, char *filename)
 						break;
 				}
                 break;
-			
+
 			case MAT_TEX1:
 			if(objetos_debug > 1){debug_printf("DEBUG:    MAT_TEX1\n");}
 				break;
-			
+
 			case MAT_MAPNAME:
 			if(objetos_debug > 1){debug_printf("DEBUG:    MAT_MAPNAME\n");}
 				i=0;
@@ -378,16 +383,16 @@ int load_3DS (t_model *data, char *filename)
                     string[i]=(char)l_char;
 					i++;
                 }while(l_char != '\0' && i<80);
-                if(i==80){debug_printf("ALERTA: Nombre de textura cortado. (No deberÌa de haber pasado nunca, probablemente sea por un archivo corrupto)\n",string);}
+                if(i==80){debug_printf("ALERTA: Nombre de textura cortado. (No deber√≠a de haber pasado nunca, probablemente sea por un archivo corrupto)\n",string);}
                 //str_append(string,".tga");
                 str_cpy(string2,app_path);
-                str_append(string2,"materials\\");
+                str_append(string2,"materials/");
                 str_append(string2,string);
                 /* Cargamos la textura */
 				//data->material[data->materials_qty-1].texture[0]=ilutGLLoadImage(string2);
 				ilGenImages(1, &ImageName); //****
 				ilBindImage(ImageName); //****
-				
+
 				//if(!data->material[data->materials_qty-1].texture[0])
 				if(!ilLoadImage(string2))
 				{
@@ -409,22 +414,22 @@ int load_3DS (t_model *data, char *filename)
 					}
 				}
 				data->material[data->materials_qty-1].texture[0] = ilutGLBindTexImage(); //****
-				
+
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				ilutGLBuildMipmaps();
-				
+
 				ilDeleteImages(1, &ImageName); //****
-				
+
 				if(objetos_debug > 1){debug_printf("DEBUG:     Material %i, textura cargada como %i\n",data->materials_qty-1,data->material[data->materials_qty-1].texture[0]);}
 				break;
-			
-			
+
+
 			/* Nos saltamos los desconocidos */
 			default:
 			if(objetos_debug > 1){debug_printf("DEBUG:    SKIPPED!\n");}
 				 fseek(l_file, l_chunk_lenght-6, SEEK_CUR);
-        } 
+        }
 	}
 	if(objetos_debug > 0){debug_printf("\n");}
 	fclose (l_file);
@@ -443,48 +448,49 @@ void model_predraw(t_model *modelo)
 	glPushMatrix();
 	int l_index;
 	int objeto_actual;
-	
 	glDisable(GL_LIGHTING);
-	
+
 	modelo->draw_list=glGenLists(1);
 	modelo->draw_lists=1;
-	
+
 	glColor3f(1.0f,1.0f,1.0f); // Si lo pongo antes de GL_COMPILE puedo cambiar el color y la transparencia durante el juego!!
+	ifdebug(DEBUG_VERBOSE){debug_printf("NewList: COMPILE\n");}
 	glNewList(modelo->draw_list,GL_COMPILE);
-	
+
     glDisable(GL_CULL_FACE);
     //glEnable(GL_CULL_FACE); *** CAMBIAR A ESTO TAN PRONTO COMO LOS OBJETOS LO PERMITAN
 	glEnable(GL_TEXTURE_2D);
-	
 	for(objeto_actual=0; objeto_actual < modelo->model_objetos_qty; objeto_actual++)
 	{
-		
+
+		ifdebug(DEBUG_VERBOSE){debug_printf(" > predraw object: %i\n",objeto_actual);}
 		for (l_index=0;l_index < modelo->polygons_qty[objeto_actual];l_index++)
 	    {
-		    if(modelo->polygon[objeto_actual][l_index].texture!=0)
+			ifdebug(DEBUG_VERBOSE){debug_printf(" >> predraw polygon: %i\n",l_index);}
+			if(modelo->polygon[objeto_actual][l_index].texture!=0)
 			{
 				glBindTexture(GL_TEXTURE_2D, modelo->polygon[objeto_actual][l_index].texture);
 			}
 			else
 			{
-			    glBindTexture(GL_TEXTURE_2D, null_texture);
+				glBindTexture(GL_TEXTURE_2D, null_texture);
 			}
 			glBegin(GL_TRIANGLES);
-				/* Primer vÈrtice */
+				/* Primer v√©rtice */
 		        glTexCoord2f( modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].u ,
 		                      modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].v );
 		        glVertex3f( modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].x *modelo->size,
 		                    modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].y *modelo->size,
 		                    modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].z *modelo->size);
-		
-		        /* Segundo vÈrtice */
+
+		        /* Segundo v√©rtice */
 		        glTexCoord2f( modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].u ,
 		                      modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].v );
 		        glVertex3f( modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].x *modelo->size,
 		                    modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].y *modelo->size,
 		                    modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].z *modelo->size);
-		
-		        /* Tercer vÈrtice */
+
+		        /* Tercer v√©rtice */
 		        glTexCoord2f( modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].c ].u ,
 		                      modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].c ].v );
 		        glVertex3f( modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].c ].x *modelo->size,
@@ -495,10 +501,11 @@ void model_predraw(t_model *modelo)
 	}
 	glEnable(GL_CULL_FACE);
 	glEndList();
-	
+	ifdebug(DEBUG_VERBOSE){debug_printf("EndList\n");}
+
 	l_index=glGetError();
 	if (l_index){debug_printf("ERROR: OpenGL ha retornado %i al llamar a model_predraw()\n",l_index);}
-	
+
 	glPopMatrix();
 }
 
@@ -516,13 +523,13 @@ void object_draw_l(t_obj_base_ptr object)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glEnable(GL_LIGHTING);
-    
+
     glTranslatef(object->pos.x,object->pos.y,object->pos.z);
-    
+
     glRotatef(object->rot.z, 0,1.0f,0);
     glRotatef(object->rot.y, 0,0,1.0f);
     glRotatef(object->rot.x, 1.0f,0,0);
-    
+
     glCallList(object->modelo->draw_list);
 	glPopMatrix();
 }
@@ -533,13 +540,13 @@ void object_draw_nodes(t_obj_base_ptr object)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glDisable(GL_LIGHTING);
-	
+
 	glTranslatef(object->pos.x,object->pos.y,object->pos.z);
-	
+
     glRotatef(object->rot.z, 0,1.0f,0);
     glRotatef(object->rot.y, 0,0,1.0f);
     glRotatef(object->rot.x, 1.0f,0,0);
-	
+
 	glLineWidth(2.0f);
 	glPointSize(6.0f);
 	int i;
@@ -568,7 +575,7 @@ void object_draw_nodes(t_obj_base_ptr object)
 						object->conx_coord[i].z + object->conx_norm[i].z +1);
 		glEnd();
 	}
-	
+
 	glPopMatrix();
 }
 
@@ -579,13 +586,13 @@ void object_draw_selected(t_obj_base_ptr object)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glDisable(GL_LIGHTING);
-	
+
 	glTranslatef(object->pos.x,object->pos.y,object->pos.z);
-	
+
     glRotatef(object->rot.z, 0,1.0f,0);
     glRotatef(object->rot.y, 0,0,1.0f);
     glRotatef(object->rot.x, 1.0f,0,0);
-	
+
 	glLineWidth(2.8f);
 	glColor4f(0.0,0.0,1.0,0.8f);
 	glBegin(GL_LINE_LOOP);
@@ -594,16 +601,16 @@ void object_draw_selected(t_obj_base_ptr object)
 		glVertex3f(object->sq_r +0.5, object->sq_b -0.5, +0.01);
 		glVertex3f(object->sq_r +0.5, object->sq_t +0.5, +0.01);
 	glEnd();
-	
+
 	glPopMatrix();
 }
 
 /*! \fn int lista_base_crear_elemento(t_obj_base_ptr *lista, int* contador, char *ruta)
- *  \brief Carga un objeto tipo base y lo aÒade a la lista.
- *  \param lista La lista a la cual se debe aÒadir el elemento
+ *  \brief Carga un objeto tipo base y lo a√±ade a la lista.
+ *  \param lista La lista a la cual se debe a√±adir el elemento
  *  \param contador Contador de la lista
  *  \param ruta Ruta al archivo 3ds
- *	\return 0 si todo fuÈ bien.
+ *	\return 0 si todo fu√© bien.
  *	\return 1 Archivo no encontrado.
  *	\return -1 Error interno del archivo 3ds.
  *	\return -2 Error en el malloc del objeto base.
@@ -613,7 +620,7 @@ void object_draw_selected(t_obj_base_ptr object)
 int lista_base_crear_elemento(int id_modelo)
 {
 	if (id_modelo>=lista_modelos || id_modelo<0){debug_printf(TL_ERR_LIST_CREATE_MODEL_ID); return -3;}
-	
+
 	if(lista_objeto_base!=NULL)
 	{
 		lista_objeto_base=realloc(lista_objeto_base, sizeof(t_obj_base*)*(lista_objetos_base+1));
@@ -625,15 +632,15 @@ int lista_base_crear_elemento(int id_modelo)
 		lista_objeto_base=malloc(sizeof(t_obj_base*));
 		if (lista_objeto_base==NULL){debug_printf(TL_ERR_MALLOC, "de la lista de objetos"); lista_objetos_base=-1; return -1;}
 	}
-	
+
 	lista_objeto_base[lista_objetos_base]=malloc(sizeof(t_obj_base));
 	if (lista_objeto_base[lista_objetos_base]==NULL){debug_printf(TL_ERR_MALLOC_ID, "del objeto", lista_objetos_base); return -2;}
-	
+
 	//memset(lista_objeto_base[lista_objetos_base], 0, sizeof(lista_objeto_base[lista_objetos_base]));
-	
+
 	lista_objeto_base[lista_objetos_base]->modelo = lista_modelo[id_modelo];
-	
-	/* InicializaciÛn */
+
+	/* Inicializaci√≥n */
 	sprintf(lista_objeto_base[lista_objetos_base]->name,"%s %i",lista_modelo[id_modelo]->name,lista_objetos_base); // Como nombre predeterminado el nombre del modelo y su ID
 	obj_ptr_setpos(lista_objeto_base[lista_objetos_base],0,0,0);
 	lista_objeto_base[lista_objetos_base]->selec = 0;
@@ -660,18 +667,18 @@ int lista_base_crear_elemento(int id_modelo)
 	//lista_objeto_base[lista_objetos_base]->temperatura = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.volumen = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.temperatura = 0;
-	
+
 	lista_objeto_base[lista_objetos_base]->node_data.gases.CO2 = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.gases.N2 = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.gases.Ar = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.gases.O2 = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.gases.CO = 0;
 	lista_objeto_base[lista_objetos_base]->node_data.gases.H2O = 0;
-	    
+
 	//object_predraw(lista_objeto_base[lista_objetos_base]);
-	
+
 	lista_objetos_base++;
-	
+
     return 0;
 }
 
@@ -697,10 +704,10 @@ int lista_cargar_modelo_dir(const char *dir)
 	char dir_buffer[1024];
 	char buffer[1024];
 	long handle;
-	
+
 	str_cpyl(dir_buffer,1023,dir);
 	str_append(dir_buffer,"/*"); // Indicamos que queremos buscar en toda la carpeta
-	
+
 	handle = _findfirst (dir_buffer, &datos);
 	if(handle==-1){debug_printf(TL_ERR_MODEL_DIR,dir_buffer);return -1;}
 	do
@@ -713,7 +720,7 @@ int lista_cargar_modelo_dir(const char *dir)
 			debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos.name);
 			lista_cargar_modelo(buffer);
 		}
-		else if(datos.attrib & _A_SUBDIR && str_cmp(datos.name,".")!=0 && str_cmp(datos.name,"..")!=0) // Si es una carpeta llamamos a esta misma funciÛn y au!
+		else if(datos.attrib & _A_SUBDIR && str_cmp(datos.name,".")!=0 && str_cmp(datos.name,"..")!=0) // Si es una carpeta llamamos a esta misma funci√≥n y au!
 		{
 			//debug_printf("Buscando en carpeta \"%s\"\n",datos.name);
 			str_cpyl(dir_buffer,1023,dir);
@@ -721,9 +728,9 @@ int lista_cargar_modelo_dir(const char *dir)
 			str_append(dir_buffer,datos.name);
 			lista_cargar_modelo_dir(dir_buffer); // Buscamos en esa carpeta
 		}
-		
+
 	}while(_findnext(handle, &datos)!=-1);
-	
+
 	_findclose(handle);
 	return 0;
 }
@@ -731,40 +738,48 @@ int lista_cargar_modelo_dir(const char *dir)
 #ifdef LINUX
 int lista_cargar_modelo_dir(const char *dir)
 {
-	struct dirent *datos; // Datos del archivo o carpeta encontrados
+	register struct dirent *datos; // Datos del archivo o carpeta encontrados. Register para que sea m√°s r√°pido y c√≥modo para la CPU
 	char dir_buffer[1024];
 	char buffer[1024];
-	DIR *handle;
-	
+	register DIR *handle;
+
 	str_cpyl(dir_buffer,1023,dir);
-	str_append(dir_buffer,"/*"); // Indicamos que queremos buscar en toda la carpeta
-	
+	str_append(dir_buffer,"/"); // Indicamos que queremos buscar en toda la carpeta
+
+	  ifdebug(DEBUG_VERBOSE){debug_printf("opendir\n");}
 	handle = opendir(dir_buffer);
+	  ifdebug(DEBUG_VERBOSE){debug_printf("post_opendir\n");}
 	if(handle==NULL){debug_printf(TL_ERR_MODEL_DIR,dir_buffer);return -1;}
-	while(datos=readdir(handle)!=NULL);
+
+	ifdebug(DEBUG_VERBOSE){debug_printf("dir_loop\n");}
+	while(datos=readdir(handle))
 	{
+		ifdebug(DEBUG_VERBOSE){debug_printf("new_entry: ");}
+		ifdebug(DEBUG_VERBOSE){debug_printf("name: %s\n", datos->d_name);}
 		if( !(datos->d_type == DT_DIR) && str_ext_cmp(datos->d_name,"3ds")==1) // Si es de tipo 3ds y no es un directorio
 		{
+			ifdebug(DEBUG_VERBOSE){debug_printf("Modelo, cargando...\n");}
 			str_cpyl(buffer,1023,dir);
 			str_append(buffer,"/");
 			str_append(buffer,datos->d_name);
 			debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos->d_name);
 			lista_cargar_modelo(buffer);
 		}
-		else if(datos->d_type == DT_DIR && str_cmp(datos->d_name,".")!=0 && str_cmp(datos->d_name,"..")!=0) // Si es una carpeta llamamos a esta misma funciÛn y au!
+		else if(datos->d_type == DT_DIR && str_cmp(datos->d_name,".")!=0 && str_cmp(datos->d_name,"..")!=0) // Si es una carpeta llamamos a esta misma funci√≥n y au!
 		{
+			ifdebug(DEBUG_VERBOSE){debug_printf("Carpeta, buscando...\n");}
 			//debug_printf("Buscando en carpeta \"%s\"\n",datos.name);
 			str_cpyl(dir_buffer,1023,dir);
 			str_append(dir_buffer,"/");
 			str_append(dir_buffer,datos->d_name);
 			lista_cargar_modelo_dir(dir_buffer); // Buscamos en esa carpeta
 		}
-		
 	}
 
-	
+	ifdebug(DEBUG_DEBUG){debug_printf("closedir\n");}
 	closedir(handle);
 	
+	ifdebug(DEBUG_DEBUG){debug_printf("lista_cargar_modelo_dir end\n");}
 	return 0;
 }
 #endif
@@ -773,41 +788,47 @@ int lista_cargar_modelo(char *ruta)
 {
 	if(lista_modelo!=NULL)
 	{
+		ifdebug(DEBUG_DEBUG){debug_printf("lista_modelo!=NULL, realloc %i.\n", lista_modelos+1);}
 		lista_modelo=realloc(lista_modelo, sizeof(t_model*)*(lista_modelos+1));
 		if (lista_modelo==NULL){debug_printf(TL_ERR_REALLOC, "de la lista de modelos"); lista_modelos=-1; return -1;}
 	}
 	else
 	{
+		ifdebug(DEBUG_DEBUG){debug_printf("lista_modelo==NULL, creando nueva.\n");}
 		lista_modelos=0;
 		lista_modelo=malloc(sizeof(t_model*));
 		if (lista_modelo==NULL){debug_printf(TL_ERR_MALLOC, "de la lista de modelos"); lista_modelos=-1; return -1;}
 	}
-	
-	
+
+	ifdebug(DEBUG_VERBOSE){debug_printf("malloc(lista_modelo[%i]);\n",lista_modelos);}
 	lista_modelo[lista_modelos]=malloc(sizeof(t_model));
 	if(lista_modelo[lista_modelos]==NULL){debug_printf(TL_ERR_MALLOC_ID, "del modelo", lista_modelos); return -2;}
-	
+
+	ifdebug(DEBUG_VERBOSE){debug_printf("load_3DS(%s)",ruta);}
 	int i;
 	i=load_3DS(lista_modelo[lista_modelos], ruta);
-	
+	ifdebug(DEBUG_VERBOSE){debug_printf("=%i\n",i);}
+
 	if (i!=0){debug_printf(TL_ERR_MODEL_LOAD,ruta,i); free(lista_modelo[lista_modelos]); return -i-10;}
-	
+
 	// Cargamos el icono (si existe)
+	ifdebug(DEBUG_VERBOSE){debug_printf("Cargando icono");}
 	char buffer[1024];
 	str_cpyl(buffer,1023,ruta);
 	str_ext_back(buffer);
 	str_append(buffer,"_spawn.tga");
-	
+
 	ILuint ImageName;
 	ilGenImages(1, &ImageName);
 	ilBindImage(ImageName);
-	
+
 	//lista_modelo[lista_modelos]->icono = ilutGLLoadImage(buffer);
 	//if(!lista_modelo[lista_modelos]->icono)
 	if(!ilLoadImage(buffer))
 	{
 		debug_printf(lista_texto[TEXT_LIST_R_WRN + 4],buffer);
 		lista_modelo[lista_modelos]->icono = icono_no_icon;
+		ifdebug(DEBUG_VERBOSE){debug_printf("\tFAIL\n");}
 	}
 	else
 	{
@@ -816,19 +837,24 @@ int lista_cargar_modelo(char *ruta)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		ilutGLBuildMipmaps();
 		ilDeleteImages(1,&lista_modelo[lista_modelos]->icono);
+		ifdebug(DEBUG_VERBOSE){debug_printf("\tOK\n");}
 	}
-	
+
+	ifdebug(DEBUG_VERBOSE){debug_printf("PREDRAW\n");}
 	model_predraw(lista_modelo[lista_modelos]);
-	
+	ifdebug(DEBUG_VERBOSE){debug_printf("POST_PREDRAW\n");}
+
 	lista_modelos++;
-	
+	ifdebug(DEBUG_VERBOSE){debug_printf("lista_modelos++ => %i\n",lista_modelos);}
+
+	ifdebug(DEBUG_DEBUG){debug_printf("lista_cargar_modelo end\n");}
     return 0;
 }
 
 
 /*! \fn void lista_base_limpiar(t_obj_base_ptr *lista, int* contador)
  *  \brief Limpia de la memoria todos los elementos de la lista y borra la lista
- *  \warning No intentar dibujar la lista despuÈs de usar esta funciÛn.
+ *  \warning No intentar dibujar la lista despu√©s de usar esta funci√≥n.
  *  \param lista La lista que contiene los elementos que se deben borrar
  *  \param contador Contador de la lista
 */
@@ -851,9 +877,10 @@ void model_unload(t_model *model)
 {
 	int i;
 	// OPENGL LISTS
+	debug_printf("glDeleteLists!\n");
 	glDeleteLists(model->draw_list,model->draw_lists);
 	model->draw_lists=0;
-	
+
 	// MATRICES
 	for (i=0; i<model->model_objetos_qty; i++)
 	{
@@ -862,14 +889,14 @@ void model_unload(t_model *model)
 		free(model->polygon[i]);
 		free(model->mapcoord[i]);
 	}
-	
+
 	free(model->obj_name);
 	free(model->vertex);
 	free(model->polygon);
 	free(model->mapcoord);
 	free(model->vertices_qty);
 	free(model->polygons_qty);
-	
+
 	// MATERIALES
 	ilBindImage(0);
 	for (i=0; i<model->materials_qty; i++)

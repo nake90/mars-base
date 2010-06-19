@@ -70,7 +70,7 @@ int isExtensionSupported(const char *extension)
 		where = (GLubyte *) strstr((const char *) start, extension);
 		if (!where)
 			break;
-		terminator = where + strlen(extension);
+		terminator = where + str_len(extension);
 		if (where == start || *(where - 1) == ' ')
 			if (*terminator == ' ' || *terminator == '\0')
 				return 1;
@@ -81,7 +81,7 @@ int isExtensionSupported(const char *extension)
 
 void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, float x, float y, float z)
 {
-	char *buffer = malloc(sizeof(char) * (str_size(text)+1));
+	char *buffer = malloc(sizeof(char) * (str_size(text)+2));
 	if(buffer!=NULL)
 	{
 		int src=0;
@@ -89,7 +89,7 @@ void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, float 
 		while(text[src]!='\0')
 		{
 			buffer[dst]=text[src];
-			if(text[src]=='\n'){dst--;} // Arreglar esto para que sean líneas
+			if(text[src]=='\n' || text[src]=='\r'){dst--;} // Arreglar esto para que sean líneas
 			if(text[src]=='\t'){buffer[dst]=' ';buffer[dst+1]=' ';buffer[dst+2]=' ';dst+=2;} // Arreglar para que sea un tab real (mod 8 y while..)
 			dst++;
 			src++;
