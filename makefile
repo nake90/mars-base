@@ -12,7 +12,7 @@ OBJS = main.o atmosferico.o control.o display.o heightmap.o materiales.o objetos
 CFLAGS = -ggdb -DOPENGLUT_STATIC -IL_STATIC_LIB
 # Linker flags go here. Currently there aren't any, but if we'll switch to
 # code optimization, we might add "-s" here to strip debug info and symbols.
-LDFLAGS = -lGL -lGLU -lm -lXext -lX11 -lSDLmain -lSDL -mwindows -lIL -lILU -lILUT -lSDL_ttf
+LDFLAGS = -s -lGL -lGLU -lm -lXext -lX11 -lSDLmain -lSDL -mwindows -lIL -lILU -lILUT -lSDL_ttf
 # use this command to erase files.
 RM = /bin/rm -f
 
