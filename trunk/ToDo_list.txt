@@ -1,5 +1,3 @@
-!!!![FIX] En linux no se encuentra ningún modelo
-!!!![FIX] Segmentation Fault en Linux si arreglo los modelos
 !!!	[FIX] Colisión de los objetos no gira con el objeto (En el display si, pero no al seleccionar)
 !!!	[ADD] Trace terreno (falta z)
 !!!	[NEW] Funciones de transferencia de calor, gases y presión (Falta sacar las ecuaciones)
@@ -8,6 +6,7 @@
 !!	[ADD] TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
 !!	[NEW] Menú de estado y acciones sobre objetos
+!!	[ADD] Triángulos lejanos de mayor tamaño para aumentar el rendimiento
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
 !	[FIX] Grid	(FALLA OFFSET)
 !	[FIX] Problemas con movimiento por teclado
@@ -16,7 +15,6 @@
 !	[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD)
 !	[NEW] Archivo de configuración
 !	[NEW] Console
-!	[ADD] Triángulos lejanos de mayor tamaño para aumentar el rendimiento
 !	[NEW] GUI_TabButton ?
 !	[NEW] GUI_TabFrame ?
 !	[NEW] GUI_Scroll ?

@@ -70,5 +70,5 @@ void unload_material (t_texture *texture)
 {
 	ilBindImage(0);
 	ilDeleteImages(1,texture->texture);
-	texture->texture[0]=0;
+	texture->texture[0]=-1;
 }
