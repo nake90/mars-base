@@ -1,0 +1,13 @@
+#!/bin/sh
+# Compila mars-base para WINDOWS usando MSYS y MinGW
+# Cómo usarlo: en MSYS entra en la carpeta en la que está este archivo y teclea ./compilar_windows_msys
+
+echo "Compilando mars-base"
+if make -f Makefile.win all
+then
+	echo
+	echo "Finalizado correctamente"
+else
+	echo
+	echo "Error al compilar!"
+fi
