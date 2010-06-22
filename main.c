@@ -64,6 +64,14 @@
 #include "display.h"
 #include "parser.h"
 
+#ifdef WINDOWS // Para obtener el directorio actual
+    #include <direct.h>
+    //#define GetCurrentDir _getcwd
+#else
+    #include <unistd.h>
+    //#define GetCurrentDir getcwd
+ #endif
+
 t_texture fondo={{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
 static Uint32 next_time; /* Controla la velocidad de actualización de la pantalla */
@@ -92,7 +100,7 @@ void salir(void)
 	/* Unload materials */
 	unload_material(&sand);
 	unload_material(&fondo);
-	unload_material(&sun_texture);
+	unload_material(&sun.material);
 	/* Unload fonts */
 	TTF_CloseFont(fntCourier12);
 	TTF_CloseFont(fntArial12);
@@ -105,8 +113,9 @@ void salir(void)
 int main(int argc, char *argv[])
 {
 	/* - INICIACIÓN VARIABLES - */
-    str_cpy(app_path,argv[0]);
-    str_ruta_back(app_path);
+    getcwd(app_path,TEXT_LIST_MAX_SIZE);
+	str_append(app_path,"\\");
+    //str_ruta_back(app_path);
 	debug_mode=0;
 
     int i;
@@ -123,6 +132,23 @@ int main(int argc, char *argv[])
     scr_height=-1;
     scr_bpp=-1;
     scr_flags=-1;
+	
+	// Cargamos la configuración de config.cfg
+	t_parse parse;
+	char lang_get[20]; // Espero que no escriban más texto que 20...
+	if(parse_open(&parse,"config.cfg")==0)
+	{
+		i=parse_get_int(&parse, "fullscreen");
+		if(i==0){scr_flags=FLAG_WINDOWED;}
+		if(i==1){scr_flags=SDL_FULLSCREEN;}
+		if((i=parse_get_int(&parse, "width"))>0){scr_width=i;}
+		if((i=parse_get_int(&parse, "height"))>0){scr_height=i;}
+		if(parse_get_int(&parse, "no_motd")==1){with_motd=0;}
+		if((i=parse_get_int(&parse, "debug"))>=0){debug_mode=i;}
+		if(parse_get_str(&parse, "lang", lang_get)!=PARSE_NOT_FOUND){str_cpyl(lang_str,4,lang_get);}
+		parse_close(&parse);
+	}
+	
     for(i=1; i<argc; i++)
     {
 		if(argv[i]==NULL)break;
@@ -214,31 +240,8 @@ int main(int argc, char *argv[])
 
 	i=load_material(&sand, "materials/sand_default");
 	if(i){debug_printf(TL_ERR_SANDBASE_TEXTURE,i); sand.texture[0]=null_texture;}
-	/*
-	sand2_texture=ilutGLLoadImage("materials/metal_in_1.tga");
-	if(!sand2_texture)
-	{
-		debug_printf("Error sandtexture2\n"); sand2_texture=null_texture;
-	}
-	else
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		ilutGLBuildMipmaps();
-	}
-	*/
-	sun_texture.texture[0]=ilutGLLoadImage("materials/sun.tga");
-	if(!sun_texture.texture[0])
-	{
-		debug_printf(TL_ERR_SUN_TEXTURE); sun_texture.texture[0]=null_texture;
-	}
-	else
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		ilutGLBuildMipmaps();
-	}
-
+	
+	if(load_material(&sun.material, "materials/sun")!=0){debug_printf(TL_ERR_SUN_TEXTURE); sun.material.texture[0]=null_texture;}
 	
 	scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 1]);
 	camera.pitch = -25;

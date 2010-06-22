@@ -1,19 +1,15 @@
-!!!	[FIX] Colisión de los objetos no gira con el objeto (En el display si, pero no al seleccionar)
-!!!	[ADD] Trace terreno (falta z)
+!!!	[ADD] Trace terreno (Falta z)
 !!!	[NEW] Funciones de transferencia de calor, gases y presión (Falta sacar las ecuaciones)
-!!!	[NEW] Multitasking para las funciones de transferencia.
-!!	[ADD] Colisiones al crear el objeto
-!!	[ADD] TRACES (Falta desplazamiento del punto de inicio del trace por la posición del ratón)
+!!!	[NEW] Multitasking para las funciones de transferencia (Faltan las funciones).
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
 !!	[NEW] Menú de estado y acciones sobre objetos
 !!	[ADD] Triángulos lejanos de mayor tamaño para aumentar el rendimiento
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
-!	[FIX] Grid	(FALLA OFFSET)
+!	[FIX] Grid (Falla offset. ¿Es realmente necesario esto?)
 !	[FIX] Problemas con movimiento por teclado
-!	[NEW] Tuberías
-!	[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control,
+!	[NEW] Tuberías (Faltan funciones de transferencia)
+!	[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control, (Faltan funciones de transferencia)
 !	[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD)
-!	[NEW] Archivo de configuración
 !	[NEW] Console
 !	[NEW] GUI_TabButton ?
 !	[NEW] GUI_TabFrame ?
@@ -22,9 +18,8 @@
 !	[NEW] GUI_Checkbox
 !	[NEW] GUI_Radial
 !	[NEW] GUI_Slide y número (Ese de +,-)
-!	[FIX] Unir sun con sun_texture (Tonterías mías al crearlo)
-!	[NEW] Más texturas para el suelo de Marte (¿Usar un texturemap? Píxel = ID_textura con blend) [He hecho pruebas y lo veo mal]
-!	[NEW] Skybox
+!	[NEW] Más texturas para el suelo de Marte (¿Usar un texturemap? Píxel = ID_textura con blend) [He hecho pruebas y lo veo difícil pero posible]
+!	[NEW] Skybox (¿Es necesario? He hecho pruebas y queda muy raro)
 !	[NEW] Mejor control de la niebla: Si cerca del suelo más niebla para aumentar el rendimiento
 !	[NEW] Distancia máxima de dibujo de modelos
 !	[NEW] Mejorar acciones del ratón: Menús, botones, hud usable

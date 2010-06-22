@@ -51,7 +51,7 @@
 
 extern DIALOG spawn_dialog[];
 
-static int rotate_ghost;
+static int rotate_ghost, enable_create_object;
 
 void control(void)
 {
@@ -88,6 +88,7 @@ int place_object(int id_modelo)
 	if(camera.ghost_mode==1){debug_printf(TL_ERR_GHOST_STARTED); return -2;}
 	if (id_modelo>=lista_modelos || id_modelo<0){debug_printf(TL_ERR_GHOST_MODEL_ID); return -1;}
 	camera.ghost_mode=1;
+	enable_create_object=0;
 	
 	// Creamos un objeto base para usar como ghost
 	t_obj_base ghost;
@@ -171,19 +172,40 @@ int place_object(int id_modelo)
 	next_time = SDL_GetTicks() + TICK_INTERVAL;
 	
 	int o_id, oc_id, pc_id; // Otro_ID, Otro_Conexión_ID, Propio_Conexión_ID
+	int colision; // 1 si está chocando con otro objeto
 	VECTOR v1, v2;
 	VECTOR vn1, vn2; // Vectores normales rotados
 	VECTOR vzero = {0,0,0};
 	int lista_conexiones[MAX_CONX]; // Usado para saber luego a qué conexión se debe poner el del otro objeto
+	
+	float angx;
+	float angy;
+	//VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
+	//VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
+	VECTOR up_axis;// = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
+	VECTOR side_axis;// = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
+	int x,y;
 	while(camera.ghost_mode==1)
 	{
 		rotate_ghost=0;
+		colision = 0;
 		
 		process_events();
 		main_update();
 		
 		pos.x=camera.pos_x; pos.y=camera.pos_y; pos.z=camera.pos_z;
 		dir=v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
+		
+		up_axis = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
+		side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
+		
+		SDL_GetMouseState(&x,&y);
+		angx = (((scr_width/2.0f) - x)*45.0f) / (scr_width/2.0f)*0.65;
+		angy = (((scr_height/2.0f) - y)*45.0f) / (scr_height/2.0f)*0.5;
+	
+		dir = vrotate_axis(dir, side_axis, RAD(angy));
+		dir = vrotate_axis(dir, up_axis, RAD(angx));
+		
 		get_traced_coord(pos, dir, &coord); // Ponerlo en un if == 0!!!
 		ghost.pos.x=nround(coord.x);
 		ghost.pos.y=nround(coord.y);
@@ -239,11 +261,110 @@ int place_object(int id_modelo)
 						}
 					}
 				}
+				
+				// Comprobamos si chocamos con ese objeto (cada vértice rotado y trasladado)
+				// -> Primero si sus vértices están dentro de los nuestros
+				if(colision==0)
+				{
+					v1.x=lista_objeto_base[o_id]->sq_l + 0.01f;
+					v1.y=lista_objeto_base[o_id]->sq_b + 0.01f;
+					v1=vrotate2D(v1,RAD(lista_objeto_base[o_id]->rot.y));
+					v1.x += lista_objeto_base[o_id]->pos.x;
+					v1.y += lista_objeto_base[o_id]->pos.y;
+					if(check_inside(v1.x, v1.y, ghost.sq_l, ghost.sq_r, ghost.sq_t, ghost.sq_b, RAD(ghost.rot.y), ghost.pos.x, ghost.pos.y)>=0)
+						colision=1;
+				}
+				if(colision==0)
+				{
+					v1.x=lista_objeto_base[o_id]->sq_r - 0.01f;
+					v1.y=lista_objeto_base[o_id]->sq_b + 0.01f;
+					v1=vrotate2D(v1,RAD(lista_objeto_base[o_id]->rot.y));
+					v1.x += lista_objeto_base[o_id]->pos.x;
+					v1.y += lista_objeto_base[o_id]->pos.y;
+					if(check_inside(v1.x, v1.y, ghost.sq_l, ghost.sq_r, ghost.sq_t, ghost.sq_b, RAD(ghost.rot.y), ghost.pos.x, ghost.pos.y)>=0)
+						colision=1;
+				}
+				if(colision==0)
+				{
+					v1.x=lista_objeto_base[o_id]->sq_r - 0.01f;
+					v1.y=lista_objeto_base[o_id]->sq_t - 0.01f;
+					v1=vrotate2D(v1,RAD(lista_objeto_base[o_id]->rot.y));
+					v1.x += lista_objeto_base[o_id]->pos.x;
+					v1.y += lista_objeto_base[o_id]->pos.y;
+					if(check_inside(v1.x, v1.y, ghost.sq_l, ghost.sq_r, ghost.sq_t, ghost.sq_b, RAD(ghost.rot.y), ghost.pos.x, ghost.pos.y)>=0)
+						colision=1;
+				}
+				if(colision==0)
+				{
+					v1.x=lista_objeto_base[o_id]->sq_l + 0.01f;
+					v1.y=lista_objeto_base[o_id]->sq_t - 0.01f;
+					v1=vrotate2D(v1,RAD(lista_objeto_base[o_id]->rot.y));
+					v1.x += lista_objeto_base[o_id]->pos.x;
+					v1.y += lista_objeto_base[o_id]->pos.y;
+					if(check_inside(v1.x, v1.y, ghost.sq_l, ghost.sq_r, ghost.sq_t, ghost.sq_b, RAD(ghost.rot.y), ghost.pos.x, ghost.pos.y)>=0)
+						colision=1;
+				}
+				
+				// -> Ahora si nuestros vértices están dentro de los suyos
+				if(colision==0)
+				{
+					v1.x=ghost.sq_l + 0.01f;
+					v1.y=ghost.sq_b + 0.01f;
+					v1=vrotate2D(v1,RAD(ghost.rot.y));
+					v1.x += ghost.pos.x;
+					v1.y += ghost.pos.y;
+					if(check_inside(v1.x, v1.y, lista_objeto_base[o_id]->sq_l, lista_objeto_base[o_id]->sq_r, lista_objeto_base[o_id]->sq_t, lista_objeto_base[o_id]->sq_b,
+							RAD(lista_objeto_base[o_id]->rot.y), lista_objeto_base[o_id]->pos.x, lista_objeto_base[o_id]->pos.y)>=0)
+						colision=1;
+				}
+				if(colision==0)
+				{
+					v1.x=ghost.sq_r - 0.01f;
+					v1.y=ghost.sq_b + 0.01f;
+					v1=vrotate2D(v1,RAD(ghost.rot.y));
+					v1.x += ghost.pos.x;
+					v1.y += ghost.pos.y;
+					if(check_inside(v1.x, v1.y, lista_objeto_base[o_id]->sq_l, lista_objeto_base[o_id]->sq_r, lista_objeto_base[o_id]->sq_t, lista_objeto_base[o_id]->sq_b,
+							RAD(lista_objeto_base[o_id]->rot.y), lista_objeto_base[o_id]->pos.x, lista_objeto_base[o_id]->pos.y)>=0)
+						colision=1;
+				}
+				if(colision==0)
+				{
+					v1.x=ghost.sq_r - 0.01f;
+					v1.y=ghost.sq_t - 0.01f;
+					v1=vrotate2D(v1,RAD(ghost.rot.y));
+					v1.x += ghost.pos.x;
+					v1.y += ghost.pos.y;
+					if(check_inside(v1.x, v1.y, lista_objeto_base[o_id]->sq_l, lista_objeto_base[o_id]->sq_r, lista_objeto_base[o_id]->sq_t, lista_objeto_base[o_id]->sq_b,
+							RAD(lista_objeto_base[o_id]->rot.y), lista_objeto_base[o_id]->pos.x, lista_objeto_base[o_id]->pos.y)>=0)
+						colision=1;
+				}
+				if(colision==0)
+				{
+					v1.x=ghost.sq_l + 0.01f;
+					v1.y=ghost.sq_t - 0.01f;
+					v1=vrotate2D(v1,RAD(ghost.rot.y));
+					v1.x += ghost.pos.x;
+					v1.y += ghost.pos.y;
+					if(check_inside(v1.x, v1.y, lista_objeto_base[o_id]->sq_l, lista_objeto_base[o_id]->sq_r, lista_objeto_base[o_id]->sq_t, lista_objeto_base[o_id]->sq_b,
+							RAD(lista_objeto_base[o_id]->rot.y), lista_objeto_base[o_id]->pos.x, lista_objeto_base[o_id]->pos.y)>=0)
+						colision=1;
+				}
 			}
 		}
 		
 		draw_element(mensaje);
-		glColor4f(1.0,1.0,1.0,0.4f); // Cambiar color dependiendo de OK/MAL
+		
+		if(colision==0)
+		{
+			glColor4f(1.0,1.0,1.0,0.4f);
+			enable_create_object=1;
+		}
+		else
+		{
+			glColor4f(1.0,0.0,0.0,0.4f);
+			enable_create_object=0;
+		}
 		object_draw_l(&ghost);
 		
 		SDL_GL_SwapBuffers();
@@ -438,7 +559,7 @@ int open_spawn_dialog(void)
 
 void key_handle(SDLKey key, SDLMod mod)
 {
-	float speed=0.5f;
+	float speed=0.15f;
 	float last_x=camera.pos_x;
 	float last_y=camera.pos_y;
 	float last_z=camera.pos_z;
@@ -558,23 +679,25 @@ int get_traced_object(VECTOR pos, VECTOR dir)
 {
 	if(dir.z>=0)return -1; // Si miramos hacia arriba o de frente no podemos calcular el punto de corte...
 	int obj;
-	float sq_l, sq_r, sq_t, sq_b; /* Coordenadas reales del cuadrado del objeto */
 	float corte_x, corte_y; /* Coordenadas reales del punto de corte del trace con el plano z = obj.z */
+	
+	corte_x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
+	corte_y = -dir.y/dir.z * pos.z + pos.y;
+	
+	VECTOR coord = {corte_x, corte_y, 0.0f};
+	COLORf color = {0.0f, 1.0f, 0.0f, 0.5f};
+	
+	//debug_point_3D(coord, color, 8.0f);
+	
 	/* Tipo objeto: base */
 	for (obj=0; obj<lista_objetos_base; obj++)
 	{
 		if (lista_objeto_base[obj]->pos.z < pos.z && vdist_sq(lista_objeto_base[obj]->pos, pos)<MAX_DIST_TRACE_OBJ_SQ) // Nos saltamos los objetos que están demasiado lejos ni por encima nuestro
 		{
-			sq_l = lista_objeto_base[obj]->pos.x + lista_objeto_base[obj]->sq_l;
-			sq_r = lista_objeto_base[obj]->pos.x + lista_objeto_base[obj]->sq_r;
-			sq_t = lista_objeto_base[obj]->pos.y + lista_objeto_base[obj]->sq_t;
-			sq_b = lista_objeto_base[obj]->pos.y + lista_objeto_base[obj]->sq_b;
 			
-			
-			corte_x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
-			corte_y = -dir.y/dir.z * pos.z + pos.y;
-			
-			if ( (corte_x>=sq_l && corte_x<=sq_r) && (corte_y>=sq_b && corte_y<=sq_t))
+			if(check_inside(corte_x, corte_y,
+					lista_objeto_base[obj]->sq_l, lista_objeto_base[obj]->sq_r, lista_objeto_base[obj]->sq_t, lista_objeto_base[obj]->sq_b,
+					RAD(lista_objeto_base[obj]->rot.y), lista_objeto_base[obj]->pos.x, lista_objeto_base[obj]->pos.y) >=0)
 			{
 				return obj;
 			}
@@ -636,8 +759,14 @@ void mouse_static_but(int button, int x, int y)
 	{
 		if(camera.ghost_mode!=1)
 		{
+			float angx = (((scr_width/2.0f) - x)*45.0f) / (scr_width/2.0f)*0.65;
+			float angy = (((scr_height/2.0f) - y)*45.0f) / (scr_height/2.0f)*0.5;
 			VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
 			VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
+			VECTOR up_axis = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
+			VECTOR side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
+			dir = vrotate_axis(dir, side_axis, RAD(angy));
+			dir = vrotate_axis(dir, up_axis, RAD(angx));
 			int obj = get_traced_object(pos, dir);
 			
 			int i;
@@ -651,7 +780,7 @@ void mouse_static_but(int button, int x, int y)
 				lista_objeto_base[obj]->selec=1;
 			}
 		}
-		else
+		else if(enable_create_object!=0)
 		{// MODO GHOST
 			camera.ghost_mode=2;
 		}

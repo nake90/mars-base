@@ -180,9 +180,9 @@ void parse_close(t_parse* parse)
 	for(i=0; i<parse->entradas; i++)
 	{
 		free(parse->title[i]);
-		parse->title[i]=NULL;
+		//parse->title[i]=NULL;
 		free(parse->value[i]);
-		parse->value[i]=NULL;
+		//parse->value[i]=NULL;
 	}
 	free(parse->title);
 	parse->title=NULL;

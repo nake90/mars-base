@@ -1,11 +1,9 @@
 Notas de versión:
 * Aprieta <ESPACIO> para ver el menú de objetos y haz click en el objeto que quieras crear.
 * Control y creación de nodos en pruebas, deberían autoconectarse (en verde) los objetos con nodos definidos.
-* Transmisión de gases entre habitáculos en prueba (El primer edificio genera oxígeno. 0.1 moles cada milisegundo).
-* Añadidas opciones de inicialización:
-	-lang <idioma> -> Idioma del juego y del debug.log (ej. -lang en)
-	-windowed -> Intenta inciar en modo ventana.
-	-fullscreen -> Intenta iniciar en modo a pantalla completa.
-	-width <width> -> Intenta usar ese ancho para la ventana/pantalla.
-	-height <height> -> Intenta usar esa altura para la ventana/pantalla.
+* Transmisión de gases entre habitáculos en prueba (El primer edificio genera oxígeno. 0.1 moles cada milisegundo). DESHABILITADO
 * Este texto se carga del archivo motd.txt
+* Puedes Configurar las opciones de arranque en config.cfg
+* ¡Ahora el ratón apunta correctamente!
+* Al crear un objeto sale en rojo si colisiona con otro.
+* Puedes comentar / quejarte / dar sugerencias / reportar fallos / agradecer el proyecto en nuestro foro http://www.nakerium.com/foro/

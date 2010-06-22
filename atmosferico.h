@@ -73,7 +73,7 @@ typedef struct
 	float specular[4];
 	float position[3];
 	float hora[1];
-	int texture[2]; /* Textura 1 es la imágen, textura 2 es el mask */
+	t_texture material;
 }t_sun;
 
 // Masas atómicas de las moléculas
@@ -130,7 +130,7 @@ typedef struct
 extern t_atmosfera datos_atmosfera;
 
 extern t_sun sun;
-extern t_texture sun_texture;
+//extern t_texture sun_texture;
 
 float get_density(float normal_density, float temperatura, float presion);
 float get_presion(t_gas gases, float volumen, float temperatura);

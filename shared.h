@@ -136,6 +136,7 @@ void position_printf (float x, float y, float z, const char *fmt, ...);
 void hud_printf (float x, float y, const char *fmt, ...);
 void set_gl_mode(void);
 void restore_gl_mode(void);
+void debug_point_3D(VECTOR coord, COLORf color, float size);
 
 /* TEXTURAS */
 void use_texture (t_texture texture);
@@ -165,6 +166,10 @@ float vdist(VECTOR vec1, VECTOR vec2); /* Distancia entre ambos vectores */
 float vdist_sq(VECTOR vec1, VECTOR vec2); /* Cuadrado de la distancia */
 VECTOR v_from_ang(float pitch, float yaw); /* Vector definido por pitch y yaw en radianes */
 VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll); /* Rotar el vector */
+VECTOR vrotate_axis(VECTOR coord, VECTOR axis, float angle); /* Rotar el vector respecto un eje */
+VECTOR vrotate2D(VECTOR vec, float yaw);
+/* Retorna 1 si (x,y) está dentro del rectángulo girado y desplazado dx, dy */
+char check_inside(float x, float y, float left, float right, float top, float bottom, float yaw, float dx, float dy);
 
 /* MATEMÁTICAS */
 float nabs(float val);

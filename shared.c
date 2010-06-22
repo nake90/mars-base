@@ -603,6 +603,103 @@ VECTOR vrotate(VECTOR coord, float pitch, float yaw, float roll)
 	return resultado;
 }
 
+VECTOR vrotate2D(VECTOR vec, float yaw)
+{
+	VECTOR res;
+	float sinx = sin(yaw), cosx = cos(yaw);
+	res.x = vec.x * cosx - vec.y * sinx;
+	res.y = vec.x * sinx + vec.y * cosx;
+	res.z = vec.z;
+	return res;
+}
+
+VECTOR vrotate_axis(VECTOR coord, VECTOR axis, float angle)
+{
+	VECTOR res, u=axis;
+	float c = cos(angle), s = sin(angle);
+	
+	normalize(&u);
+	res.x = ((u.x*u.x)+(1-u.x*u.x)*c)*coord.x + (u.x*u.y*(1-c)-u.z*s)*coord.y + (u.x*u.z*(1-c)+u.y*s)*coord.z;
+	res.y = ((u.x*u.y)*(1-c)+u.z*s)*coord.x + (u.y*u.y+(1-u.y*u.y)*c)*coord.y + (u.y*u.z*(1-c)-u.x*s)*coord.z;
+	res.z = ((u.x*u.z)*(1-c)-u.y*s)*coord.x + (u.y*u.z*(1-c)+u.x*s)*coord.y + (u.z*u.z+(1-u.z*u.z)*c)*coord.z;
+	
+	return res;
+}
+
+/*! \fn char check_inside(float x, float y, float left, float right, float top, float bottom, float yaw, float dx, float dy)
+ *  \brief Comprueba si un punto está dentro de un rectángulo girado y desplazado
+ *  \param x Coordenada x del punto.
+ *  \param y Coordenada y del punto.
+ *  \param left Distancia del centro de giro del objeto al lado izquierdo con su signo (negativo normalmente).
+ *  \param right Distancia del centro de giro del objeto al lado derecho con su signo.
+ *  \param bottom Distancia del centro de giro del objeto al lado inferior con su signo (negativo normalmente).
+ *  \param top Distancia del centro de giro del objeto al lado superior con su signo.
+ *  \param yaw Ángulo de giro en grados en sentido anti-horario.
+ *  \param dx Desplazamiento del recuadro en el eje x.
+ *  \param dy Desplazamiento del recuadro en el eje y.
+ *  \return 1 Si el punto está dentro del rectángulo.
+ *  \return 0 Si el punto está sobre el rectángulo.
+ *  \return -1 Si el punto está fuera el rectángulo.
+*/
+char check_inside(float x, float y, float left, float right, float top, float bottom, float yaw, float dx, float dy)
+{
+	VECTOR v1, v2, vp; // vp -> vértice referencia
+	VECTOR va, vb, vd;
+	VECTOR despl;
+	float p1, p2;
+	
+	despl.x = dx;
+	despl.y = dy;
+	despl.z = 0;
+	
+	// bottom y left ya deben de tener el signo bien puesto (negativo normalmente)
+	
+	va.x = left;
+	va.y = bottom;
+	va.z = 0;
+	
+	vb.x = right;
+	vb.y = bottom;
+	vb.z = 0;
+	
+	vd.x = left;
+	vd.y = top;
+	vd.z = 0;
+	
+	va = vrotate2D(va, yaw);
+	vb = vrotate2D(vb, yaw);
+	vd = vrotate2D(vd, yaw);
+	
+	va = vadd(va, despl);
+	vb = vadd(vb, despl);
+	vd = vadd(vd, despl);
+	
+	//COLORf debug_color = {1.0f, 0.0f, 0.0f, 0.5f};
+	//debug_point_3D(va, debug_color, 3.0f);
+	//debug_point_3D(vb, debug_color, 3.0f);
+	//debug_point_3D(vd, debug_color, 3.0f);
+	
+	v1 = vsub(vd,va);
+	v2 = vsub(vb,va);
+	
+	vp.x = x - va.x;
+	vp.y = y - va.y;
+	vp.z = 0;
+	
+	p1 = p_escalar(vp,v1);
+	p2 = p_escalar(vp,v2);
+	
+	if(0 < p1 && p1 < p_escalar(v1,v1) && 0 < p2 && p2 < p_escalar(v2,v2))
+	{
+		return 1;
+	}
+	if(0 <= p1 && p1 <= p_escalar(v1,v1) && 0 <= p2 && p2 <= p_escalar(v2,v2))
+	{
+		return 0;
+	}
+	return -1;
+}
+
 /* - DEBUG - */
 
 /*! \fn void debug_reset(void)
@@ -634,6 +731,16 @@ void debug_printf(const char *fmt, ...)
     vfprintf (file, fmt, args);
     va_end(args);
     fclose(file);
+}
+
+
+void debug_point_3D(VECTOR coord, COLORf color, float size)
+{
+	glPointSize(size);
+	glColor4f(color.r,color.g,color.b,color.a);
+	glBegin(GL_POINTS);
+		glVertex3f(coord.x, coord.y, coord.z);
+	glEnd();
 }
 
 /* - PRINTING - */

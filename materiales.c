@@ -66,9 +66,18 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
 
 	return 0;
 }
-void unload_material (t_texture *texture)
+
+
+void unload_material(t_texture *texture)
 {
 	ilBindImage(0);
 	ilDeleteImages(1,texture->texture);
 	texture->texture[0]=-1;
+}
+
+void unload_texture(GLint *texture)
+{
+	ilBindImage(0);
+	ilDeleteImages(1,texture);
+	texture[0]=-1;
 }
