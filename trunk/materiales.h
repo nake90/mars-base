@@ -40,13 +40,9 @@
 #define MATERIALES_H
 #include "shared.h"
 
-int load_material (t_texture *texture, const char* ruta_);
-void unload_material (t_texture *texture);
-
-
-
-
-
+int load_material(t_texture *texture, const char* ruta_);
+void unload_material(t_texture *texture);
+void unload_texture(GLint *texture);
 
 
 #endif

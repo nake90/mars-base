@@ -315,7 +315,7 @@ void display(void)
 	
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	draw_fixsprite(sun.position[0],sun.position[1],sun.position[2]+SUN_SIZE,sun_texture,SUN_SIZE);
+	draw_fixsprite(sun.position[0],sun.position[1],sun.position[2]+SUN_SIZE,sun.material,SUN_SIZE);
 	//glBlendFunc(GL_ONE,GL_ZERO);
 	//glDisable(GL_BLEND);
 	
@@ -335,7 +335,7 @@ void display(void)
 	
 	/* Dibujamos los extras del terreno */
 	
-	//draw_sprite (0, 0, 10, sun_texture, 5);
+	//draw_sprite (0, 0, 10, sun.material, 5);
 	
 	/* - Display Casillas - (casillas solo de la zona actual, casillas de 1x1m^2) */
    	if (camera.show_grid)
@@ -498,3 +498,4 @@ void video_init(void)
 	
 	ifdebug(DEBUG_DEBUG){debug_printf("video_init OK\n");}
 }
+

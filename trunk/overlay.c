@@ -119,10 +119,18 @@ void draw_HUD(void)
 	hud_printf (12, 4*12, "POS = (%.2f, %.2f, %.2f)",camera.pos_x, camera.pos_y, camera.pos_z);
 	hud_printf (12, 5*12, "Flechas para moverse, shift para ir muy rápido");
 	hud_printf (12, 6*12, "WASD+QE -> Girar cámara");
-
-		VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
-		VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
-		int obj = get_traced_object(pos, dir);
+	
+	int x,y;
+	SDL_GetMouseState(&x,&y);
+	float angx = (((scr_width/2.0f) - x)*45.0f) / (scr_width/2.0f)*0.65;
+	float angy = (((scr_height/2.0f) - y)*45.0f) / (scr_height/2.0f)*0.5;
+	VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
+	VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
+	VECTOR up_axis = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
+	VECTOR side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
+	dir = vrotate_axis(dir, side_axis, RAD(angy));
+	dir = vrotate_axis(dir, up_axis, RAD(angx));
+	int obj = get_traced_object(pos, dir); 
 
 	hud_printf (12, 7*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
 	hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrícula");
