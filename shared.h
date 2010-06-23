@@ -77,54 +77,65 @@ extern TTF_Font *fntCourier12;
 extern TTF_Font *fntArial12;
 
 
-typedef struct{float x; float y; float z;}VECTOR;
-typedef struct{float r; float g; float b; float a;}COLORf;
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} VECTOR;
+typedef struct
+{
+    float r;
+    float g;
+    float b;
+    float a;
+} COLORf;
 
 
 #define CAMERA_MIN_VEL 0.001
 #define CAMERA_VEL_DIV 1.1
 typedef struct
 {
-	GLfloat pos_x;
-	GLfloat pos_y;
-	GLfloat pos_z;
+    GLfloat pos_x;
+    GLfloat pos_y;
+    GLfloat pos_z;
 
-	GLfloat vel_x;
-	GLfloat vel_y;
-	GLfloat vel_z;
+    GLfloat vel_x;
+    GLfloat vel_y;
+    GLfloat vel_z;
 
-	GLint wasd_count;/* Cuenta el número de teclas de movimiento presionadas. (Para la desaceleración) */
+    GLint wasd_count;/* Cuenta el número de teclas de movimiento presionadas. (Para la desaceleración) */
 
-	GLfloat pitch;
-	GLfloat yaw;
-	GLfloat roll;
+    GLfloat pitch;
+    GLfloat yaw;
+    GLfloat roll;
 
-	int show_grid;
-	int show_presion;
+    int show_grid;
+    int show_presion;
 
-	int ghost_mode;
-}t_camera;
+    int ghost_mode;
+} t_camera;
 extern t_camera camera;
 
 typedef struct
 {
-	int show_fondo;
+    int show_fondo;
 
-	int show_grid;
-	int show_presion;
-}t_config;
+    int show_grid;
+    int show_presion;
+} t_config;
 extern t_config config;
 
 typedef struct
 {
-	char name[80];
-	GLfloat ambient[4];
-	GLfloat diffuse[4];
-	GLfloat specular[4];
-	GLfloat shininess[1];
-	GLfloat transparency[1];
-	GLint texture[1];
-}t_texture;
+    char name[80];
+    GLfloat ambient[4];
+    GLfloat diffuse[4];
+    GLfloat specular[4];
+    GLfloat shininess[1];
+    GLfloat transparency[1];
+    GLint texture[1];
+} t_texture;
 
 /* DEBUG y SCREEN */
 void debug_reset (void);

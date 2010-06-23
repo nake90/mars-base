@@ -61,10 +61,10 @@ else
 
 typedef struct
 {
-	char **title; /* Lista de títulos de las entradas */
-	char **value; /* Lista de valores de las entradas (Tal como están escritas, después se traducen a lo que se necesite) */
-	unsigned int entradas; /* Cantidad de entradas que hay */
-}t_parse;
+    char **title; /* Lista de títulos de las entradas */
+    char **value; /* Lista de valores de las entradas (Tal como están escritas, después se traducen a lo que se necesite) */
+    unsigned int entradas; /* Cantidad de entradas que hay */
+} t_parse;
 
 int parse_open(t_parse* parse, char *ruta);
 void parse_close(t_parse* parse);

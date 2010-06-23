@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="mars_base" />
+		<Option platforms="Windows;Unix;" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="..\mars_base\mars_base" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="I:\Documents and Settings\nake\My Documents\Avanzado\develop\mars_base\" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="I:\MinGW\lib\SDL_ttf.lib" />
+					<Add library="I:\MinGW\lib\libdevil.a" />
+					<Add library="I:\MinGW\lib\libgdi32.a" />
+					<Add library="I:\MinGW\lib\libglaux.a" />
+					<Add library="I:\MinGW\lib\libglu32.a" />
+					<Add library="I:\MinGW\lib\libilu.a" />
+					<Add library="I:\MinGW\lib\libilut.a" />
+					<Add library="I:\MinGW\lib\libmingw32.a" />
+					<Add library="I:\MinGW\lib\libopengl32.a" />
+					<Add library="I:\MinGW\lib\libSDLmain.a" />
+					<Add library="I:\MinGW\lib\libwinmm.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-DOPENGLUT_STATIC" />
+			<Add option="-IL_STATIC_LIB" />
+		</Compiler>
+		<Linker>
+			<Add option="-mwindows" />
+			<Add library="glu32" />
+			<Add library="opengl32" />
+			<Add library="winmm" />
+			<Add library="gdi32" />
+			<Add library="glaux" />
+			<Add library="mingw32" />
+			<Add library="SDLmain" />
+			<Add library="SDL" />
+			<Add library="devil" />
+			<Add library="ilu" />
+			<Add library="ilut" />
+			<Add library="SDL_ttf" />
+		</Linker>
+		<Unit filename="ToDo_list.txt">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="atmosferico.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="atmosferico.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="config.cfg">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="control.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="control.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="debug.log">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="display.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="display.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="heightmap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="heightmap.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lang.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lang.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mars_base_private.h" />
+		<Unit filename="materiales.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="materiales.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="motd.txt">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="my_changelog.txt">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="objetos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="objetos.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="overlay.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="overlay.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="parser.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="shared.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="shared.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="1" ask_to_increment="0" language="C" svn="0" svn_directory="I:\Documents and Settings\nake\My Documents\Avanzado\develop\mars_base" header_path="mars_base_private.h" />
+				<Changes_Log show_changes_editor="1" app_title="released version %M.%m.%b of %p (r%s)" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="INFO" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
