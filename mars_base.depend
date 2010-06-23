@@ -15,7 +15,7 @@
 	"mars_base_private.h"
 	"lang.h"
 
-1277321736 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\mars_base_private.h
+1277325646 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\mars_base_private.h
 
 1276848288 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\lang.h
 
@@ -102,7 +102,7 @@
 	"materiales.h"
 	<IL/ilut.h>
 
-1277320512 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.c
+1277321677 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.c
 	"objetos.h"
 	<stdio.h>
 	<GL/gl.h>
