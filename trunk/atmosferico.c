@@ -210,7 +210,7 @@ void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float dis
     delta_gas.O2 = node1->gases.O2 * prop;
     delta_gas.CO = node1->gases.CO * prop;
     delta_gas.H2O = node1->gases.H2O * prop;
-
+/*
     debug_printf("\nPress 1: %f Pa\n", pres1);
     debug_printf("Press 2: %f Pa\n", pres2);
     debug_printf("DELTA GASES (prop = %f):\n", prop * 2);
@@ -221,7 +221,7 @@ void node_flow_gas(t_node_data *node1, t_node_data *node2, float size, float dis
     debug_printf("  CO:  %f (%f, %f)\n", delta_gas.CO, node1->gases.CO, node2->gases.CO);
     debug_printf("  H2O: %f (%f, %f)\n", delta_gas.H2O, node1->gases.H2O, node2->gases.H2O);
     debug_printf("\n----------\n");
-
+*/
     node1->gases.CO2 -= delta_gas.CO2;
     node1->gases.N2 -= delta_gas.N2;
     node1->gases.Ar -= delta_gas.Ar;
@@ -262,7 +262,7 @@ void node_main_control(float step_time)
                 o_node = lista_objeto_base[p_obj]->conx_node_id[p_node];
                 distancia = vdist(lista_objeto_base[p_obj]->pos, lista_objeto_base[o_obj]->pos); // Distancia entre centros de objeto
 
-                debug_printf("Obj %i -> Obj %i\n", p_obj, o_obj);
+                //debug_printf("Obj %i -> Obj %i\n", p_obj, o_obj);
                 node_flow_gas(	&lista_objeto_base[p_obj]->node_data,
                                 &lista_objeto_base[o_obj]->node_data,
                                 lista_objeto_base[p_obj]->conx_size[p_node],
