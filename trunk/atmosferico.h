@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -68,13 +68,13 @@ extern float fogRange[2];/*= {25000.0f, 50000.0f}; !< Distancia mínima de la ni
 
 typedef struct
 {
-	float ambient[4];
-	float diffuse[4];
-	float specular[4];
-	float position[3];
-	float hora[1];
-	t_texture material;
-}t_sun;
+    float ambient[4];
+    float diffuse[4];
+    float specular[4];
+    float position[3];
+    float hora[1];
+    t_texture material;
+} t_sun;
 
 // Masas atómicas de las moléculas
 extern const double ma_co2;
@@ -104,28 +104,28 @@ extern const double densN_h20;
 
 typedef struct
 {
-	float CO2;
-	float N2;
-	float Ar;
-	float O2;
-	float CO;
-	float H2O;
-}t_gas;	/* Lista de cantidad de moles de cada tipo de gas (PV=nRT) */
+    float CO2;
+    float N2;
+    float Ar;
+    float O2;
+    float CO;
+    float H2O;
+} t_gas;	/* Lista de cantidad de moles de cada tipo de gas (PV=nRT) */
 
 
 typedef struct
 {
-	t_gas gases;	// Moles en un 1m3 de aire
-	float presion; // Se actualiza cada frame? depende de temperatura y gases
-	float temperatura;
-}t_atmosfera;
+    t_gas gases;	// Moles en un 1m3 de aire
+    float presion; // Se actualiza cada frame? depende de temperatura y gases
+    float temperatura;
+} t_atmosfera;
 
 typedef struct
 {
-	t_gas gases;
-	float volumen;
-	float temperatura;
-}t_node_data;
+    t_gas gases;
+    float volumen;
+    float temperatura;
+} t_node_data;
 
 extern t_atmosfera datos_atmosfera;
 

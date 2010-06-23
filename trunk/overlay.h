@@ -48,15 +48,15 @@ void draw_HUD(void);
 
 typedef struct st_Dialog
 {
-	int (*df)(int msg, struct st_Dialog * d, int c);
-	int x, y;
-	int w, h;
-	COLORf fg, bg;
-	int key;
-	int flag;
-	int d1, d2;
-	void *dp, *dp2, *dp3;
-}DIALOG;
+    int (*df)(int msg, struct st_Dialog * d, int c);
+    int x, y;
+    int w, h;
+    COLORf fg, bg;
+    int key;
+    int flag;
+    int d1, d2;
+    void *dp, *dp2, *dp3;
+} DIALOG;
 
 /* bits for the flags field */
 #define D_EXIT          1        /*!< object makes the dialog exit */

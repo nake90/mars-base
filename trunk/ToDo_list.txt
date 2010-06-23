@@ -1,5 +1,6 @@
 !!!	[ADD] Trace terreno (Falta z)
-!!!	[NEW] Funciones de transferencia de calor, gases y presión (Falta sacar las ecuaciones)
+!!!	[ADD] objeto.exists
+!!! [FIX] Hay errores al unir nodos.
 !!!	[NEW] Multitasking para las funciones de transferencia (Faltan las funciones).
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
 !!	[NEW] Menú de estado y acciones sobre objetos

@@ -93,9 +93,9 @@
 #define TRI_VERTEXOPTIONS 0x4111	/*!< #UNK# POINT_FLAG_ARRAY */
 #define TRI_FACEL1 0x4120			/*!< #OK# Polygons (faces) list */
 #define TRI_MATERIAL 0x4130			/*!< #OK# MSH_MAT_GROUP mesh_material_group
-		cstr material_name;
-		short nfaces;
-		short facenum[nfaces];*/
+cstr material_name;
+short nfaces;
+short facenum[nfaces];*/
 #define TRI_MAPPINGCOORS 0x4140		/*!< #OK# Vertices list */
 #define TRI_SMOOTH 0x4150			/*!< #POSIBLE# SMOOTH_GROUP */
 #define TRI_LOCAL 0x4160			/*!< #POSIBLE# MESH_MATRIX */
@@ -103,61 +103,69 @@
 #define TRI_MAPPINGSTANDARD 0x4170	/*!< #UNK# MESH_TEXTURE_INFO */
 
 /* - TYPEDEFS usados - */
-typedef struct{unsigned short a,b,c; int texture;}t_polygon; /*!< Polígono -> Apunta a 3 vértices y a una textura */
-typedef struct{float u,v;}t_mapcoord; /*!< Coordenadas u,v de la textura */
+typedef struct
+{
+    unsigned short a,b,c;
+    int texture;
+} t_polygon; /*!< Polígono -> Apunta a 3 vértices y a una textura */
+typedef struct
+{
+    float u,v;
+} t_mapcoord; /*!< Coordenadas u,v de la textura */
 
 /*! Datos del modelo */
 typedef struct
 {
-	char name[80]; /*!< Nombre del archivo (debería ser único) */
-	char **obj_name; /*!< Nombre definido en el archivo 3ds (nombre del componente del 3ds) */  //[MAX_MODEL_OBJETOS][20];
-	int *vertices_qty; /*!< Cantidad de vertices */  //[MAX_MODEL_OBJETOS];
-	int *polygons_qty; /*!< Cantidad de polígonos */  //[MAX_MODEL_OBJETOS];
-	int materials_qty; /*!< Cantidad de materiales */
-	int model_objetos_qty; /*!< Número de objetos dentro del objeto */
+    char name[80]; /*!< Nombre del archivo (debería ser único) */
+    char **obj_name; /*!< Nombre definido en el archivo 3ds (nombre del componente del 3ds) */  //[MAX_MODEL_OBJETOS][20];
+    int *vertices_qty; /*!< Cantidad de vertices */  //[MAX_MODEL_OBJETOS];
+    int *polygons_qty; /*!< Cantidad de polígonos */  //[MAX_MODEL_OBJETOS];
+    int materials_qty; /*!< Cantidad de materiales */
+    int model_objetos_qty; /*!< Número de objetos dentro del objeto */
 
-	VECTOR **vertex;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
-	t_polygon **polygon;//[MAX_MODEL_OBJETOS][MAX_POLYGONS];
-	t_mapcoord **mapcoord;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
-	t_texture material[MAX_MATERIALS];
+    VECTOR **vertex;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
+    t_polygon **polygon;//[MAX_MODEL_OBJETOS][MAX_POLYGONS];
+    t_mapcoord **mapcoord;//[MAX_MODEL_OBJETOS][MAX_VERTICES];
+    t_texture material[MAX_MATERIALS];
 
 
-	int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
-	int draw_lists; /*!< Número de índices compilados de OpenGL (por ahora siempre 1) */
+    int draw_list; /*!< Primer índice a la lista de dibujo compilado de OpenGL */
+    int draw_lists; /*!< Número de índices compilados de OpenGL (por ahora siempre 1) */
 
-	int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
+    int icono; /*!< ID de la textura usada como icono. (Estilo del spawn_menu del Garry's Mod) */
 
-	float size; /* Valor de la escala */
-}t_model, *t_model_ptr;
+    float size; /* Valor de la escala */
+} t_model, *t_model_ptr;
 
 /*! Base -> Modelo base para usar como ejemplo a la hora de crear más tipos de objetos */
 typedef struct
 {
-	char name[256]; /*!< Nombre del objeto */
-	t_model *modelo; /*!< Datos de vértices y demás */
-	VECTOR pos; /*!< Posición (en metros) */
-	VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
-	//VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
-	//VECTOR velang; /*!< Velocidad angular (en rad/s) */
-	float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisión del objeto */
+    char name[256]; /*!< Nombre del objeto */
+    t_model *modelo; /*!< Datos de vértices y demás */
+    VECTOR pos; /*!< Posición (en metros) */
+    VECTOR rot; /*!< Pitch, yaw y roll actuales del objeto {Pitch: x; Yaw: y; Roll: z} */
+    //VECTOR vel; /*!< Velocidad (en m/s) */ /* Mmmmm, voy a usarlos realmente???? los edificios no se mueven... */
+    //VECTOR velang; /*!< Velocidad angular (en rad/s) */
+    float sq_l, sq_r, sq_t, sq_b; /*!< Lados que definen la base rectangular de colisión del objeto */
 
-	/* Conexiones */
-	int conx_qty; /*!< Cantidad de conexiones (máximas) del objeto */
-	VECTOR conx_coord[MAX_CONX]; /*!< Coordenadas (locales) de las posibles conexiones del objeto */
-	VECTOR conx_norm[MAX_CONX]; /*!< Vectores normales (locales!) de las posibles conexiones del objeto */
-	int conx_id[MAX_CONX]; /*!< Id del objeto al que está conectado (-1 si no está conectado) */
-	int conx_node_id[MAX_CONX]; /*!< Id del nodo del objeto al que está conectado (-1 si no está conectado) */
-	float conx_size[MAX_CONX]; /*!< Tamaño de la conexión en metros. Deben coincidir para conectarse e influye en la transmisión de gases. */
+    /* Conexiones */
+    int conx_qty; /*!< Cantidad de conexiones (máximas) del objeto */
+    VECTOR conx_coord[MAX_CONX]; /*!< Coordenadas (locales) de las posibles conexiones del objeto */
+    VECTOR conx_norm[MAX_CONX]; /*!< Vectores normales (locales!) de las posibles conexiones del objeto */
+    int conx_id[MAX_CONX]; /*!< Id del objeto al que está conectado (-1 si no está conectado) */
+    int conx_node_id[MAX_CONX]; /*!< Id del nodo del objeto al que está conectado (-1 si no está conectado) */
+    float conx_size[MAX_CONX]; /*!< Tamaño de la conexión en metros. Deben coincidir para conectarse e influye en la transmisión de gases. */
 
-	//float volumen; /*!< Volumen del objeto en m3, usado para presión y uso de gases y cosas así */
-	float reparar; /*!< Nivel de daños del objeto [0->Perfecto, 1->Daños fatales] */
-	//float temperatura; /*!< Temperatura interna del objeto en kelvin */
-	t_node_data node_data;
+    //float volumen; /*!< Volumen del objeto en m3, usado para presión y uso de gases y cosas así */
+    float reparar; /*!< Nivel de daños del objeto [0->Perfecto, 1->Daños fatales] */
+    //float temperatura; /*!< Temperatura interna del objeto en kelvin */
+    t_node_data node_data;
 
-	// Internos
-	char selec; /*!< ¿Seleccionado? */
+    // Internos
+    char selec; /*!< ¿Seleccionado? */
+    char exists; /*!< ¿Existe? Si vale 1 si, si no es que se ha borrado. */
 
-}t_obj_base, *t_obj_base_ptr;
+} t_obj_base, *t_obj_base_ptr;
 
 t_model **lista_modelo; /* Lista dinámica de punteros a modelos mallocados */
 t_obj_base **lista_objeto_base; /* Lista dinámica de punteros a objetos mallocados */
@@ -178,6 +186,7 @@ void model_unload(t_model *model);
 /* - FUNCIONES de listas - */
 int lista_cargar_modelo(char *ruta); // Carga a la lista de modelos un modelo
 int lista_base_crear_elemento(int id_modelo);
+void lista_base_borrar_elemento(int id);
 int lista_cargar_modelo_dir(const char *dir);
 
 int lista_modelo_get_id(const char* nombre_modelo); // Obtiene el id de un modelo por su nombre

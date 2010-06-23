@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -49,24 +49,24 @@
 
 typedef struct
 {
-	unsigned int list; /* list -> Terreno; list+1 -> Casillas; list+2 -> Normales; */
-	int tam_x;
-	int tam_y;
-	float scale;
-	int zero_h;
-	int min_h;
-	int max_h;
-	float north;
-	float south;
-	float east;
-	float west;
-	int ini_x;
-	int ini_y;
-	int ini_z;
-	VECTOR* normal; /* Vector normal al plano (unitario) */
-	float* shadow; /* Valor de gris (0-1) */
-	unsigned char* data; /* Alturas (0-255) */
-}t_heightmap;
+    unsigned int list; /* list -> Terreno; list+1 -> Casillas; list+2 -> Normales; */
+    int tam_x;
+    int tam_y;
+    float scale;
+    int zero_h;
+    int min_h;
+    int max_h;
+    float north;
+    float south;
+    float east;
+    float west;
+    int ini_x;
+    int ini_y;
+    int ini_z;
+    VECTOR* normal; /* Vector normal al plano (unitario) */
+    float* shadow; /* Valor de gris (0-1) */
+    unsigned char* data; /* Alturas (0-255) */
+} t_heightmap;
 t_heightmap marte;
 
 int load_heightmap(const char* filename, t_heightmap* h_buffer, t_texture texture);
