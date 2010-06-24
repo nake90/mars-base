@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 {
     /* - INICIACIÓN VARIABLES - */
     getcwd(app_path,TEXT_LIST_MAX_SIZE);
-    str_append(app_path,"\\");
+    str_append(app_path,"/");
     //str_ruta_back(app_path);
     debug_mode=0;
 

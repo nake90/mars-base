@@ -76,8 +76,10 @@ main.o: /usr/include/SDL/SDL.h /usr/include/IL/ilut.h /usr/include/IL/il.h
 main.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
 main.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
 main.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h shared.h lang.h
-main.o: objetos.h overlay.h heightmap.h materiales.h atmosferico.h control.h
-main.o: display.h parser.h
+main.o: objetos.h atmosferico.h overlay.h heightmap.h materiales.h control.h
+main.o: display.h parser.h /usr/include/unistd.h
+main.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+main.o: /usr/include/getopt.h
 atmosferico.o: atmosferico.h shared.h /usr/include/GL/gl.h
 atmosferico.o: /usr/include/GL/glext.h /usr/include/inttypes.h
 atmosferico.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -110,7 +112,8 @@ atmosferico.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 atmosferico.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 atmosferico.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 atmosferico.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-atmosferico.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
+atmosferico.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h display.h
+atmosferico.o: heightmap.h objetos.h
 control.o: control.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
 control.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
 control.o: /usr/include/SDL/SDL_platform.h /usr/include/sys/types.h
@@ -142,11 +145,16 @@ control.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
 control.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
 control.o: shared.h /usr/include/GL/gl.h /usr/include/GL/glext.h
 control.o: /usr/include/SDL/SDL_ttf.h /usr/include/SDL/SDL.h
-control.o: mars_base_private.h lang.h /usr/include/IL/ilut.h
+control.o: mars_base_private.h lang.h atmosferico.h /usr/include/math.h
+control.o: /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h
+control.o: /usr/include/bits/huge_vall.h /usr/include/bits/inf.h
+control.o: /usr/include/bits/nan.h /usr/include/bits/mathdef.h
+control.o: /usr/include/bits/mathcalls.h /usr/include/IL/ilut.h
 control.o: /usr/include/IL/il.h /usr/include/limits.h
 control.o: /usr/include/bits/posix1_lim.h /usr/include/bits/local_lim.h
 control.o: /usr/include/linux/limits.h /usr/include/bits/posix2_lim.h
-control.o: /usr/include/IL/ilu.h objetos.h overlay.h heightmap.h parser.h
+control.o: /usr/include/IL/ilu.h objetos.h overlay.h display.h heightmap.h
+control.o: parser.h
 display.o: /usr/include/GL/gl.h /usr/include/GL/glext.h
 display.o: /usr/include/inttypes.h /usr/include/features.h
 display.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
@@ -288,7 +296,7 @@ objetos.o: /usr/include/SDL/SDL_mouse.h /usr/include/SDL/SDL_video.h
 objetos.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
 objetos.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
 objetos.o: /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_ttf.h
-objetos.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h
+objetos.o: /usr/include/SDL/SDL.h mars_base_private.h lang.h atmosferico.h
 objetos.o: /usr/include/GL/glu.h /usr/include/IL/ilut.h /usr/include/IL/il.h
 objetos.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
 objetos.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
@@ -331,6 +339,11 @@ overlay.o: /usr/include/GL/glu.h /usr/include/IL/ilut.h /usr/include/IL/il.h
 overlay.o: /usr/include/limits.h /usr/include/bits/posix1_lim.h
 overlay.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
 overlay.o: /usr/include/bits/posix2_lim.h /usr/include/IL/ilu.h
+overlay.o: /usr/include/math.h /usr/include/bits/huge_val.h
+overlay.o: /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h
+overlay.o: /usr/include/bits/inf.h /usr/include/bits/nan.h
+overlay.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+overlay.o: atmosferico.h objetos.h
 parser.o: parser.h /usr/include/stdio.h /usr/include/features.h
 parser.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
 parser.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
