@@ -2,7 +2,7 @@
 // Falta mucho, es solo de test
 
 //Mensajes de error
-err_init_sdl = Error, could no start SDL: %s.\n
+err_init_sdl = Error, could not start SDL: %s.\n
 err_background = Error, background texture not found.\n
 err_font = Error, font not found:\"%s\".\n
 err_null_texture = Error loading null_texture!\n
@@ -71,5 +71,5 @@ dlg_screenshot = Screenshot saved
 
 //Texto de hud
 hud_to_floor = Distance to the floor: %f
-hud_ghost_mode_message = Click were you want the object (',' and '.' rotate) or press ESC to cancel.
+hud_ghost_mode_message = Click where you want to place the object (press ',' and '.' to rotate) or press ESC to cancel.
 

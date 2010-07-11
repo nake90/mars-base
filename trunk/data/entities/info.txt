@@ -1,0 +1,39 @@
+____________________________________________________________________________________________________
+Descripción de la variable 'objeto'
+	objeto.id = Número de identificación del objeto. (READ ONLY)
+	objeto.name = Nombre del objeto.
+	objeto.model = Nombre del modelo. (READ ONLY)
+	objeto.pos.[x|y|z] = Coordenada global en la que está el objeto.
+	objeto.rot.[pitch|yaw|roll] = Ángulo en grados del objeto.
+	objeto.sq.[left|right|top|bottom] = Tamaño de la colisión en metros desde el centro del objeto.
+	objeto.conx_qty = Cantidad de conexiones. (READ ONLY)
+	objeto.conx_coord[].[x|y|z] = Matriz de coordenadas locales de las conexiones. (READ ONLY) POR IMPLEMENTAR
+	objeto.conx_norm[].[x|y|z] = Matriz de vectores normales de las conexiones. (READ ONLY) POR IMPLEMENTAR
+	objeto.conx_id[] = Matriz de número de identificación de objetos al que están conectados los POR IMPLEMENTAR
+		nodos, o -1 si no está conectado.
+	objeto.conx_node_id[] = Matriz de id del nodo al que está conectado. POR IMPLEMENTAR
+	objeto.conx_size[] = Tamaño de la conexión, en metros. (Área de la puerta) (READ ONLY) POR IMPLEMENTAR
+	objeto.reparar = Estado del objeto en daños. [0:Perfecto, 1:Daños fatales]
+	objeto.node_data = Datos del objeto de gases. (Ver node_data)
+	objeto.selec = ¿Seleccionado?
+____________________________________________________________________________________________________
+Descripción de la variable 'node_data'
+	node_data.gases = Cantidad en moles de cada gas. (Ver Lista de gases)
+	node_data.volumen = Volumen en m3 del objeto.
+	node_data.temperatura = Temperatura de los gases en Kelvins.
+____________________________________________________________________________________________________
+Lista de gases
+	* CO2
+	* N2
+	* Ar
+	* O2
+	* CO
+	* H2O
+____________________________________________________________________________________________________
+Lista de funciones
+	message(mensaje) -> Muestra un mensaje por la pantalla.
+	print(mensaje) -> Muestra un mensaje por la pantalla. (Cuando pueda cambiará a mostrar texto en
+					el HUD sin detener el juego)
+	debug_print(mensaje) -> Escribe el mensaje en el debug.log
+	object_kill(id) -> Borra el objeto POR IMPLEMENTAR
+	object_change_model(model_name) -> Cambia el modelo del objeto POR IMPLEMENTAR

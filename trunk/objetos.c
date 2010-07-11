@@ -747,6 +747,7 @@ void object_draw_nodes(t_obj_base_ptr object)
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
 
     glTranslatef(object->pos.x,object->pos.y,object->pos.z);
 
@@ -794,6 +795,7 @@ void object_draw_selected(t_obj_base_ptr object)
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
 
     glTranslatef(object->pos.x,object->pos.y,object->pos.z);
 
@@ -968,7 +970,7 @@ int lista_cargar_modelo_dir(const char *dir)
             str_cpyl(buffer,1023,dir);
             str_append(buffer,"/");
             str_append(buffer,datos.name);
-            debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos.name);
+            ifdebug(DEBUG_INFO){debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos.name);}
             lista_cargar_modelo(buffer);
         }
         else if(datos.attrib & _A_SUBDIR && str_cmp(datos.name,".")!=0 && str_cmp(datos.name,"..")!=0) // Si es una carpeta llamamos a esta misma función y au!
@@ -1036,7 +1038,7 @@ int lista_cargar_modelo_dir(const char *dir)
             str_cpyl(buffer,1023,dir);
             str_append(buffer,"/");
             str_append(buffer,datos->d_name);
-            debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos->d_name);
+            ifdebug(DEBUG_INFO){debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos->d_name);}
             lista_cargar_modelo(buffer);
         }
         else if(datos->d_type == DT_DIR && str_cmp(datos->d_name,".")!=0 && str_cmp(datos->d_name,"..")!=0) // Si es una carpeta llamamos a esta misma función y au!
@@ -1240,7 +1242,7 @@ void model_unload(t_model *model)
 {
     int i;
     // OPENGL LISTS
-    debug_printf("glDeleteLists!\n");
+    ifdebug(DEBUG_DEBUG){debug_printf("glDeleteLists!\n");}
     glDeleteLists(model->draw_list,model->draw_lists);
     model->draw_lists=0;
 

@@ -190,7 +190,8 @@ int nceil(float val);
 int nsgn(float val);
 
 /* RANDOM */
-void randomize(float seed);
+void randomize(float seed); //!< Genera un número aleatorio con (seed * número de segundos) como seed.
+void randomize_seed(float seed); //!< Genera un número aleatorio con seed, mismo seed da mismo aleatorio.
 int irand(int max); // Integer random [0 - max]
 int sirand(int max); // Signed integer random [(-max) - (+max)]
 float frand(void); // Float random [0 - 1]

@@ -62,6 +62,7 @@
 #include "atmosferico.h"
 #include "control.h"
 #include "display.h"
+#include "entities.h"
 #include "parser.h"
 
 #ifdef WINDOWS // Para obtener el directorio actual
@@ -95,6 +96,7 @@ void salir(void)
     /* Unload maps */
     destroy_heightmap(&marte);
     /* Unload objects */
+    entity_list_unload();
     lista_modelos_limpiar();
     lista_base_limpiar();
     /* Unload materials */
@@ -340,7 +342,7 @@ int main(int argc, char *argv[])
     }
 
     scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 1]);
-    camera.pitch = -50.0;
+    camera.pitch = -20.0;
     camera.yaw =  0.0;
     camera.roll = 0.0;
     camera.pos_x= 0.0;
@@ -382,6 +384,11 @@ int main(int argc, char *argv[])
     {
         debug_printf(TL_ERR_MODEL_DIR,buffer);
     }
+
+
+    if(entity_init()!=0){debug_printf("Error al iniciar las entidades.\n"); exit(-20);}
+
+
 
     scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 13]);
     glClearColor(fogColor[0],fogColor[1],fogColor[2],1.0f);
@@ -437,6 +444,10 @@ int main(int argc, char *argv[])
         if(node_main_control_loop)
         {
             node_main_control(TICK_INTERVAL*2/1000.0);
+            for(i=0; i<lista_entities; i++)
+            {
+            	entity_exec_update(i,TICK_INTERVAL*2/1000.0);
+            }
             node_main_control_loop=0;
         }
         else
@@ -448,7 +459,7 @@ int main(int argc, char *argv[])
     }
     ifdebug(DEBUG_INFO)
     {
-        debug_printf("main_loo_end\n");
+        debug_printf("main_loop_end\n");
     }
 
     exit(0);

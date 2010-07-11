@@ -1,12 +1,8 @@
 Notas de versión:
 * Aprieta <ESPACIO> para ver el menú de objetos y haz click en el objeto que quieras crear.
 * Control y creación de nodos en pruebas, deberían autoconectarse (en verde) los objetos con nodos definidos.
-* Transmisión de gases entre habitáculos en prueba (El primer edificio genera oxígeno. 0.1 moles cada milisegundo).
-* Este texto se carga del archivo motd.txt
-* Puedes Configurar las opciones de arranque en config.cfg
-* ¡Ahora el ratón apunta correctamente!
-* Al crear un objeto sale en rojo si colisiona con otro.
+* Puedes configurar las opciones de arranque en config.cfg
+* Aprieta <T> mientras seleccionas un objeto para que se le asigne el entity 'test.lua'.
 * Puedes comentar / quejarte / dar sugerencias / reportar fallos / agradecer el proyecto en nuestro foro:
 http://www.nakerium.com/foro/
 * ¡Puedes borrar objetos! Seleccionalo y pulsa 'SUPR'. Aunque actualmente tiene bastantes fallos.
-* Si seleccionas un objeto se muestra su estado.

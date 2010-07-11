@@ -31,41 +31,31 @@
 	   	   nake90@terra.es
 */
 
-/** \file control.h
- * \brief Funciones de control del programa (Entrada de teclado y ratón... etc
- * Este archivo contiene las funciones que se encargan de controlar el estado del programa y de entrada directa
- * del usuario (teclado, ratón, y cosas así).
+/** \file entities.h
+ * \brief Creaci�n y control de objetos asociados a entidades y la ejeccuci�n de scripts relacionados.
+ * B�sicamente este archivo define todos los elementos necesarios para cargar archivos LUA que definen
+ * la forma en la que se comportan las distintas entidades. Estas entidades son objetos con elementos
+ * din�micos como generadores, puertas, ...
  * \author Alfonso Arbona Gimeno
 */
-#ifndef CONTROL_H
-#define CONTROL_H
 
-#include <SDL/SDL.h>
+
+#ifndef __ENTITIES_H__
+#define __ENTITIES_H__
+
 #include "shared.h"
+#include "objetos.h"
 
-// Máxima distancia al cuadrado desde la cámara hasta el objeto al hacer los traces
-#define MAX_DIST_TRACE_OBJ_SQ 5000
-#define MAX_DIST_CONX_SQ 50000
+#define ENTITY_NAME_MAXLEN 256
 
-/* Cantidad de elementos a parte de los iconos que hay en el spawn_dialog */
-#define SPAWN_DIALOG_HEADER_SIZE 3
 
-void control(void);
-void key_handle(SDLKey key, SDLMod mod);
-void key_up_handle(SDLKey key, SDLMod mod);
-void mouse_move_but(int button, int x, int y);
-void mouse_static_but(int button, int x, int y);
-void process_events(void);
-void clear_cola_eventos(void);
-void main_update(void);
+extern int lista_entities; /*!< Cantidad de entidades creadas en el mapa */
 
-int open_spawn_dialog(void); // Retorna el id del modelo a cargar o -1
-int place_object(int id_modelo); // Ejecuta una rutina de posicionamiento del objeto, retorna 1 si se ha puesto el objeto
+int entity_init(void);
+void entity_execf(unsigned int id, const char* function_name);
+void entity_exec_update(unsigned int id, double time_elapsed);
 
-int get_traced_object(VECTOR pos, VECTOR dir);
+int entity_list_load(const char* filename, int object_id);
+void entity_list_unload(void);
 
-extern int last_m_x,last_m_y;
-extern SDL_Event sdl_event;
-int window_mode; /* 0->Normal, 1->Minimizado */
-
-#endif
+#endif // __ENTITIES_H__

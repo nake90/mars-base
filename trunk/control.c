@@ -47,11 +47,14 @@
 #include "overlay.h"
 #include "display.h"
 #include "heightmap.h"
+#include "entities.h"
 #include "parser.h"
 
 extern DIALOG spawn_dialog[];
 
 static int rotate_ghost, enable_create_object;
+SDL_Event sdl_event;
+int last_m_x,last_m_y;
 
 void control(void)
 {
@@ -693,7 +696,11 @@ void key_handle(SDLKey key, SDLMod mod)
 
     case SDLK_t: /* Funciones de test */
         //node_flow_gas(&node1, &node2, 2.0f, 8.0f, 0.1f);
-
+		for(i=0;i<lista_objetos_base;i++)
+		{
+			if(lista_objeto_base[i]->selec)
+				entity_list_load("data/entities/test.lua", i);
+		}
         break;
 
     case SDLK_DELETE:
