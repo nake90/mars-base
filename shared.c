@@ -1049,6 +1049,10 @@ void randomize(float seed)
 {
     srand(time(NULL)*seed);
 }
+void randomize_seed(float seed)
+{
+    srand(seed);
+}
 int irand(int max)
 {
     return (rand() % (max-1));

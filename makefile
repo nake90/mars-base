@@ -5,9 +5,9 @@ LD = gcc
 # program executable file name.
 PROG = mars_base
 # define the list of source files.
-SRCS = main.c atmosferico.c control.c display.c heightmap.c materiales.c objetos.c overlay.c parser.c shared.c lang.c
+SRCS = main.c atmosferico.c control.c display.c heightmap.c materiales.c objetos.c overlay.c parser.c shared.c lang.c entities.c
 # list of generated object files.
-OBJS = main.o atmosferico.o control.o display.o heightmap.o materiales.o objetos.o overlay.o parser.o shared.o lang.o
+OBJS = main.o atmosferico.o control.o display.o heightmap.o materiales.o objetos.o overlay.o parser.o shared.o lang.o entities.o
 # Compiler flags go here.
 CFLAGS = -ggdb -DOPENGLUT_STATIC -IL_STATIC_LIB
 # Linker flags go here. Currently there aren't any, but if we'll switch to

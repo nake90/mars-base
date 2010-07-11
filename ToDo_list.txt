@@ -1,10 +1,18 @@
+!!!![ADD] Comprobar dll's e inicialización.
+!!!	[ADD] Falta pasar y obtener los datos de los nodos con LUA
+!!! [FIX] Cambiar el terreno a quadtrees.
+!!! [ADD] - Añadir funciones de quadtrees.
+!!! [ADD] - Añadir terreno con randoms.
+!!! [FIX] - Nuevo formato: Necesita normales mejores, sombra por hora, y reorganización de datos para que sea más fácil cargar.
+!!!	[ADD] - Triángulos lejanos de mayor tamaño para aumentar el rendimiento
+!!! [FIX] - Mejorar el algoritmo para generar los id's de los child. (añadirlo al compilar?)
 !!!	[ADD] Trace terreno (Falta z)
-!!!	[ADD] objeto.exists
-!!! [FIX] Hay errores al unir nodos.
-!!!	[NEW] Multitasking para las funciones de transferencia (Faltan las funciones).
+!!!	[FIX] objeto.exists
+!!! [FIX] Hay errores en el GhostMode.
+!!!	[NEW] Multitasking para las funciones de transferencia.
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
-!!	[NEW] Menú de estado y acciones sobre objetos
-!!	[ADD] Triángulos lejanos de mayor tamaño para aumentar el rendimiento
+!!	[NEW] Menú de estado y acciones sobre objetos.
+!!	[ADD] Auto conectar objetos que estén cerca unos de otros.
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
 !	[FIX] Grid (Falla offset. ¿Es realmente necesario esto?)
 !	[FIX] Problemas con movimiento por teclado
@@ -24,7 +32,6 @@
 !	[NEW] Mejor control de la niebla: Si cerca del suelo más niebla para aumentar el rendimiento
 !	[NEW] Distancia máxima de dibujo de modelos
 !	[NEW] Mejorar acciones del ratón: Menús, botones, hud usable
-!	[NEW] Cambiar de color si el ghost está bien/mal
 !	[NEW] Controlar los \n en hud_printf y tal
 !	[NEW] Calcular y guardar función de las sombras respecto la hora del día -> Ciclos día/noche.
-!	[FIX] Densidad del H2O gas???
+!	[FIX] Densidad del H2O gas??? (¿Necesario?)

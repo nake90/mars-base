@@ -34,8 +34,8 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-DOPENGLUT_STATIC" />
 			<Add option="-IL_STATIC_LIB" />
+			<Add option="-DOPENGLUT_STATIC" />
 		</Compiler>
 		<Linker>
 			<Add option="-mwindows" />
@@ -51,6 +51,7 @@
 			<Add library="ilu" />
 			<Add library="ilut" />
 			<Add library="SDL_ttf" />
+			<Add library="lua" />
 		</Linker>
 		<Unit filename="ToDo_list.txt">
 			<Option target="&lt;{~None~}&gt;" />
@@ -79,6 +80,10 @@
 		<Unit filename="display.h">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="entities.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="entities.h" />
 		<Unit filename="heightmap.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -102,9 +107,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="motd.txt">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
-		<Unit filename="my_changelog.txt">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="objetos.c">

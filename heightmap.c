@@ -36,6 +36,7 @@
  * \author Alfonso Arbona Gimeno
 */
 #include "heightmap.h"
+#include <math.h>
 #include <stdio.h>
 #include <GL/gl.h>
 #include <IL/ilut.h>
@@ -43,6 +44,8 @@
 //#include <GL/glu.h>
 //#include <SDL/SDL.h>
 //#include <SDL/SDL_ttf.h>
+
+t_heightmap marte;
 
 static VECTOR calc_normal(VECTOR vec1,VECTOR vec2)
 {
@@ -319,6 +322,19 @@ void list_compile_map(t_heightmap* obj, t_texture texture)
     glEndList();
 }
 
+
+static
+int sumatorio_4(int a) //!< Calcula SUM(i=0 hasta 'a'){4^i}
+{
+	int i, res=1;
+	for(i=1; i<=a; i++)
+	{
+		res+=pow(4,i);
+	}
+	return res;
+}
+
+
 int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
 {
     int magic_ = ((char)'n')+((char)'h'<<8)+((char)'m'<<16);
@@ -375,6 +391,7 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
     /* -- Datos -- */
 
     /* malloc's */
+#ifdef __OLD_NMAP_MODE__
     obj->list=0;
     obj->data=malloc(sizeof(unsigned char)*obj->tam_y*obj->tam_x);
     if(!obj->data)
@@ -383,14 +400,17 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
         return 3;
     }
     obj->shadow=malloc(sizeof(float)*obj->tam_y*obj->tam_x);
-    if(!obj->data)
+    if(!obj->shadow)
     {
+        free(obj->data);
         debug_printf(TL_ERR_MAP_MALLOC,obj->tam_y,obj->tam_x);
         return 3;
     }
     obj->normal=malloc(sizeof(VECTOR)*obj->tam_y*obj->tam_x);
-    if(!obj->data)
+    if(!obj->normal)
     {
+        free(obj->data);
+        free(obj->shadow);
         debug_printf(TL_ERR_MAP_MALLOC,obj->tam_y,obj->tam_x);
         return 3;
     }
@@ -403,7 +423,203 @@ int load_compiled_map(const char* ruta, t_heightmap* obj, t_texture texture)
     fread(obj->data, sizeof(unsigned char), obj->tam_x*obj->tam_y, file);
     fclose(file);
 
+#else
+	obj->list=0;
+	float iter, multipl;
+    int despl_x=0, despl_y=0, mult=1, lado; // Los uso después si el mapa no es cuadrado.
+    /* despl_? define un desplazamiento lineal a la hora de usar los vértices, de
+    forma que si el mapa no es cuadrado el proceso se repita varias veces
 
+    */
+
+	/*! El número de quads se calcula así:
+		num_quads = SUM(i de 0 a nºiteraciones){4^i}
+		siendo nºiteraciones = log2(lado_mapa) = ln(lado_mapa)/ln(2)
+		Como el mapa puede no ser cuadrado, se calcula para el lado menor y se
+		multiplica por lado_mayor/lado_menor. Que es entero ya que el mapa es
+		múltiplo de 2. Muahahahaaaa soy DIOS xD, todo esto lo he sacado yo sin
+		internet ni na de eso. Gracias Cálculo Infinitesimal e Integral xD
+	*/
+
+	if(obj->tam_x == obj->tam_y)
+	{
+		iter = log((double)obj->tam_x)/0.9314718056d; // log(2)
+
+		if(nround(iter*1000.0f)/1000.0f != iter)
+		{
+			debug_printf("Error, el tamaño del mapa no es multiplo de 2\n");
+			return 4;
+		}
+		obj->max_detail = nround(iter);
+		obj->max_detail_rand = obj->max_detail + MAP_DETAIL_RANDOM;
+
+		obj->num_quads = sumatorio_4(obj->max_detail_rand);
+		obj->num_parents = 1;
+		lado=obj->tam_x;
+	}
+	else if(obj->tam_x > obj->tam_y)
+	{
+		multipl = ((float)obj->tam_x)/((float)obj->tam_y);
+		if(nround(multipl*1000.0f)/1000.0f != nround(multipl)) // Compruebo que los 3 primeros decimales sean 0
+		{
+			debug_printf("Error, el tamaño del mapa no es multiplo de 2\n");
+			return 4;
+		}
+		mult = nround(multipl);
+		despl_x = obj->tam_y * (mult-1);
+		obj->num_parents = mult;
+
+		iter = log((double)obj->tam_y)/0.9314718056d; // log(2)
+
+		if(nround(iter*1000.0f)/1000.0f != iter)
+		{
+			debug_printf("Error, el tamaño del mapa no es multiplo de 2\n");
+			return 4;
+		}
+		obj->max_detail = nround(iter);
+		obj->max_detail_rand = obj->max_detail + MAP_DETAIL_RANDOM;
+
+		obj->num_quads = sumatorio_4(obj->max_detail_rand) * nround(multipl);
+		lado=obj->tam_y;
+	}
+	else/// if(obj->tam_x < obj->tam_y)
+	{
+		multipl = ((float)obj->tam_y)/((float)obj->tam_x);
+		if(nround(multipl*1000.0f)/1000.0f != nround(multipl)) // Compruebo que los 3 primeros decimales sean 0
+		{
+			debug_printf("Error, el tamaño del mapa no es multiplo de 2\n");
+			return 4;
+		}
+		mult = nround(multipl);
+		despl_y = obj->tam_x * mult;
+		obj->num_parents = mult;
+
+		iter = log((double)obj->tam_x)/0.9314718056d; // log(2)
+
+		if(nround(iter*1000.0f)/1000.0f != iter)
+		{
+			debug_printf("Error, el tamaño del mapa no es multiplo de 2\n");
+			return 4;
+		}
+		obj->max_detail = nround(iter);
+		obj->max_detail_rand = obj->max_detail + MAP_DETAIL_RANDOM;
+
+		obj->num_quads = sumatorio_4(obj->max_detail_rand) * nround(multipl);
+		lado=obj->tam_x;
+	}
+
+	//! Hacemos los mallocs
+    obj->vertex=malloc(sizeof(vertex)*obj->tam_y*obj->tam_x);
+    if(!obj->vertex)
+    {
+        debug_printf(TL_ERR_MAP_MALLOC,obj->tam_y,obj->tam_x);
+        return 3;
+    }
+    obj->quadtree=malloc(sizeof(t_map_quad)*obj->num_quads);
+    if(!obj->quadtree)
+    {
+        free(obj->vertex);
+        debug_printf("Error en el malloc al crear la lista de quads (%i quads)\n",obj->num_quads);
+        return 3;
+    }
+
+	unsigned char *data;
+	float *shadow;
+	VECTOR *normal;
+
+	data=malloc(sizeof(unsigned char)*obj->tam_y*obj->tam_x);
+    if(!data)
+    {
+        free(obj->vertex);
+        free(obj->quadtree);
+        debug_printf(TL_ERR_MAP_MALLOC,obj->tam_y,obj->tam_x);
+        return 3;
+    }
+    shadow=malloc(sizeof(float)*obj->tam_y*obj->tam_x);
+    if(!shadow)
+    {
+        free(obj->vertex);
+        free(obj->quadtree);
+        free(data);
+        debug_printf(TL_ERR_MAP_MALLOC,obj->tam_y,obj->tam_x);
+        return 3;
+    }
+    normal=malloc(sizeof(VECTOR)*obj->tam_y*obj->tam_x);
+    if(!normal)
+    {
+        free(obj->vertex);
+        free(obj->quadtree);
+        free(data);
+        free(shadow);
+        debug_printf(TL_ERR_MAP_MALLOC,obj->tam_y,obj->tam_x);
+        return 3;
+    }
+
+	//! Leemos los datos
+    /* Normales */
+    fread(normal, sizeof(VECTOR), obj->tam_x*obj->tam_y, file);
+    /* Shadows */
+    fread(shadow, sizeof(float), obj->tam_x*obj->tam_y, file);
+    /* Alturas */
+    fread(data, sizeof(unsigned char), obj->tam_x*obj->tam_y, file);
+
+
+    fclose(file);
+
+    //! Guardamos los datos en las variables
+
+    int i;
+    for(i=0; i<obj->tam_x*obj->tam_y; i++)
+    {
+		obj->vertex[i].altura=(double)data[i];
+		obj->vertex[i].shadow=shadow[i];
+		//! Faltan las normales, están mal hechas, hay que añadirlas al formato del nmap.
+    }
+
+	free(data);
+	free(shadow);
+    free(normal);
+
+
+    //! Creamos los quadtrees
+    int incr, x,y;
+    incr=1;
+    #define xy2i(x,y) ((x)+(y)*lado)
+    // En juego: x->Izquierda a derecha, y->Detrás a delante; En vértices: x->Iz. a der. y-> Arriba a abajo! (creo...)
+    i=0;
+    do
+    {
+		for(y=0; y<obj->tam_y; y+=incr)
+		{
+			for(x=0; x<obj->tam_x; x+=incr)
+			{
+				obj->quadtree[i].vertex[0] = xy2i(x,y);				// Arriba izquierda
+				obj->quadtree[i].vertex[1] = xy2i(x,y+incr);		// Abajo izquierda
+				obj->quadtree[i].vertex[2] = xy2i(x+incr,y+incr);	// Abajo derecha
+				obj->quadtree[i].vertex[3] = xy2i(x+incr,y);		// Arriba derecha
+				obj->quadtree[i].child[0]  = obj->num_quads;	// Si child es el último se considera nulo.
+				obj->quadtree[i].child[1]  = obj->num_quads;
+				obj->quadtree[i].child[2]  = obj->num_quads;
+				obj->quadtree[i].child[3]  = obj->num_quads;
+				//obj->quadtree[i].normal[0] = ### ; FALTA <<<<<<<<<<<<<<
+				//obj->quadtree[i].normal[1] = ### ; FALTA <<<<<<<<<<<<<<
+				i++;
+				if(i>obj->num_quads)
+				{
+					debug_printf("Error, hay más quads de los calculados!\n");
+					free(obj->vertex);
+					free(obj->quadtree);
+					return -10;
+				}
+			}
+		}
+		incr*=2;
+	}while(incr<lado);
+
+	//! FALTA ASIGNAR child's
+
+	#undef xy2i
+#endif
     /* --- */
     list_compile_map(obj, texture);
     scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 13]);

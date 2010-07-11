@@ -510,6 +510,8 @@ void video_init(void)
     /* OpenGL - Specific */
     //if(!isExtensionSupported("GL_ARB_multitexture")){debug_printf("ERROR, GL_ARB_multitexture not supported"); exit(-3);}
 
+	debug_printf(" OpenGL version: %s\n\n", glGetString(GL_VERSION) );
+
     glShadeModel(GL_SMOOTH);
     glClearColor(0.02f,0.1f,0.02f,1.0f);
 

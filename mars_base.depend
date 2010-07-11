@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1277315081 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\atmosferico.c
+1278781252 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\atmosferico.c
 	"atmosferico.h"
 	"display.h"
 	"objetos.h"
@@ -7,7 +7,7 @@
 1277315081 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\atmosferico.h
 	"shared.h"
 
-1277315082 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\shared.h
+1278151429 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\shared.h
 	<GL/gl.h>
 	<SDL/SDL.h>
 	<SDL/SDL_ttf.h>
@@ -15,7 +15,7 @@
 	"mars_base_private.h"
 	"lang.h"
 
-1277325646 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\mars_base_private.h
+1278867385 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\mars_base_private.h
 
 1276848288 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\lang.h
 
@@ -25,14 +25,14 @@
 	"shared.h"
 	"heightmap.h"
 
-1277315081 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\heightmap.h
+1278607933 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\heightmap.h
 	"shared.h"
 
 1277319844 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.h
 	"shared.h"
 	"atmosferico.h"
 
-1277320927 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.c
+1278864991 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.c
 	"control.h"
 	"atmosferico.h"
 	<math.h>
@@ -42,9 +42,10 @@
 	"overlay.h"
 	"display.h"
 	"heightmap.h"
+	"entities.h"
 	"parser.h"
 
-1276848287 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.h
+1278068430 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.h
 	<SDL/SDL.h>
 	"shared.h"
 
@@ -53,7 +54,7 @@
 
 1277315082 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\parser.h
 
-1277315081 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\display.c
+1278865044 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\display.c
 	<GL/gl.h>
 	<GL/glu.h>
 	<GL/glext.h>
@@ -64,8 +65,9 @@
 	"display.h"
 	"overlay.h"
 
-1277315081 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\heightmap.c
+1278770733 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\heightmap.c
 	"heightmap.h"
+	<math.h>
 	<stdio.h>
 	<GL/gl.h>
 	<IL/ilut.h>
@@ -76,7 +78,7 @@
 	"parser.h"
 	<stdio.h>
 
-1277317846 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\main.c
+1278863593 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\main.c
 	"mars_base_private.h"
 	<time.h>
 	<GL/gl.h>
@@ -91,6 +93,7 @@
 	"atmosferico.h"
 	"control.h"
 	"display.h"
+	"entities.h"
 	"parser.h"
 	<direct.h>
 	<unistd.h>
@@ -102,7 +105,7 @@
 	"materiales.h"
 	<IL/ilut.h>
 
-1277321677 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.c
+1278867251 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.c
 	"objetos.h"
 	<stdio.h>
 	<GL/gl.h>
@@ -114,7 +117,7 @@
 	<dirent.h>
 	<sys/stat.h>
 
-1277320010 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\overlay.c
+1278777659 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\overlay.c
 	"control.h"
 	"overlay.h"
 	"heightmap.h"
@@ -133,7 +136,7 @@
 	<stdlib.h>
 	"shared.h"
 
-1277315082 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\shared.c
+1278151725 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\shared.c
 	<GL/glu.h>
 	<GL/glext.h>
 	<IL/ilut.h>
@@ -141,4 +144,15 @@
 	<math.h>
 	<time.h>
 	"shared.h"
+
+1278782061 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\entities.h
+	"shared.h"
+	"objetos.h"
+
+1278782061 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\entities.c
+	<lua.h>
+	<lualib.h>
+	<lauxlib.h>
+	<stdio.h>
+	"entities.h"
 

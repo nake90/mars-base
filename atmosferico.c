@@ -249,11 +249,6 @@ void node_main_control(float step_time)
     float distancia; // Distancia entre los centros de presión (Centro del objeto)
     for(p_obj=0; p_obj<lista_objetos_base; p_obj++)
     {
-        if(p_obj==0)
-        {
-            lista_objeto_base[p_obj]->node_data.gases.O2+=0.1;    // Generador de oxígeno
-        }
-
         for(p_node=0; p_node<lista_objeto_base[p_obj]->conx_qty; p_node++) // Para cada nodo propio
         {
             o_obj=lista_objeto_base[p_obj]->conx_id[p_node]; // Obtenemos el ID del otro objeto

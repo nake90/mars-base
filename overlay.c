@@ -141,7 +141,7 @@ void draw_HUD(void)
         if(lista_objeto_base[i]->exists && lista_objeto_base[i]->selec == 1)
         {
             tot=moles_gas_total(lista_objeto_base[i]->node_data.gases);
-            hud_printf (12, (cont*10+20)*12, "Objeto %i:", i);
+            hud_printf (12, (cont*10+20)*12, "%s (id = %i):", lista_objeto_base[i]->name,i);
             hud_printf (12, (cont*10+21)*12, "  Press: %.3f", get_presion(lista_objeto_base[i]->node_data.gases, lista_objeto_base[i]->node_data.volumen, lista_objeto_base[i]->node_data.temperatura));
             hud_printf (12, (cont*10+22)*12, "  CO2 %3.2f%%", lista_objeto_base[i]->node_data.gases.CO2/tot * 100);
             hud_printf (12, (cont*10+23)*12, "  N2  %3.2f%%", lista_objeto_base[i]->node_data.gases.N2/tot * 100);

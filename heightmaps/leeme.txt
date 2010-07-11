@@ -1,0 +1,11 @@
+Los datos han sido sacados de http://www.mapaplanet.org/ y se corresponden con las alturas reales de
+Marte obtenidas por el Viking.
+
+
+Nota al crear tus propios mapas:
+####################################################
+# EL TAMAÑO DEL TERRENO DEBE SER DE POTENCIAS DE 2 #
+####################################################
+Es decir: 1024x512 está bien, 800x600 está mal.
+Antes no era así, pero al subdividir el terreno en quadtrees la condición es necesaria, y así se
+pueden añadir ciertas optimizaciones que antes no se podían.
