@@ -2,7 +2,7 @@ Notas de versión:
 * Aprieta <ESPACIO> para ver el menú de objetos y haz click en el objeto que quieras crear.
 * Control y creación de nodos en pruebas, deberían autoconectarse (en verde) los objetos con nodos definidos.
 * Puedes configurar las opciones de arranque en config.cfg
-* Aprieta <T> mientras seleccionas un objeto para que se le asigne el entity 'test.lua'.
+* Aprieta <Y> mientras seleccionas un objeto para añadir una entity al objeto.
 * Puedes comentar / quejarte / dar sugerencias / reportar fallos / agradecer el proyecto en nuestro foro:
 http://www.nakerium.com/foro/
 * ¡Puedes borrar objetos! Seleccionalo y pulsa 'SUPR'. Aunque actualmente tiene bastantes fallos.

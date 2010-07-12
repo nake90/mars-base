@@ -1,10 +1,10 @@
 /*! \mainpage Mars Base
  *
- * \section intro_sec Introducci√≥n
+ * \section intro_sec IntroducciÛn
  *
- * Mars-Base (nombre no definitivo) es un juego que estamos desarrollando que consistir√° en dise√±ar, construir y mantener una colonia en Marte. Siendo en todo momento lo m√°s fieles a la realidad en los aspectos qu√≠micos, f√≠sicos y topogr√°ficos.
- * Para crear la base se contar√° con m√≥dulos prefabricados (pasillos, puertas, habitaciones, biodomes,...) que se podr√°n ensamblar entre s√≠ permitiendo bases de estructura dise√±ada por el jugador. A nivel m√°s de interiores, se deber√° dise√±ar el sistema de circuitos el√©ctricos (sensores, actuadores y suministro el√©ctrico) y de fluidos (aire, agua,...), aunque supongo que se podr√°n usar elementos prefabricados.
- * El juego est√° siendo desarrollado usando openGL, SDL y devIL. Por ahora tan solo puede mostrar el mapa tridimensional marciano (Valles Marineris) y cargar objetos, pero est√° siendo desarrollado con intensidad.
+ * Mars-Base (nombre no definitivo) es un juego que estamos desarrollando que consistir· en diseÒar, construir y mantener una colonia en Marte. Siendo en todo momento lo m·s fieles a la realidad en los aspectos quÌmicos, fÌsicos y topogr·ficos.
+ * Para crear la base se contar· con mÛdulos prefabricados (pasillos, puertas, habitaciones, biodomes,...) que se podr·n ensamblar entre sÌ permitiendo bases de estructura diseÒada por el jugador. A nivel m·s de interiores, se deber· diseÒar el sistema de circuitos elÈctricos (sensores, actuadores y suministro elÈctrico) y de fluidos (aire, agua,...), aunque supongo que se podr·n usar elementos prefabricados.
+ * El juego est· siendo desarrollado usando openGL, SDL y devIL. Por ahora tan solo puede mostrar el mapa tridimensional marciano (Valles Marineris) y cargar objetos, pero est· siendo desarrollado con intensidad.
  *
  * \section copyright Copyright
  *
@@ -42,7 +42,7 @@
 
 /** \file main.c
  * \brief Archivo principal del Mars-Base
- * Este archivo se encarga de la inicializaci√≥n del juego y contiene el main central.
+ * Este archivo se encarga de la inicializaciÛn del juego y contiene el main central.
  * \author Alfonso Arbona Gimeno
 */
 #include "mars_base_private.h"
@@ -75,7 +75,7 @@
 
 t_texture fondo= {{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
 
-static Uint32 next_time; /* Controla la velocidad de actualizaci√≥n de la pantalla */
+static Uint32 next_time; /* Controla la velocidad de actualizaciÛn de la pantalla */
 unsigned char debug_mode;
 
 static
@@ -114,7 +114,7 @@ void salir(void)
 
 int main(int argc, char *argv[])
 {
-    /* - INICIACI√ìN VARIABLES - */
+    /* - INICIACI”N VARIABLES - */
     getcwd(app_path,TEXT_LIST_MAX_SIZE);
     str_append(app_path,"/");
     //str_ruta_back(app_path);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
     int i;
     int with_motd=1;
-    char lang_str[4]; // M√°ximo 3 car√°cteres y el \0
+    char lang_str[4]; // M·ximo 3 car·cteres y el \0
     str_cpyl(lang_str,4,"es"); // default spanish
     debug_reset();
     debug_printf("Mars_Base(%s) v.%s.%i (%s) - by nake\n\n",INFO_STATUS,INFO_FULLVERSION_STRING,INFO_BUILDS_COUNT,app_path);
@@ -135,9 +135,9 @@ int main(int argc, char *argv[])
     scr_bpp=-1;
     scr_flags=-1;
 
-    // Cargamos la configuraci√≥n de config.cfg
+    // Cargamos la configuraciÛn de config.cfg
     t_parse parse;
-    char lang_get[20]; // Espero que no escriban m√°s texto que 20...
+    char lang_get[20]; // Espero que no escriban m·s texto que 20...
     if(parse_open(&parse,"config.cfg")==0)
     {
         i=parse_get_int(&parse, "fullscreen");
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
         debug_printf("Debug level: %u\n",debug_mode);
     }
 
-    /* - INICIACI√ìN PROGRAMA - */
+    /* - INICIACI”N PROGRAMA - */
     ifdebug(DEBUG_INFO)
     {
         debug_printf("Loading_lang\n");
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 
     SDL_WM_SetCaption("mars_base", NULL);
     randomize(17.5);
-    sfrand(); // no se por qu√© pero sale siempre <0 la primera vez ??
+    sfrand(); // no se por quÈ pero sale siempre <0 la primera vez ??
     if(sfrand()>0.0f)
     {
         ifdebug(DEBUG_DEBUG)
@@ -273,9 +273,9 @@ int main(int argc, char *argv[])
 
     ifdebug(DEBUG_INFO)
     {
-        debug_printf("Postinicializaci√≥n\n");
+        debug_printf("PostinicializaciÛn\n");
     }
-    /* - POSTINICIALIZACI√ìN (Carga elementos) - */
+    /* - POSTINICIALIZACI”N (Carga elementos) - */
 
 
     /* Carga fuentes */
@@ -385,7 +385,12 @@ int main(int argc, char *argv[])
         debug_printf(TL_ERR_MODEL_DIR,buffer);
     }
 
+    scr_init_printf ("Cargando entidades");
 
+    ifdebug(DEBUG_INFO)
+    {
+        debug_printf("Loading entities\n");
+    }
     if(entity_init()!=0){debug_printf("Error al iniciar las entidades.\n"); exit(-20);}
 
 
@@ -397,7 +402,7 @@ int main(int argc, char *argv[])
     /* - MAIN LOOP - */
     next_time = SDL_GetTicks() + TICK_INTERVAL;
 
-    // MENSAJE DE INTRODUCCI√ìN
+    // MENSAJE DE INTRODUCCI”N
     ifdebug(DEBUG_INFO)
     {
         debug_printf("Showing MOTD\n");

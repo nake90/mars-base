@@ -26,7 +26,6 @@ Se llama cada vez que se crea este objeto, para inicializar variables y cambiar 
 --]]
 
 function create(objeto)
-	-- No hacemos nada
 	objeto.name = "Generador de oxígeno"
 	
 	return objeto; -- Siempre hay que retornar el objeto

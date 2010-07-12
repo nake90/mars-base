@@ -49,6 +49,8 @@
 
 /* Cantidad de elementos a parte de los iconos que hay en el spawn_dialog */
 #define SPAWN_DIALOG_HEADER_SIZE 3
+/* Cantidad de elementos a parte de los iconos que hay en el spawn_dialog de entidades */
+#define ENTITY_SPAWN_DIALOG_HEADER_SIZE 3
 
 void control(void);
 void key_handle(SDLKey key, SDLMod mod);

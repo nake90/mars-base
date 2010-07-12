@@ -12,13 +12,11 @@
 !!!	[NEW] Multitasking para las funciones de transferencia.
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
 !!	[NEW] Menú de estado y acciones sobre objetos.
-!!	[ADD] Auto conectar objetos que estén cerca unos de otros.
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
-!	[FIX] Grid (Falla offset. ¿Es realmente necesario esto?)
 !	[FIX] Problemas con movimiento por teclado
-!	[NEW] Tuberías (Faltan funciones de transferencia)
-!	[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control, (Faltan funciones de transferencia)
-!	[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD)
+!	[NEW] Tuberías
+!	[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control: LUA
+!	[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD) LUA
 !	[NEW] Console
 !	[NEW] GUI_TabButton ?
 !	[NEW] GUI_TabFrame ?
