@@ -52,6 +52,7 @@
 #ifdef LINUX*/
 #include <dirent.h>
 #include <sys/stat.h>
+#include "entities.h"
 
 //#endif
 
@@ -168,7 +169,7 @@ void debug_get_3ds_chunk_name(unsigned short id, char* name)
 
 
 /*! \fn int load_3DS (t_model *data, char *filename)
- *  \brief Carga los datos bÃ¡sicos de un objeto desde un archivo 3ds
+ *  \brief Carga los datos básicos de un objeto desde un archivo 3ds
  *  \param data Pointer al lugar donde se deben guardar los datos
  *  \param filename Ruta al archivo 3ds
  *  \return 0 -> Ok
@@ -200,7 +201,7 @@ int load_3DS (t_model *data, char *filename)
     char string2[256];
     char chunk_name[256];
     unsigned char l_rgb[3];
-    unsigned short l_qty; /* NÃºmero de elementos en el chunk */
+    unsigned short l_qty; /* Número de elementos en el chunk */
 
     unsigned short l_face_flags; /* Flag that stores some face information */
 
@@ -225,7 +226,7 @@ int load_3DS (t_model *data, char *filename)
     data->draw_list=0;
     data->draw_lists=0;
 
-    data->model_objetos_qty = 0; // AÃºn no hay ningÃºn objeto cargado
+    data->model_objetos_qty = 0; // Aún no hay ningún objeto cargado
 
     struct stat fileStatus;
     fstat( fileno(l_file), &fileStatus);
@@ -269,7 +270,7 @@ int load_3DS (t_model *data, char *filename)
                 data->model_objetos_qty=1;
                 // Todo a NULL
                 data->obj_name=NULL;
-                //data->obj_name[0]=NULL; No aquÃ­, primero hacemos el realloc grande y despuÃ©s inicializamos
+                //data->obj_name[0]=NULL; No aquí, primero hacemos el realloc grande y después inicializamos
                 data->vertices_qty=NULL;
                 data->polygons_qty=NULL;
                 data->vertex=NULL;
@@ -563,7 +564,7 @@ int load_3DS (t_model *data, char *filename)
             while(l_char != '\0' && i<80);
             if(i==80)
             {
-                debug_printf("ALERTA: Nombre de textura cortado. (No deberÃ­a de haber pasado nunca, probablemente sea por un archivo corrupto)\n",string);
+                debug_printf("ALERTA: Nombre de textura cortado. (No debería de haber pasado nunca, probablemente sea por un archivo corrupto)\n",string);
             }
             //str_append(string,".tga");
             str_cpy(string2,app_path);
@@ -675,21 +676,21 @@ void model_predraw(t_model *modelo)
                 glBindTexture(GL_TEXTURE_2D, null_texture);
             }
             glBegin(GL_TRIANGLES);
-            /* Primer vÃ©rtice */
+            /* Primer vértice */
             glTexCoord2f( modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].u ,
                           modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].v );
             glVertex3f( modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].x *modelo->size,
                         modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].y *modelo->size,
                         modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].a ].z *modelo->size);
 
-            /* Segundo vÃ©rtice */
+            /* Segundo vértice */
             glTexCoord2f( modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].u ,
                           modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].v );
             glVertex3f( modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].x *modelo->size,
                         modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].y *modelo->size,
                         modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].b ].z *modelo->size);
 
-            /* Tercer vÃ©rtice */
+            /* Tercer vértice */
             glTexCoord2f( modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].c ].u ,
                           modelo->mapcoord[objeto_actual][ modelo->polygon[objeto_actual][l_index].c ].v );
             glVertex3f( modelo->vertex[objeto_actual][ modelo->polygon[objeto_actual][l_index].c ].x *modelo->size,
@@ -827,11 +828,11 @@ int lista_base_check_empty(void)
 }
 
 /*! \fn int lista_base_crear_elemento(t_obj_base_ptr *lista, int* contador, char *ruta)
- *  \brief Carga un objeto tipo base y lo aÃ±ade a la lista.
- *  \param lista La lista a la cual se debe aÃ±adir el elemento
+ *  \brief Carga un objeto tipo base y lo añade a la lista.
+ *  \param lista La lista a la cual se debe añadir el elemento
  *  \param contador Contador de la lista
  *  \param ruta Ruta al archivo 3ds
- *	\return 0 si todo fuÃ© bien.
+ *	\return 0 si todo fué bien.
  *	\return 1 Archivo no encontrado.
  *	\return -1 Error interno del archivo 3ds.
  *	\return -2 Error en el malloc del objeto base.
@@ -848,7 +849,7 @@ int lista_base_crear_elemento(int id_modelo)
 		return -3;
 	}
 
-    if((actual=lista_base_check_empty())==-1) //! Si no existe un hueco vacÃ­o
+    if((actual=lista_base_check_empty())==-1) //! Si no existe un hueco vacío
     {
 		if(lista_objeto_base!=NULL)
 		{
@@ -887,7 +888,7 @@ int lista_base_crear_elemento(int id_modelo)
 
     lista_objeto_base[actual]->modelo = lista_modelo[id_modelo];
 
-    /* InicializaciÃ³n */
+    /* Inicialización */
     sprintf(lista_objeto_base[actual]->name,"%s %i",lista_modelo[id_modelo]->name,actual); // Como nombre predeterminado el nombre del modelo y su ID
     obj_ptr_setpos(lista_objeto_base[actual],0,0,0);
     lista_objeto_base[actual]->selec = 0;
@@ -899,7 +900,7 @@ int lista_base_crear_elemento(int id_modelo)
     lista_objeto_base[actual]->sq_t=0;
     lista_objeto_base[actual]->sq_b=0;
     lista_objeto_base[actual]->conx_qty=0;
-    lista_objeto_base[actual]->exists=1; // Por defecto existe, para no tener que cambiar mucho cÃ³digo.
+    lista_objeto_base[actual]->exists=1; // Por defecto existe, para no tener que cambiar mucho código.
     int con;
     VECTOR vec_zero= {0,0,0};
     for(con=0; con<MAX_CONX; con++)
@@ -973,7 +974,7 @@ int lista_cargar_modelo_dir(const char *dir)
             ifdebug(DEBUG_INFO){debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos.name);}
             lista_cargar_modelo(buffer);
         }
-        else if(datos.attrib & _A_SUBDIR && str_cmp(datos.name,".")!=0 && str_cmp(datos.name,"..")!=0) // Si es una carpeta llamamos a esta misma funciÃ³n y au!
+        else if(datos.attrib & _A_SUBDIR && str_cmp(datos.name,".")!=0 && str_cmp(datos.name,"..")!=0) // Si es una carpeta llamamos a esta misma función y au!
         {
             //debug_printf("Buscando en carpeta \"%s\"\n",datos.name);
             str_cpyl(dir_buffer,1023,dir);
@@ -992,7 +993,7 @@ int lista_cargar_modelo_dir(const char *dir)
 #ifdef LINUX
 int lista_cargar_modelo_dir(const char *dir)
 {
-    register struct dirent *datos; // Datos del archivo o carpeta encontrados. Register para que sea mÃ¡s rÃ¡pido y cÃ³modo para la CPU
+    register struct dirent *datos; // Datos del archivo o carpeta encontrados. Register para que sea más rápido y cómodo para la CPU
     char dir_buffer[1024];
     char buffer[1024];
     register DIR *handle;
@@ -1041,7 +1042,7 @@ int lista_cargar_modelo_dir(const char *dir)
             ifdebug(DEBUG_INFO){debug_printf(lista_texto[TEXT_LIST_R_NFO + 3],datos->d_name);}
             lista_cargar_modelo(buffer);
         }
-        else if(datos->d_type == DT_DIR && str_cmp(datos->d_name,".")!=0 && str_cmp(datos->d_name,"..")!=0) // Si es una carpeta llamamos a esta misma funciÃ³n y au!
+        else if(datos->d_type == DT_DIR && str_cmp(datos->d_name,".")!=0 && str_cmp(datos->d_name,"..")!=0) // Si es una carpeta llamamos a esta misma función y au!
         {
             ifdebug(DEBUG_VERBOSE)
             {
@@ -1194,20 +1195,30 @@ int lista_cargar_modelo(char *ruta)
 
 /*! \fn void lista_base_delete(int id)
  *  \brief Borra un objeto de la lista y establece esa memoria como usable para nuevos objetos.
- *  TambiÃ©n controla las conexiones.
+ *  También controla las conexiones.
  *  \warning El objeto no se borra de la memoria, solo se establece como que no existe.
  *  \param id Identidad del objeto a borrar
 */
 void lista_base_borrar_elemento(int id)
 {
+	//! Borramos los entities enlazados
+	int i;
+	ifdebug(DEBUG_DEBUG)debug_printf("Borrando entidades asociadas a %i:", id);
+	while((i=entity_id_from_object(id))>=0)
+	{
+		entity_kill(i);
+		ifdebug(DEBUG_DEBUG)debug_printf(" %i",i);
+	}
+	ifdebug(DEBUG_DEBUG)debug_printf("\n");
+
 	//! Nos tenemos que desconectar de todos los nodos
 	int conx, o_id, o_cid;
 	for(conx=0; conx<lista_objeto_base[id]->conx_qty; conx++) // Para todas las conexiones del objeto
 	{
-		o_id=lista_objeto_base[id]->conx_id[conx]; // Obtenemos el objeto al que estÃ¡ conectado
-		if(o_id >=0) // Si estÃ¡ conectado a otro objeto
+		o_id=lista_objeto_base[id]->conx_id[conx]; // Obtenemos el objeto al que está conectado
+		if(o_id >=0) // Si está conectado a otro objeto
 		{
-			o_cid=lista_objeto_base[id]->conx_node_id[conx]; // Obtenemos el nodo al que estÃ¡ conectado
+			o_cid=lista_objeto_base[id]->conx_node_id[conx]; // Obtenemos el nodo al que está conectado
 			lista_objeto_base[o_id]->conx_id[o_cid] = -1; // Nos desconectamos
 			lista_objeto_base[o_id]->conx_node_id[o_cid] = -1; // Nos desconectamos
 		}
@@ -1219,14 +1230,14 @@ void lista_base_borrar_elemento(int id)
 
 /*! \fn void lista_base_limpiar(t_obj_base_ptr *lista, int* contador)
  *  \brief Limpia de la memoria todos los elementos de la lista y borra la lista
- *  \warning No intentar dibujar la lista despuÃ©s de usar esta funciÃ³n.
+ *  \warning No intentar dibujar la lista después de usar esta función.
  *  \param lista La lista que contiene los elementos que se deben borrar
  *  \param contador Contador de la lista
 */
 
 void lista_base_limpiar(void)
 {
-    debug_printf(lista_texto[TEXT_LIST_R_NFO + 4],lista_objetos_base);
+    ifdebug(DEBUG_INFO)debug_printf(lista_texto[TEXT_LIST_R_NFO + 4],lista_objetos_base);
     lista_objetos_base--;
     while(lista_objetos_base>=0)
     {
@@ -1242,7 +1253,7 @@ void model_unload(t_model *model)
 {
     int i;
     // OPENGL LISTS
-    ifdebug(DEBUG_DEBUG){debug_printf("glDeleteLists!\n");}
+    ifdebug(DEBUG_DEBUG){debug_printf("glDeleteLists\n");}
     glDeleteLists(model->draw_list,model->draw_lists);
     model->draw_lists=0;
 

@@ -32,7 +32,7 @@
 */
 
 /** \file lang.c
- * \brief CÃ³digo sobre las funciones de carga del texto estÃ¡tico
+ * \brief Código sobre las funciones de carga del texto estático
  * \author Alfonso Arbona Gimeno
 */
 
@@ -91,7 +91,7 @@ void lang_load(const char* lang)
     t_parse parse;
     if(parse_open(&parse, ruta)!=0)
     {
-        parse_opened=0;    // In inglish pitinglish porque es un error al cargar la traducciÃ³n de los errores xD
+        parse_opened=0;    // In inglish pitinglish porque es un error al cargar la traducción de los errores xD
         debug_printf("Error, lang (%s) not found!\n",lang);
     }
 
@@ -136,7 +136,7 @@ void lang_load(const char* lang)
     _PARSE_GET("ERR");									// +5
     lang_parse_special_chars(TEXT_LIST_R_WRN, TEXT_LIST_R_WRN + 4);
 
-    /* Cargamos los mensajes de informaciï¿½n (TEXT_LIST_R_NFO) */
+    /* Cargamos los mensajes de información (TEXT_LIST_R_NFO) */
     i=TEXT_LIST_R_NFO;
     _PARSE_GET("nfo_closed_ok");						// +0
     _PARSE_GET("nfo_compiled_start");
@@ -173,6 +173,8 @@ void lang_load(const char* lang)
     _PARSE_GET("dlg_spawn_dialog_title");
     _PARSE_GET("dlg_spawn_dialog_close");
     _PARSE_GET("dlg_screenshot");
+    _PARSE_GET("dlg_entity_spawn_dialog_title");
+    _PARSE_GET("dlg_entity_spawn_dialog_close");		// +5
     _PARSE_GET("ERR");
     lang_parse_special_chars(TEXT_LIST_R_DLG, TEXT_LIST_R_DLG + 3);
 

@@ -32,9 +32,9 @@
 */
 
 /** \file control.h
- * \brief Funciones de control del programa (Entrada de teclado y ratÃ³n... etc
+ * \brief Funciones de control del programa (Entrada de teclado y ratón... etc
  * Este archivo contiene las funciones que se encargan de controlar el estado del programa y de entrada directa
- * del usuario (teclado, ratÃ³n, y cosas asÃ­).
+ * del usuario (teclado, ratón, y cosas así).
  * \author Alfonso Arbona Gimeno
 */
 
@@ -51,6 +51,7 @@
 #include "parser.h"
 
 extern DIALOG spawn_dialog[];
+extern DIALOG entity_spawn_dialog[];
 
 static int rotate_ghost, enable_create_object;
 SDL_Event sdl_event;
@@ -141,7 +142,7 @@ int place_object(int id_modelo)
     t_obj_base ghost;
     ghost.modelo = lista_modelo[id_modelo];
 
-    /* InicializaciÃ³n */
+    /* Inicialización */
     sprintf(ghost.name,"GHOST %s",lista_modelo[id_modelo]->name);
     ghost.pos.x=0;
     ghost.pos.y=0;
@@ -216,15 +217,15 @@ int place_object(int id_modelo)
     VECTOR coord = {0,0,0};
     /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
     DIALOG mensaje = {d_label_proc, 10,200,0,0,{255,255,255,255},{0,0,0,128},0,0,0,0,lista_texto[TEXT_LIST_R_HUD + 1],fntArial12,NULL};
-    // Entramos en un bucle personal interno hasta que se hace click con el ratÃ³n o se aprieta ESC
+    // Entramos en un bucle personal interno hasta que se hace click con el ratón o se aprieta ESC
     next_time = SDL_GetTicks() + TICK_INTERVAL;
 
-    int o_id, oc_id, pc_id; // Otro_ID, Otro_ConexiÃ³n_ID, Propio_ConexiÃ³n_ID
-    int colision; // 1 si estÃ¡ chocando con otro objeto
+    int o_id, oc_id, pc_id; // Otro_ID, Otro_Conexión_ID, Propio_Conexión_ID
+    int colision; // 1 si está chocando con otro objeto
     VECTOR v1, v2;
     VECTOR vn1, vn2; // Vectores normales rotados
     VECTOR vzero = {0,0,0};
-    int lista_conexiones[MAX_CONX]; // Usado para saber luego a quÃ© conexiÃ³n se debe poner el del otro objeto
+    int lista_conexiones[MAX_CONX]; // Usado para saber luego a qué conexión se debe poner el del otro objeto
 
     float angx;
     float angy;
@@ -282,13 +283,13 @@ int place_object(int id_modelo)
         }
         for(o_id=0; o_id<lista_objetos_base; o_id++)
         {
-            if(lista_objeto_base[o_id]->exists && o_id!=id_modelo && vdist_sq(ghost.pos,lista_objeto_base[o_id]->pos)< MAX_DIST_CONX_SQ) // Si no somos nosotros mismos y no estÃ¡ demasiado lejos
+            if(lista_objeto_base[o_id]->exists && o_id!=id_modelo && vdist_sq(ghost.pos,lista_objeto_base[o_id]->pos)< MAX_DIST_CONX_SQ) // Si no somos nosotros mismos y no está demasiado lejos
             {
-                for(pc_id=0; pc_id<ghost.conx_qty; pc_id++) // Para cada conexiÃ³n propia
+                for(pc_id=0; pc_id<ghost.conx_qty; pc_id++) // Para cada conexión propia
                 {
-                    for(oc_id=0; oc_id<lista_objeto_base[o_id]->conx_qty; oc_id++) // Para cada conexiÃ³n del otro objeto
+                    for(oc_id=0; oc_id<lista_objeto_base[o_id]->conx_qty; oc_id++) // Para cada conexión del otro objeto
                     {
-                        if(nabs(ghost.conx_size[pc_id] - lista_objeto_base[o_id]->conx_size[oc_id])<=0.1) // Deben de ser del mismo tamaÃ±o
+                        if(nabs(ghost.conx_size[pc_id] - lista_objeto_base[o_id]->conx_size[oc_id])<=0.1) // Deben de ser del mismo tamaño
                         {
                             v1=vrotate(ghost.conx_coord[pc_id],RAD(ghost.rot.x),RAD(-ghost.rot.y),RAD(ghost.rot.z));
                             v2=vrotate(lista_objeto_base[o_id]->conx_coord[oc_id],RAD(lista_objeto_base[o_id]->rot.x),RAD(-lista_objeto_base[o_id]->rot.y),RAD(lista_objeto_base[o_id]->rot.z));
@@ -303,19 +304,19 @@ int place_object(int id_modelo)
 
                             if(vdist_sq(v1,v2)<=1 && vdist_sq(vn1,vn2)<=1)
                             {
-                                // Si estÃ¡ en al misma coordenada y tienen direcciones opuestas
+                                // Si está en al misma coordenada y tienen direcciones opuestas
                                 ghost.conx_id[pc_id]=o_id;
                                 ghost.conx_node_id[pc_id]=oc_id;
-                                lista_conexiones[pc_id]=oc_id; // Esto se puede simpificar usando conx_node_id (creado mÃ¡s tarde)
-                                // La conexiÃ³n del otro se aplica solo al crear el objeto!
+                                lista_conexiones[pc_id]=oc_id; // Esto se puede simpificar usando conx_node_id (creado más tarde)
+                                // La conexión del otro se aplica solo al crear el objeto!
                                 break; // No seguimos buscando conexiones con este objeto
                             }
                         }
                     }
                 }
 
-                // Comprobamos si chocamos con ese objeto (cada vÃ©rtice rotado y trasladado)
-                // -> Primero si sus vÃ©rtices estÃ¡n dentro de los nuestros
+                // Comprobamos si chocamos con ese objeto (cada vértice rotado y trasladado)
+                // -> Primero si sus vértices están dentro de los nuestros
                 if(colision==0)
                 {
                     v1.x=lista_objeto_base[o_id]->sq_l + 0.01f;
@@ -357,7 +358,7 @@ int place_object(int id_modelo)
                         colision=1;
                 }
 
-                // -> Ahora si nuestros vÃ©rtices estÃ¡n dentro de los suyos
+                // -> Ahora si nuestros vértices están dentro de los suyos
                 if(colision==0)
                 {
                     v1.x=ghost.sq_l + 0.01f;
@@ -444,7 +445,7 @@ int place_object(int id_modelo)
     lista_objeto_base[lista_objetos_base-1]->reparar = ghost.reparar;
     lista_objeto_base[lista_objetos_base-1]->exists = ghost.exists;
 
-    // Inicialmente los gases y la presiÃ³n es la de la atmÃ³sfera
+    // Inicialmente los gases y la presión es la de la atmósfera
     lista_objeto_base[lista_objetos_base-1]->node_data.temperatura = datos_atmosfera.temperatura;
     lista_objeto_base[lista_objetos_base-1]->node_data.gases.CO2 = datos_atmosfera.gases.CO2 * ghost.node_data.volumen;
     lista_objeto_base[lista_objetos_base-1]->node_data.gases.N2 = datos_atmosfera.gases.N2 * ghost.node_data.volumen;
@@ -477,7 +478,7 @@ int open_spawn_dialog(void)
     camera.ghost_mode=0;
     /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
 
-    /* InicializaciÃ³n del tÃ­tulo y tal (Cuando pueda lo harÃ© usando lua o algÃºn otro tipo de script) */
+    /* Inicialización del título y tal (Cuando pueda lo haré usando lua o algún otro tipo de script) */
 
     /* Ventana */
     spawn_dialog[0].df = d_box_proc;
@@ -501,7 +502,7 @@ int open_spawn_dialog(void)
     spawn_dialog[0].dp2 = NULL;
     spawn_dialog[0].dp3 = NULL;
 
-    /* TÃ­tulo */
+    /* Título */
     //str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 0],TEXT_LIST_MAX_SIZE, "Click en el objeto que quieras crear");
 
     spawn_dialog[1].df = d_label_proc;
@@ -525,7 +526,7 @@ int open_spawn_dialog(void)
     spawn_dialog[1].dp2 = fntArial12;
     spawn_dialog[1].dp3 = NULL;
 
-    /* BotÃ³n de cancelar */
+    /* Botón de cancelar */
     //str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 1],TEXT_LIST_MAX_SIZE, "Cerrar");
 
     spawn_dialog[2].df = d_button_proc;
@@ -611,8 +612,160 @@ int open_spawn_dialog(void)
         }
 
     }
-    spawn_dialog[sdh_size+i].df = NULL; // El elemento NULL, debe ser el Ãºltimo de todos y DEBE estar, si no cosas horribles pueden pasar!
+    spawn_dialog[sdh_size+i].df = NULL; // El elemento NULL, debe ser el último de todos y DEBE estar, si no cosas horribles pueden pasar!
     int ret_id=do_dialog(spawn_dialog);
+
+    if(ret_id<sdh_size)
+    {
+        return -1;
+    }
+
+    return (ret_id-sdh_size)/2;
+}
+#undef sdh_size
+
+#define sdh_size ENTITY_SPAWN_DIALOG_HEADER_SIZE
+int open_entity_spawn_dialog(void)
+{
+    camera.ghost_mode=0;
+    /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
+
+    /* Inicialización del título y tal (Cuando pueda lo haré usando lua o algún otro tipo de script) */
+
+    /* Ventana */
+    entity_spawn_dialog[0].df = d_box_proc;
+    entity_spawn_dialog[0].x = scr_width/2 - 621/2;
+    entity_spawn_dialog[0].y = scr_height/2 - (95 + 95 * nceil(lista_entities_names/5.0))/2;
+    entity_spawn_dialog[0].w = 621;
+    entity_spawn_dialog[0].h = 95 + 95 * nceil(lista_entities_names/5.0);
+    entity_spawn_dialog[0].fg.r = 0;
+    entity_spawn_dialog[0].fg.g = 0;
+    entity_spawn_dialog[0].fg.b = 0;
+    entity_spawn_dialog[0].fg.a = 255;
+    entity_spawn_dialog[0].bg.r = 40;
+    entity_spawn_dialog[0].bg.g = 128;
+    entity_spawn_dialog[0].bg.b = 40;
+    entity_spawn_dialog[0].bg.a = 200;
+    entity_spawn_dialog[0].key = 0;
+    entity_spawn_dialog[0].flag = 0;
+    entity_spawn_dialog[0].d1 = 0;
+    entity_spawn_dialog[0].d2 = 0;
+    entity_spawn_dialog[0].dp = NULL;
+    entity_spawn_dialog[0].dp2 = NULL;
+    entity_spawn_dialog[0].dp3 = NULL;
+
+    /* Título */
+    //str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 0],TEXT_LIST_MAX_SIZE, "Click en el objeto que quieras crear");
+
+    entity_spawn_dialog[1].df = d_label_proc;
+    entity_spawn_dialog[1].x = entity_spawn_dialog[0].x + 40;
+    entity_spawn_dialog[1].y = entity_spawn_dialog[0].y + 5;
+    entity_spawn_dialog[1].w = 0;
+    entity_spawn_dialog[1].h = 0;
+    entity_spawn_dialog[1].fg.r = 255;
+    entity_spawn_dialog[1].fg.g = 255;
+    entity_spawn_dialog[1].fg.b = 255;
+    entity_spawn_dialog[1].fg.a = 255;
+    entity_spawn_dialog[1].bg.r = 0;
+    entity_spawn_dialog[1].bg.g = 0;
+    entity_spawn_dialog[1].bg.b = 0;
+    entity_spawn_dialog[1].bg.a = 0;
+    entity_spawn_dialog[1].key = 0;
+    entity_spawn_dialog[1].flag = 0;
+    entity_spawn_dialog[1].d1 = 0;
+    entity_spawn_dialog[1].d2 = 0;
+    entity_spawn_dialog[1].dp = lista_texto[TEXT_LIST_R_DLG + 4]; //título
+    entity_spawn_dialog[1].dp2 = fntArial12;
+    entity_spawn_dialog[1].dp3 = NULL;
+
+    /* Botón de cancelar */
+    //str_cpyl(lista_texto[TEXT_LIST_R_SPAWN_MENU + 1],TEXT_LIST_MAX_SIZE, "Cerrar");
+
+    entity_spawn_dialog[2].df = d_button_proc;
+    entity_spawn_dialog[2].x = entity_spawn_dialog[0].x+20;
+    entity_spawn_dialog[2].y = entity_spawn_dialog[0].y+entity_spawn_dialog[0].h-40;
+    entity_spawn_dialog[2].w = 0;
+    entity_spawn_dialog[2].h = 0;
+    entity_spawn_dialog[2].fg.r = 255;
+    entity_spawn_dialog[2].fg.g = 255;
+    entity_spawn_dialog[2].fg.b = 255;
+    entity_spawn_dialog[2].fg.a = 255;
+    entity_spawn_dialog[2].bg.r = 64;
+    entity_spawn_dialog[2].bg.g = 128;
+    entity_spawn_dialog[2].bg.b = 64;
+    entity_spawn_dialog[2].bg.a = 255;
+    entity_spawn_dialog[2].key = 0;
+    entity_spawn_dialog[2].flag = 0;
+    entity_spawn_dialog[2].d1 = 0;
+    entity_spawn_dialog[2].d2 = 0;
+    entity_spawn_dialog[2].dp = lista_texto[TEXT_LIST_R_DLG + 5]; //cerrar
+    entity_spawn_dialog[2].dp2 = fntArial12;
+    entity_spawn_dialog[2].dp3 = NULL;
+
+
+    /* Iconos */
+    int i;
+    int id=0;
+
+    const int inix = 40 ,iniy = 30;
+
+    int x=inix,y=iniy;
+    for(i=0; i<lista_entities_names*2; i++)
+    {
+        entity_spawn_dialog[sdh_size+i].df = d_icon_proc;
+        entity_spawn_dialog[sdh_size+i].x = entity_spawn_dialog[0].x + x;
+        entity_spawn_dialog[sdh_size+i].y = entity_spawn_dialog[0].y + y;
+        entity_spawn_dialog[sdh_size+i].w = 80;
+        entity_spawn_dialog[sdh_size+i].h = 80;
+        entity_spawn_dialog[sdh_size+i].fg.r = 128;
+        entity_spawn_dialog[sdh_size+i].fg.g = 128;
+        entity_spawn_dialog[sdh_size+i].fg.b = 128;
+        entity_spawn_dialog[sdh_size+i].fg.a = 255;
+        entity_spawn_dialog[sdh_size+i].bg.r = 255;
+        entity_spawn_dialog[sdh_size+i].bg.g = 255;
+        entity_spawn_dialog[sdh_size+i].bg.b = 255;
+        entity_spawn_dialog[sdh_size+i].bg.a = 255;
+        entity_spawn_dialog[sdh_size+i].key = 0;
+        entity_spawn_dialog[sdh_size+i].flag = 0;
+        entity_spawn_dialog[sdh_size+i].d1 = icono_no_icon;
+        entity_spawn_dialog[sdh_size+i].d2 = 0;
+        entity_spawn_dialog[sdh_size+i].dp = NULL;
+        entity_spawn_dialog[sdh_size+i].dp2 = NULL;
+        entity_spawn_dialog[sdh_size+i].dp3 = NULL;
+
+        i++;
+        entity_spawn_dialog[sdh_size+i].df = d_label_proc;
+        entity_spawn_dialog[sdh_size+i].x = entity_spawn_dialog[0].x + x;
+        entity_spawn_dialog[sdh_size+i].y = entity_spawn_dialog[0].y + y+82;
+        entity_spawn_dialog[sdh_size+i].w = 0;
+        entity_spawn_dialog[sdh_size+i].h = 0;
+        entity_spawn_dialog[sdh_size+i].fg.r = 255;
+        entity_spawn_dialog[sdh_size+i].fg.g = 255;
+        entity_spawn_dialog[sdh_size+i].fg.b = 255;
+        entity_spawn_dialog[sdh_size+i].fg.a = 255;
+        entity_spawn_dialog[sdh_size+i].bg.r = 0;
+        entity_spawn_dialog[sdh_size+i].bg.g = 0;
+        entity_spawn_dialog[sdh_size+i].bg.b = 0;
+        entity_spawn_dialog[sdh_size+i].bg.a = 0;
+        entity_spawn_dialog[sdh_size+i].key = 0;
+        entity_spawn_dialog[sdh_size+i].flag = 0;
+        entity_spawn_dialog[sdh_size+i].d1 = 0;
+        entity_spawn_dialog[sdh_size+i].d2 = 0;
+        entity_spawn_dialog[sdh_size+i].dp = lista_entity_names[id];
+        entity_spawn_dialog[sdh_size+i].dp2 = fntArial12;
+        entity_spawn_dialog[sdh_size+i].dp3 = NULL;
+
+        id++;
+        x+=120;
+        if(x>=entity_spawn_dialog[0].w-80)
+        {
+            x=inix;
+            y+=110;
+        }
+
+    }
+    entity_spawn_dialog[sdh_size+i].df = NULL; // El elemento NULL, debe ser el último de todos y DEBE estar, si no cosas horribles pueden pasar!
+    int ret_id=do_dialog(entity_spawn_dialog);
 
     if(ret_id<sdh_size)
     {
@@ -635,7 +788,7 @@ void key_handle(SDLKey key, SDLMod mod)
         speed=200.0f;
     }
 
-    int i;
+    int i,j;
 
     switch (key)
     {
@@ -687,20 +840,32 @@ void key_handle(SDLKey key, SDLMod mod)
         message_printf(lista_texto[TEXT_LIST_R_DLG + 3]);
         break;
 
-    case SDLK_SPACE: /* MenÃº de spawn */
+    case SDLK_SPACE: /* Menú de spawn */
         if(camera.ghost_mode==1)break;
         i = open_spawn_dialog();
         if(i>=0)
             place_object(i);
         break;
 
+    case SDLK_y: /* Menú de spawn */
+        if(camera.ghost_mode==1)break;
+        j = open_entity_spawn_dialog();
+        if(j>=0)
+        {
+			for(i=0;i<lista_objetos_base;i++)
+			{
+				if(lista_objeto_base[i]->selec)
+				{
+					ifdebug(DEBUG_DEBUG)debug_printf("Asignando %s al objeto %i\n",lista_entity_names[j],i);
+					entity_list_load(lista_entity_names[j], i);
+				}
+			}
+        }
+        break;
+
     case SDLK_t: /* Funciones de test */
         //node_flow_gas(&node1, &node2, 2.0f, 8.0f, 0.1f);
-		for(i=0;i<lista_objetos_base;i++)
-		{
-			if(lista_objeto_base[i]->selec)
-				entity_list_load("data/entities/test.lua", i);
-		}
+
         break;
 
     case SDLK_DELETE:
@@ -770,14 +935,14 @@ void key_up_handle(SDLKey key, SDLMod mod)
     }
 }
 
-/* Obtiene el ID del objeto que estÃ¡ en el trace desde pos en la direcciÃ³n dir */
+/* Obtiene el ID del objeto que está en el trace desde pos en la dirección dir */
 int get_traced_object(VECTOR pos, VECTOR dir)
 {
     if(dir.z>=0)return -1; // Si miramos hacia arriba o de frente no podemos calcular el punto de corte...
     int obj;
     float corte_x, corte_y; /* Coordenadas reales del punto de corte del trace con el plano z = obj.z */
 
-    corte_x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (EstÃ¡n negados porque salen al revÃ©s...)
+    corte_x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
     corte_y = -dir.y/dir.z * pos.z + pos.y;
 
     //VECTOR coord = {corte_x, corte_y, 0.0f};
@@ -788,7 +953,7 @@ int get_traced_object(VECTOR pos, VECTOR dir)
     /* Tipo objeto: base */
     for (obj=0; obj<lista_objetos_base; obj++)
     {
-        if (lista_objeto_base[obj]->pos.z < pos.z && vdist_sq(lista_objeto_base[obj]->pos, pos)<MAX_DIST_TRACE_OBJ_SQ) // Nos saltamos los objetos que estÃ¡n demasiado lejos ni por encima nuestro
+        if (lista_objeto_base[obj]->pos.z < pos.z && vdist_sq(lista_objeto_base[obj]->pos, pos)<MAX_DIST_TRACE_OBJ_SQ) // Nos saltamos los objetos que están demasiado lejos ni por encima nuestro
         {
 
             if(check_inside(corte_x, corte_y,
@@ -802,7 +967,7 @@ int get_traced_object(VECTOR pos, VECTOR dir)
     return -1;
 }
 
-/* Si se mueve el ratÃ³n mientras se estÃ¡ pulsando algun botÃ³n del ratÃ³n */
+/* Si se mueve el ratón mientras se está pulsando algun botón del ratón */
 void mouse_move_but(int button, int x, int y)
 {
     static int dont_use_this_movement;
@@ -857,7 +1022,7 @@ void mouse_move_but(int button, int x, int y)
     control();
 }
 
-/* Si se pulsa algun botÃ³n del ratÃ³n y el ratÃ³n estÃ¡ quieto */
+/* Si se pulsa algun botón del ratón y el ratón está quieto */
 void mouse_static_but(int button, int x, int y)
 {
 
@@ -951,7 +1116,7 @@ void process_events(void)
             mouse_move_but(mstat, x, y);
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if (sdl_event.button.button == SDL_BUTTON_WHEELUP)camera.vel_z=+0.2;/* No funciona si no estÃ¡ aquÃ­ */
+            if (sdl_event.button.button == SDL_BUTTON_WHEELUP)camera.vel_z=+0.2;/* No funciona si no está aquí */
             if (sdl_event.button.button == SDL_BUTTON_WHEELDOWN)camera.vel_z=-0.2;
             mstat = SDL_GetMouseState(&x,&y);
             x-=last_m_x;//scr_width/2;

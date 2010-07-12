@@ -50,6 +50,8 @@
 
 
 extern int lista_entities; /*!< Cantidad de entidades creadas en el mapa */
+extern char **lista_entity_names; /*!< Lista de nombres de entidades */
+extern int lista_entities_names;
 
 int entity_init(void);
 void entity_execf(unsigned int id, const char* function_name);
@@ -57,5 +59,8 @@ void entity_exec_update(unsigned int id, double time_elapsed);
 
 int entity_list_load(const char* filename, int object_id);
 void entity_list_unload(void);
+
+int entity_id_from_object(int id);
+void entity_kill(int id);
 
 #endif // __ENTITIES_H__

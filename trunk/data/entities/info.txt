@@ -35,5 +35,7 @@ Lista de funciones
 	print(mensaje) -> Muestra un mensaje por la pantalla. (Cuando pueda cambiará a mostrar texto en
 					el HUD sin detener el juego)
 	debug_print(mensaje) -> Escribe el mensaje en el debug.log
-	object_kill(id) -> Borra el objeto POR IMPLEMENTAR
-	object_change_model(model_name) -> Cambia el modelo del objeto POR IMPLEMENTAR
+	obj_qty() -> Retorna el número de objetos que hay en el juego
+	obj_info(id) -> Retorna una variable tipo object con los datos de ese objeto
+	obj_kill(id) -> Borra el objeto
+	obj_change_model(model_name) -> Cambia el modelo del objeto POR IMPLEMENTAR

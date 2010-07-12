@@ -112,6 +112,7 @@ typedef struct st_Dialog
 
 #define SPAWN_DLG_MAX_ELEMENTS 256
 DIALOG spawn_dialog[SPAWN_DLG_MAX_ELEMENTS];// Ahora es en run-time, pero para no toquitear reallocs y tal hay un máximo de 256 elementos
+DIALOG entity_spawn_dialog[SPAWN_DLG_MAX_ELEMENTS];// Ahora es en run-time, pero para no toquitear reallocs y tal hay un máximo de 256 elementos
 
 int do_dialog(DIALOG *d); // Entra en un loop interno y sale con el valor del objeto que ha cerrado el dialog
 

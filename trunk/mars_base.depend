@@ -15,7 +15,7 @@
 	"mars_base_private.h"
 	"lang.h"
 
-1278867385 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\mars_base_private.h
+1278970650 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\mars_base_private.h
 
 1276848288 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\lang.h
 
@@ -32,7 +32,7 @@
 	"shared.h"
 	"atmosferico.h"
 
-1278864991 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.c
+1278946603 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.c
 	"control.h"
 	"atmosferico.h"
 	<math.h>
@@ -45,11 +45,11 @@
 	"entities.h"
 	"parser.h"
 
-1278068430 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.h
+1278935660 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\control.h
 	<SDL/SDL.h>
 	"shared.h"
 
-1277315082 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\overlay.h
+1278936350 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\overlay.h
 	"shared.h"
 
 1277315082 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\parser.h
@@ -72,7 +72,7 @@
 	<GL/gl.h>
 	<IL/ilut.h>
 
-1277315081 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\lang.c
+1278936030 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\lang.c
 	"lang.h"
 	"shared.h"
 	"parser.h"
@@ -105,7 +105,7 @@
 	"materiales.h"
 	<IL/ilut.h>
 
-1278867251 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.c
+1278935346 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\objetos.c
 	"objetos.h"
 	<stdio.h>
 	<GL/gl.h>
@@ -116,6 +116,7 @@
 	<io.h>
 	<dirent.h>
 	<sys/stat.h>
+	"entities.h"
 
 1278777659 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\overlay.c
 	"control.h"
@@ -145,14 +146,18 @@
 	<time.h>
 	"shared.h"
 
-1278782061 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\entities.h
+1278944593 i:\documents and settings\nake\my documents\avanzado\develop\mars_base\entities.h
 	"shared.h"
 	"objetos.h"
 
-1278782061 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\entities.c
+1278970615 source:i:\documents and settings\nake\my documents\avanzado\develop\mars_base\entities.c
 	<lua.h>
 	<lualib.h>
 	<lauxlib.h>
 	<stdio.h>
+	<dirent.h>
+	<sys/stat.h>
+	"display.h"
+	"objetos.h"
 	"entities.h"
 
