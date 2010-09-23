@@ -40,38 +40,49 @@
 #define HEIGHTMAP_H
 #include "shared.h"
 
-#define NHMAP_VERSION 2 /*! Define la versiÃ³n de los mapas precompilados */
+#define NHMAP_VERSION 2 /*! Define la versión de los mapas precompilados */
 
 #define AMBIENTE 0.2f
-#define MAP_Z_OFFSET 0.20
 #define pos_a_casilla_x(m,x) ((int)((m).tam_x -((m).tam_x -((m).tam_x/2) -((x)+(m).ini_x)/(m).scale)+1))
 #define pos_a_casilla_y(m,y) ((int)((m).tam_y -(((m).tam_y/2) +((y)+(m).ini_y)/(m).scale) -1))
-#define MAP_DETAIL_RANDOM 8 /*!< Cantidad de iteraciones extra que se hacen de forma aleatoria */
+#define MAP_DETAIL_RANDOM 0 /*!< Cantidad de iteraciones extra que se hacen de forma aleatoria */
+
+#define MAP_RANDOM_ENABLE 0
+#define MAP_RANDOM_SUBDIVISIONS 16.0f /*!< Cantidad de subdivisiones aleatorias */
+#define MAP_RANDOM_VDIVIDE 16.0f /*!< Valor por el que dividir el v_scale para obtener las alturas máximas de los randoms */
 
 typedef struct s_map_vertex
 {
 	double altura;
 	float shadow;
 	int textura; //!< Id de la textura a usar.
-	// Para aÃ±adir ciclos dÃ­a/noche (se calcula con el producto escalar cada hora o asÃ­ y se guarda en shadow)
-	//float day_time; //! Define la hora a partir de la cuÃ¡l se debe controlar la luz
-	//float night_time; //! Momento en el que siempre es de noche (sombra al mÃ¡ximo)
+	// Para añadir ciclos día/noche (se calcula con el producto escalar cada hora o así y se guarda en shadow)
+	//float day_time; //! Define la hora a partir de la cuál se debe controlar la luz
+	//float night_time; //! Momento en el que siempre es de noche (sombra al máximo)
 }t_map_vertex;
 
+/*
 typedef struct s_map_quad
 {
-	union //!< Id al vÃ©rtice si el quad dentro de max_detail, si no el seed para generar el terreno aleatorio.
+	union //!< Id al vértice si el quad dentro de max_detail, si no el seed para generar el terreno aleatorio.
 	{
-		unsigned int vertex[4]; //!< 0: Arriba izquierda, 1: Abajo izquierda, 2: Abajo derecha, 3: Arriba derecha
-		double seed;
-		// Como vertex ocupa sizeof(int)*4=16 podemos 'desperdiciar' memoria en un double(8 bytes) en vez de float
+		unsigned int vertex[4]; //!< 0: Arriba izquierda, 1: Abajo izquierda, 2: Abajo derecha, 3: Arriba derecha (De aquí saco las coordenadas x,y)
+		struct s_rand_quad
+		{
+			float seed;
+			int x, y, lado;
+		}rand_quad;
 	};
 	VECTOR normal[2]; //!< Vector normal de cada cara
-	unsigned int child[4]; //!< Id a los hijos. 0 si no tiene mÃ¡s hijos o estÃ¡n fuera del mapa.
-	//unsigned char defined; //!< Usado solo al crear el mapa.
+	unsigned int child[4]; //!< Id a los hijos. 0 si no tiene más hijos o están fuera del mapa.
+	unsigned int parent;
+	unsigned int vecino[4]; // Up, left, down, right
+	unsigned int level;
+	//unsigned char modo;
 }t_map_quad;
+*/
 
-#define __OLD_NMAP_MODE__
+//#define __OLD_NMAP_MODE__
 typedef struct
 {
     unsigned int list; /* list -> Terreno; list+1 -> Casillas; list+2 -> Normales; */
@@ -95,12 +106,14 @@ typedef struct
     unsigned char* data; /* Alturas (0-255) */
 #else
     //! NUEVO
-    unsigned int max_detail; //!< MÃ¡ximo nivel de detalle (aka: nivel de hijos) con datos reales del mapa.
-    unsigned int max_detail_rand; //!< MÃ¡ximo nivel de detalle + los generados de forma aleatoria.
-	t_map_vertex *vertex; //!< Datos de los vÃ©rtices guardados a saco para ser referenciados (No tiene por quÃ© estar en orden).
-	t_map_quad *quadtree; //!< Lista de quadtrees. El inicial es el Ãºltimo de la lista, el resto se referencian.
-	unsigned int num_quads; //!< Cantidad de quadtrees, la fÃ³rmula es complicada por eso lo guardo.
-	unsigned int num_parents; //!< Cantidad de quads que son iniciales, siempre 1 excepto si el mapa no es cuadrado
+    unsigned int max_detail; //!< Máximo nivel de detalle (aka: nivel de hijos) con datos reales del mapa.
+    //unsigned int max_detail_rand; //!< Máximo nivel de detalle + los generados de forma aleatoria.
+    //int pow_mult_scale; //!< Controla las unidades del mapa, usado para ampliar el mapa si hay randoms para que el tamaño de las casillas sea 1
+		t_map_vertex *vertex; //!< Datos de los vértices guardados a saco para ser referenciados (No tiene por qué estar en orden).
+		//t_map_quad *quadtree; //!< Lista de quadtrees. El inicial es el último de la lista, el resto se referencian.
+		//unsigned int num_quads; //!< Cantidad de quadtrees, la fórmula es complicada por eso lo guardo.
+		//unsigned int num_parents; //!< Cantidad de quads que son iniciales, siempre 1 excepto si el mapa no es cuadrado
+		float seed;
 #endif
 }t_heightmap;
 extern t_heightmap marte;
@@ -115,11 +128,12 @@ void list_compile_map(t_heightmap* obj, t_texture texture);
 
 float get_real_height(t_heightmap obj, float coord_x, float coord_y);
 float z_to_real_height (t_heightmap obj, int z);
-float coord_to_real_height(t_heightmap obj, float z);
-#define altura_al_suelo(m,x,y,z) (coord_to_real_height((m),(z)) - get_real_height((m), (x), (y)))
+#define altura_al_suelo(m,x,y,z) ((z) - get_real_height((m), (x), (y)))
 
 int get_current_triangle(t_heightmap obj, float coord_x, float coord_y, VECTOR *v1, VECTOR *v2, VECTOR *v3);
 
 int get_traced_coord(VECTOR pos, VECTOR dir, VECTOR *coord);
+
+void quad_dump_data(const char *filename);
 
 #endif

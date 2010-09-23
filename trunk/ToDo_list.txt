@@ -1,35 +1,37 @@
-!!!![ADD] Comprobar dll's e inicialización.
-!!!	[ADD] Falta pasar y obtener los datos de los nodos con LUA
-!!! [FIX] Cambiar el terreno a quadtrees.
-!!! [ADD] - Añadir funciones de quadtrees.
-!!! [ADD] - Añadir terreno con randoms.
-!!! [FIX] - Nuevo formato: Necesita normales mejores, sombra por hora, y reorganización de datos para que sea más fácil cargar.
-!!!	[ADD] - Triángulos lejanos de mayor tamaño para aumentar el rendimiento
-!!! [FIX] - Mejorar el algoritmo para generar los id's de los child. (añadirlo al compilar?)
-!!!	[ADD] Trace terreno (Falta z)
-!!!	[FIX] objeto.exists
+!!!![FIX] Algo pasa al dibujar el mapa que cambia de altura al girar la cámara.
+!!!	[ADD] Falta pasar y obtener los datos de los nodos con LUA.
+!!! [IMP] Nuevo formato: Necesita normales mejores, sombra por hora, y reorganización de datos para que sea más fácil cargar.
+!!!	[ADD] Trace terreno (Triángulos cercanos).
+!!!	[CHK] objeto.exists.
 !!! [FIX] Hay errores en el GhostMode.
 !!!	[NEW] Multitasking para las funciones de transferencia.
+!!!	[NEW] Menú de estado y acciones sobre objetos.
+!!	[ADD] Añadir terreno con randoms. 1 seed al azar para el mapa y usar las coordenadas * seed para cada seed interno. NO USAR QUADS
 !!	[ADD] Creación de materiales al cargarlos del .3ds (No solo texturas como ahora)
-!!	[NEW] Menú de estado y acciones sobre objetos.
 ! 	[FIX] Arreglar los sprites (Sigue sin funcionar, por ahora va bien para el sol, pero no está bien hecho)
-!	[FIX] Problemas con movimiento por teclado
-!	[NEW] Tuberías
-!	[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control: LUA
-!	[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD) LUA
-!	[NEW] Console
-!	[NEW] GUI_TabButton ?
-!	[NEW] GUI_TabFrame ?
-!	[NEW] GUI_Scroll ?
-!	[NEW] GUI_Input
-!	[NEW] GUI_Checkbox
-!	[NEW] GUI_Radial
-!	[NEW] GUI_Slide y número (Ese de +,-)
-!	[NEW] Más texturas para el suelo de Marte (¿Usar un texturemap? Píxel = ID_textura con blend) [He hecho pruebas y lo veo difícil pero posible]
-!	[NEW] Skybox (¿Es necesario? He hecho pruebas y queda muy raro)
-!	[NEW] Mejor control de la niebla: Si cerca del suelo más niebla para aumentar el rendimiento
-!	[NEW] Distancia máxima de dibujo de modelos
-!	[NEW] Mejorar acciones del ratón: Menús, botones, hud usable
-!	[NEW] Controlar los \n en hud_printf y tal
-!	[NEW] Calcular y guardar función de las sombras respecto la hora del día -> Ciclos día/noche.
-!	[FIX] Densidad del H2O gas??? (¿Necesario?)
+!		[FIX] Problemas con movimiento por teclado
+!		[NEW] Tuberías.
+!		[NEW] Objetos especiales: Generadores, compresores, almacenamiento, control: LUA
+!		[NEW] Sistemas eléctricos: Sistemas(generadores, almacenamiento,..., Control:ver WIREMOD) LUA
+!		[NEW] Console.
+!		[NEW] GUI_TabButton ?.
+!		[NEW] GUI_TabFrame ?.
+!		[NEW] GUI_Scroll ?.
+!		[NEW] GUI_Input.
+!		[NEW] GUI_Checkbox.
+!		[NEW] GUI_Radial.
+!		[NEW] GUI_Slide y número (Ese de +,-).
+!		[NEW] Más texturas para el suelo de Marte (¿Usar un texturemap? Píxel = ID_textura con blend).
+!		[NEW] Mejor control de la niebla: Si cerca del suelo más niebla para aumentar el rendimiento.
+!		[NEW] Distancia máxima de dibujo de modelos.
+!		[NEW] Mejorar acciones del ratón: Menús, botones, hud usable.
+!		[NEW] Controlar los \n en hud_printf y tal.
+!		[NEW] Calcular y guardar función de las sombras respecto la hora del día -> Ciclos día/noche.
+!		[FIX] Densidad del H2O gas??? (¿Necesario?).
+!		[FIX] Añadir el texto a lang.
+
+ADD: Añadir
+IMP: Implementar
+CHK: Comprobar
+FIX: Arreglar
+NEW: Nuevo

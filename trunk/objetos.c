@@ -43,6 +43,9 @@
 #include <GL/glu.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#define ILUT_USE_OPENGL
+#include <IL/il.h>
+#include <IL/ilu.h>
 #include <IL/ilut.h>
 
 /*
@@ -571,7 +574,7 @@ int load_3DS (t_model *data, char *filename)
             str_append(string2,"materials/");
             str_append(string2,string);
             /* Cargamos la textura */
-            //data->material[data->materials_qty-1].texture[0]=ilutGLLoadImage(string2);
+            //data->material[data->materials_qty-1].texture[0]=_ilutGLLoadImage(string2);
             ilGenImages(1, &ImageName); //****
             ilBindImage(ImageName); //****
 
@@ -579,13 +582,13 @@ int load_3DS (t_model *data, char *filename)
             if(!ilLoadImage(string2))
             {
                 str_append(string2,".tga"); // No se ha encontrado? Veamos si le falta el .tga
-                //data->material[data->materials_qty-1].texture[0]=ilutGLLoadImage(string2);
+                //data->material[data->materials_qty-1].texture[0]=_ilutGLLoadImage(string2);
                 //if(!data->material[data->materials_qty-1].texture[0])
                 if(!ilLoadImage(string2))
                 {
                     str_ext_back(string2);
                     str_append(string2,".jpg");
-                    //data->material[data->materials_qty-1].texture[0]=ilutGLLoadImage(string2);
+                    //data->material[data->materials_qty-1].texture[0]=_ilutGLLoadImage(string2);
                     //if(!data->material[data->materials_qty-1].texture[0])
                     if(!ilLoadImage(string2))
                     {
@@ -1145,7 +1148,7 @@ int lista_cargar_modelo(char *ruta)
     ilGenImages(1, &ImageName);
     ilBindImage(ImageName);
 
-    //lista_modelo[lista_modelos]->icono = ilutGLLoadImage(buffer);
+    //lista_modelo[lista_modelos]->icono = _ilutGLLoadImage(buffer);
     //if(!lista_modelo[lista_modelos]->icono)
     if(!ilLoadImage(buffer))
     {

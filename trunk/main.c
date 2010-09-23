@@ -52,6 +52,9 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#define ILUT_USE_OPENGL
+#include <IL/il.h>
+#include <IL/ilu.h>
 #include <IL/ilut.h>
 
 #include "shared.h"
@@ -67,10 +70,8 @@
 
 #ifdef WINDOWS // Para obtener el directorio actual
 #include <direct.h>
-//#define GetCurrentDir _getcwd
 #else
 #include <unistd.h>
-//#define GetCurrentDir getcwd
 #endif
 
 t_texture fondo= {{1.0f, 1.0f, 1.0f, 1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{0.0f, 0.0f, 0.0f, 1.0f},{1.0},{0}};
@@ -121,7 +122,9 @@ int main(int argc, char *argv[])
     debug_mode=0;
 
     int i;
+    float f;
     int with_motd=1;
+    int with_objects=1;
     char lang_str[4]; // Máximo 3 carácteres y el \0
     str_cpyl(lang_str,4,"es"); // default spanish
     debug_reset();
@@ -129,11 +132,19 @@ int main(int argc, char *argv[])
     camera.show_grid=0;
     camera.show_presion=0;
     window_mode=0;
-
+    config.show_fondo=1;
     scr_width=-1;
     scr_height=-1;
     scr_bpp=-1;
     scr_flags=-1;
+    
+    str_cpy(TL_DEBUG1, " ");
+    str_cpy(TL_DEBUG2, " ");
+    
+    // Caliad del display
+    config.quad_f_square = 0.001; // Por si acaso el pc es malo ponemos mala calidad //0.000718;
+    config.quad_min_level = 5;
+    config.quad_dist_extra = 3;
 
     // Cargamos la configuración de config.cfg
     t_parse parse;
@@ -169,6 +180,30 @@ int main(int argc, char *argv[])
         {
             str_cpyl(lang_str,4,lang_get);
         }
+        if(parse_get_int(&parse, "no_background")==1)
+        {
+            config.show_fondo=0;
+        }
+        if((f=parse_get_float(&parse, "quads_cercanos"))>=0)
+        {
+            if(f >= 0.5 && f <= 2.0)
+							config.quad_f_square = 1.0 / (f * 1000.0);
+        }
+        if((i=parse_get_int(&parse, "quads_nivel_minimo"))>=0)
+        {
+            if(i>=3 && i<=6)
+            config.quad_min_level=i;
+        }
+        if((i=parse_get_int(&parse, "quads_radio_calidad"))>=0)
+        {
+            if(i>=1 && i<=30)
+            config.quad_dist_extra=i;
+        }
+        if(parse_get_int(&parse, "no_objects")==1)
+        {
+            with_objects=0;
+        }
+        
         parse_close(&parse);
     }
 
@@ -203,6 +238,14 @@ int main(int argc, char *argv[])
         {
             debug_mode=(unsigned char)str2float(argv[i+1]);
         }
+        if(str_cmp(argv[i],"-no_background")==0)
+        {
+            config.show_fondo=0;
+        }
+        if(str_cmp(argv[i],"-no_objects")==0)
+        {
+            with_objects=0;
+        }
         //if(str_cmp(argv[i],"")==0){}
     }
     ifdebug(DEBUG_INFO)
@@ -236,39 +279,62 @@ int main(int argc, char *argv[])
 
     ifdebug(DEBUG_DEBUG)
     {
-        debug_printf("video_init\n");
+        debug_printf("DevIL init\n");
+    }
+    /* DevIL init */
+    if (ilGetInteger(IL_VERSION_NUM) != IL_VERSION ||
+	    iluGetInteger(ILU_VERSION_NUM) != ILU_VERSION ||
+	    ilutGetInteger(ILUT_VERSION_NUM) != ILUT_VERSION)
+    {
+	debug_printf(TL_ERR_DEVIL_VER);
+	exit(-2);
+    }
+    ilInit();
+    iluInit();
+
+    ilEnable(IL_CONV_PAL);
+    ilutEnable(ILUT_OPENGL_CONV);
+
+    ifdebug(DEBUG_DEBUG)
+    {
+        debug_printf("video_init()\n");
     }
     video_init();
     atexit(salir);
+    ilutInit();
+    ilutRenderer(ILUT_OPENGL);
     scr_init_reset(0);
 
     SDL_WM_SetCaption("mars_base", NULL);
     randomize(17.5);
     sfrand(); // no se por qué pero sale siempre <0 la primera vez ??
-    if(sfrand()>0.0f)
+    if(config.show_fondo==1)
     {
-        ifdebug(DEBUG_DEBUG)
-        {
-            debug_printf("fondo 1\n");
-        }
-        fondo.texture[0] = ilutGLLoadImage("materials/fondo1.tga");
-    }
-    else
-    {
-        ifdebug(DEBUG_DEBUG)
-        {
-            debug_printf("fondo 2\n");
-        }
-        fondo.texture[0] = ilutGLLoadImage("materials/fondo2.tga");
-    }
-    if(!fondo.texture[0])
-    {
-        debug_printf(TL_ERR_BACKGROUND);
-        config.show_fondo=0;
-    }
-    else
-    {
-        config.show_fondo=1;
+      if(sfrand()>0.0f)
+      {
+	ifdebug(DEBUG_DEBUG)
+	{
+	    debug_printf("fondo 1\n");
+	}
+	fondo.texture[0] = ilutGLLoadImage("materials/fondo1.tga");
+      }
+      else
+      {
+	ifdebug(DEBUG_DEBUG)
+	{
+	    debug_printf("fondo 2\n");
+	}
+	fondo.texture[0] = ilutGLLoadImage("materials/fondo2.tga");
+      }
+      if(!fondo.texture[0])
+      {
+	debug_printf(TL_ERR_BACKGROUND);
+	config.show_fondo=0;
+      }
+      else
+      {
+	config.show_fondo=1;
+      }
     }
 
     ifdebug(DEBUG_INFO)
@@ -341,16 +407,6 @@ int main(int argc, char *argv[])
         sun.material.texture[0]=null_texture;
     }
 
-    scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 1]);
-    camera.pitch = -20.0;
-    camera.yaw =  0.0;
-    camera.roll = 0.0;
-    camera.pos_x= 0.0;
-    camera.pos_z=20.0;
-    camera.pos_y=-4.5;
-    camera.wasd_count=0;
-    camera.ghost_mode=0;
-
     scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 2]);
     ifdebug(DEBUG_INFO)
     {
@@ -361,6 +417,16 @@ int main(int argc, char *argv[])
         debug_printf(TL_ERR_LOAD_HEIGHTMAP,i);
         exit(-1);
     }
+
+    scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 1]);
+    camera.pitch = 60.0;
+    camera.yaw =  180.0;
+    camera.roll = 0.0;
+    camera.pos_x= 163870.0;
+    camera.pos_y= 139795.0;
+    camera.pos_z= 3486.0;
+    camera.wasd_count=0;
+    camera.ghost_mode=0;
 
     scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 3]);
 
@@ -373,26 +439,32 @@ int main(int argc, char *argv[])
     lista_objetos_base=0;
     lista_modelos=0;
 
-    char buffer[256];
-    str_cpyl(buffer,256,app_path);
-    str_append(buffer,"models");
-    ifdebug(DEBUG_DEBUG)
-    {
-        debug_printf("Models dir: \"%s\"\n",buffer);
-    }
-    if(lista_cargar_modelo_dir(buffer)!=0)
-    {
-        debug_printf(TL_ERR_MODEL_DIR,buffer);
-    }
+		if(with_objects)
+		{
+			char buffer[256];
+			str_cpyl(buffer,256,app_path);
+			str_append(buffer,"models");
+			ifdebug(DEBUG_DEBUG)
+			{
+					debug_printf("Models dir: \"%s\"\n",buffer);
+			}
+			if(lista_cargar_modelo_dir(buffer)!=0)
+			{
+					debug_printf(TL_ERR_MODEL_DIR,buffer);
+			}
 
-    scr_init_printf ("Cargando entidades");
+			scr_init_printf ("Cargando entidades");
 
-    ifdebug(DEBUG_INFO)
-    {
-        debug_printf("Loading entities\n");
-    }
-    if(entity_init()!=0){debug_printf("Error al iniciar las entidades.\n"); exit(-20);}
-
+			ifdebug(DEBUG_INFO)
+			{
+					debug_printf("Loading entities\n");
+			}
+			if(entity_init()!=0){debug_printf("Error al iniciar las entidades.\n"); exit(-20);}
+		}
+		else
+		{
+			debug_printf("Nota: Modo sin objetos\n");
+		}
 
 
     scr_init_printf (lista_texto[TEXT_LIST_R_SCR + 13]);
@@ -436,8 +508,20 @@ int main(int argc, char *argv[])
         debug_printf("main_loop_init\n");
     }
     int node_main_control_loop=1;
+    int fps_FPS = 0;
+    str_cpy(TL_FPS,"FPS: 0");
+    float fps_last = 0.0f;
     while(1)
     {
+        // FPS
+        fps_FPS++;
+        if(((clock() * 0.001f) - fps_last) > 1.0f)
+        {
+        	sprintf(TL_FPS,"FPS: %i",fps_FPS);
+        	fps_last = (clock() * 0.001f);
+        	fps_FPS = 0;
+        }
+        
         process_events();
 
         main_update();
@@ -459,8 +543,6 @@ int main(int argc, char *argv[])
         {
             node_main_control_loop=1;
         }
-        //contador++;
-        //if(contador>=FPS_FRAMES){FPS=1000.0f/(float)(next_time-SDL_GetTicks()); contador=0;}
     }
     ifdebug(DEBUG_INFO)
     {

@@ -37,13 +37,18 @@
 */
 
 #include "materiales.h"
+#include <GL/gl.h>
+#define ILUT_USE_OPENGL
+#include <IL/il.h>
+#include <IL/ilu.h>
+#include <IL/ilut.h>
 #include <IL/ilut.h>
 
-int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #-1# -> Material not found; #-2# -> Texture not found */
+int load_material(t_texture *texture, const char* ruta_)/* return: #0# -> OK; #-1# -> Material not found; #-2# -> Texture not found */
 {
     char ruta[256];
     char textura[256];
-    str_cpyl(ruta, 256, ruta_);
+    str_cpyl(ruta, 252, ruta_);
     str_append(ruta,".nmf");
     FILE* file = fopen(ruta,"r");
     if (!file)
@@ -66,10 +71,13 @@ int load_material (t_texture *texture, const char* ruta_)/* return: #0# -> OK; #
         debug_printf(TL_ERR_MAT_LOAD_TEXTURE,textura);
         return(-2);
     }
-
-    ilutGLBuildMipmaps();
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    
+    ilutGLBuildMipmaps();
 
     return 0;
 }

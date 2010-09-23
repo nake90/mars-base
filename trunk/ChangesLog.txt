@@ -1,0 +1,59 @@
+23 September 2010
+   released version 0.11.827 of mars_base (r0)
+
+     Change log:
+        -Added: Mensajes de debug guardados en la consola.
+        -Added: Función para obtener el vector generado por el ratón.
+        -Cleaned: Arreglado el inicio del DevIL y sus includes.
+        -Cleaned: Cambiado sistema de referencia en el mapa.
+        -Updated: Actualizado funciones de cálculo de alturas y situación actual.
+        -Updated: Mejorado y cambiado por completo el método de dibujo del mapa. Ahora sólo dibuja algunos de los triángulos y con distinta calidad.
+        -Cleaned: Movidas todas las funciones del HUD a la función que dibuja el HUD en vez de que estubiesen por ahí desperdigadas.
+        -Cleaned: Mejorado el formato del heightmap en la memoria, y añadido lugar para funciones nuevas por implementar.
+        -Added: Añadida función para calcular el trace del ratón con el suelo. (Solo triángulo sobre el que se está, pero enpezado con sistema para calcular cualquier triángulo).
+        -Cleaned: Cambiada la forma de cargar los datos del heightmap para añadir opciones que aún no he implementado.
+        -New: Añadido texto de debug al HUD para fácil visión de datos cualquiera sin necesidad de ver el debug.log.
+        -New: Nueva opción de inicio -no_objects para no cargar los modelos.
+        -New: Nueva opción de inicio -no_background para no cargar ni mostrar el fondo al iniciar.
+        -New: Ahora se puede especificar las coordenadas de inicio sin recompilar el mapa, pero falta implementar un sistema para parsear los datos.
+        -New: Se muestran los Frames Per Second, y se han limitado a unos 50 FPS.
+        -Updated: El minimapa depende del tamaño del mapa, antes se forzaba.
+        -New: Funciones matriciales. (Para el cálculo de intersecciones y cosas así).
+
+12 July 2010
+   released version 0.2.94 of mars_base (r0)
+
+     Change log:
+        -Added: Funciones para acceder a la lista de objetos.
+        -Added: Se pueden borrar entidades.
+        -Fixed: Ahora borra los entities enlazados al borrar un objeto.
+        -Added: Busca todas las entities al iniciar.
+        -Added: Menú para seleccionar el entity que se quiere enlazar.
+        -Updated: Quitada la entrada 'nombre' de los scripts, no se usaba.
+        -Added: Control de errores LUA: muestra mensaje y borra la entidad.
+
+12 July 2010
+   released version 0.2.73 of mars_base (r0)
+
+     Change log:
+        -Added: Añadidas funciones de control de listas de entidades.
+        -Added: Añadidas funciones básicas entre c y LUA.
+        -Added: Se envían los datos del objeto a las funciones.
+        -Added: Se leen los datos cambiados desde LUA y se actualiza en el juego.
+        -Added: Función para llamar a funciones de LUA desde C.
+        -Added: Función update se llama cada poco tiempo.
+        -Added: Muestra la versión de OpenGL al iniciar la pantalla.
+        -Added: Se asigna el entity 'test' a los objetos seleccionados al pulsar 't'
+        -Fixed: Se muestran correctamente los vectores de conexión y el cuadrado de colisión.
+
+23 June 2010
+   released version 0.2.23 of mars_base (r80)
+
+     Change log:
+        -Updated: Cambiada la posición inicial de la cámara.
+        -Added: Añadido reuso de memoria de objetos borrados.
+        -Added: Añadido SUPR para borrar objetos.
+        -Added: Se pueden elegir varios objetos con CONTROL.
+        -Fixed: Volumen y colisiones por defecto para evitar problemas.
+		-Added: Añadidas funciones de transferencia de gases. Me las he inventado pero parece que funcionan.
+		-Removed: Quitados los archivos del DevC++.

@@ -41,6 +41,9 @@
 #include "parser.h"
 #include <stdio.h>
 
+char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE];
+char *console_text;
+
 static void lang_parse_special_chars(const unsigned int start, const unsigned int end)
 {
     unsigned int index, dest, src;

@@ -42,6 +42,9 @@
 #include "atmosferico.h"
 #include <math.h>
 #include <SDL/SDL_ttf.h>
+#define ILUT_USE_OPENGL
+#include <IL/il.h>
+#include <IL/ilu.h>
 #include <IL/ilut.h>
 #include "objetos.h"
 #include "overlay.h"
@@ -60,13 +63,13 @@ int last_m_x,last_m_y;
 void control(void)
 {
     float f1;
-    if(camera.pitch<-90)
+    if(camera.pitch<0)
     {
-        camera.pitch=-90;
+        camera.pitch=0;
     }
-    if(camera.pitch>90)
+    if(camera.pitch>180)
     {
-        camera.pitch=90;
+        camera.pitch=180;
     }
     if(camera.yaw<0)
     {
@@ -84,21 +87,21 @@ void control(void)
     {
         camera.roll-=360;
     }
-    if (camera.pos_x<(-marte.tam_x/2)*marte.scale -marte.ini_x)
+    if (camera.pos_x<0)
     {
-        camera.pos_x=(-marte.tam_x/2)*marte.scale -marte.ini_x;
+        camera.pos_x=0;
     }
-    if (camera.pos_x>(+marte.tam_x/2)*marte.scale -marte.ini_x -marte.scale*2)
+    if (camera.pos_x>marte.tam_x*marte.scale-1)
     {
-        camera.pos_x=(+marte.tam_x/2)*marte.scale -marte.ini_x -marte.scale*2;
+        camera.pos_x=marte.tam_x*marte.scale-1;
     }
-    if (camera.pos_y<(-marte.tam_y/2)*marte.scale -marte.ini_y)
+    if (camera.pos_y<0)
     {
-        camera.pos_y=(-marte.tam_y/2)*marte.scale -marte.ini_y;
+        camera.pos_y=0;
     }
-    if (camera.pos_y>(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale)
+    if (camera.pos_y>marte.tam_y*marte.scale-1)
     {
-        camera.pos_y=(+marte.tam_y/2)*marte.scale -marte.ini_y -marte.scale;
+        camera.pos_y=marte.tam_y*marte.scale-1;
     }
     if (camera.pos_z>30000)
     {
@@ -213,7 +216,6 @@ int place_object(int id_modelo)
     }
 
     VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
-    VECTOR dir = v_from_ang(RAD(camera.pitch-90), RAD(camera.yaw));
     VECTOR coord = {0,0,0};
     /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
     DIALOG mensaje = {d_label_proc, 10,200,0,0,{255,255,255,255},{0,0,0,128},0,0,0,0,lista_texto[TEXT_LIST_R_HUD + 1],fntArial12,NULL};
@@ -221,19 +223,12 @@ int place_object(int id_modelo)
     next_time = SDL_GetTicks() + TICK_INTERVAL;
 
     int o_id, oc_id, pc_id; // Otro_ID, Otro_Conexión_ID, Propio_Conexión_ID
-    int colision; // 1 si está chocando con otro objeto
+    int colision; // 1 si estó chocando con otro objeto
     VECTOR v1, v2;
     VECTOR vn1, vn2; // Vectores normales rotados
     VECTOR vzero = {0,0,0};
     int lista_conexiones[MAX_CONX]; // Usado para saber luego a qué conexión se debe poner el del otro objeto
 
-    float angx;
-    float angy;
-    //VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
-    //VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
-    VECTOR up_axis;// = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
-    VECTOR side_axis;// = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
-    int x,y;
     while(camera.ghost_mode==1)
     {
         rotate_ghost=0;
@@ -245,19 +240,8 @@ int place_object(int id_modelo)
         pos.x=camera.pos_x;
         pos.y=camera.pos_y;
         pos.z=camera.pos_z;
-        dir=v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
 
-        up_axis = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
-        side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
-
-        SDL_GetMouseState(&x,&y);
-        angx = (((scr_width/2.0f) - x)*45.0f) / (scr_width/2.0f)*0.65;
-        angy = (((scr_height/2.0f) - y)*45.0f) / (scr_height/2.0f)*0.5;
-
-        dir = vrotate_axis(dir, side_axis, RAD(angy));
-        dir = vrotate_axis(dir, up_axis, RAD(angx));
-
-        get_traced_coord(pos, dir, &coord); // Ponerlo en un if == 0!!!
+        get_traced_coord(pos, get_mouse_vector(), &coord); // Ponerlo en un if == 0!!!
         ghost.pos.x=nround(coord.x);
         ghost.pos.y=nround(coord.y);
         ghost.pos.z=nround(coord.z);
@@ -283,7 +267,7 @@ int place_object(int id_modelo)
         }
         for(o_id=0; o_id<lista_objetos_base; o_id++)
         {
-            if(lista_objeto_base[o_id]->exists && o_id!=id_modelo && vdist_sq(ghost.pos,lista_objeto_base[o_id]->pos)< MAX_DIST_CONX_SQ) // Si no somos nosotros mismos y no está demasiado lejos
+            if(lista_objeto_base[o_id]->exists && o_id!=id_modelo && vdist_sq(ghost.pos,lista_objeto_base[o_id]->pos)< MAX_DIST_CONX_SQ) // Si no somos nosotros mismos y no estó demasiado lejos
             {
                 for(pc_id=0; pc_id<ghost.conx_qty; pc_id++) // Para cada conexión propia
                 {
@@ -847,7 +831,7 @@ void key_handle(SDLKey key, SDLMod mod)
             place_object(i);
         break;
 
-    case SDLK_y: /* Menú de spawn */
+    case SDLK_y: /* Menú de spawn de entities */
         if(camera.ghost_mode==1)break;
         j = open_entity_spawn_dialog();
         if(j>=0)
@@ -863,6 +847,16 @@ void key_handle(SDLKey key, SDLMod mod)
         }
         break;
 
+
+    //case SDLK_i: /* Funciones de test */
+        //config.quad_f_square /= 1.2;
+
+        //break;
+    //case SDLK_k: /* Funciones de test */
+        //config.quad_f_square *= 1.2;
+
+        //break;
+        
     case SDLK_t: /* Funciones de test */
         //node_flow_gas(&node1, &node2, 2.0f, 8.0f, 0.1f);
 
@@ -911,7 +905,7 @@ void key_handle(SDLKey key, SDLMod mod)
     default:
         break;
     }
-    if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0)
+    if(altura_al_suelo(marte, camera.pos_x, camera.pos_y, camera.pos_z)<0)
     {
         camera.pos_x=last_x;
         camera.pos_y=last_y;
@@ -941,9 +935,12 @@ int get_traced_object(VECTOR pos, VECTOR dir)
     if(dir.z>=0)return -1; // Si miramos hacia arriba o de frente no podemos calcular el punto de corte...
     int obj;
     float corte_x, corte_y; /* Coordenadas reales del punto de corte del trace con el plano z = obj.z */
-
-    corte_x = -dir.x/dir.z * pos.z + pos.x; // De la eqn de la recta (Están negados porque salen al revés...)
-    corte_y = -dir.y/dir.z * pos.z + pos.y;
+		VECTOR coord;
+		
+		get_traced_coord(pos, get_mouse_vector(), &coord);
+		
+    corte_x = coord.x; // De la eqn de la recta (Están negados porque salen al revés...)
+    corte_y = coord.y;
 
     //VECTOR coord = {corte_x, corte_y, 0.0f};
     //COLORf color = {0.0f, 1.0f, 0.0f, 0.5f};
@@ -953,7 +950,7 @@ int get_traced_object(VECTOR pos, VECTOR dir)
     /* Tipo objeto: base */
     for (obj=0; obj<lista_objetos_base; obj++)
     {
-        if (lista_objeto_base[obj]->pos.z < pos.z && vdist_sq(lista_objeto_base[obj]->pos, pos)<MAX_DIST_TRACE_OBJ_SQ) // Nos saltamos los objetos que están demasiado lejos ni por encima nuestro
+        if (lista_objeto_base[obj]->pos.z < pos.z && vdist_sq(lista_objeto_base[obj]->pos, pos)<MAX_DIST_TRACE_OBJ_SQ) // Nos saltamos los objetos que estón demasiado lejos o por encima nuestro
         {
 
             if(check_inside(corte_x, corte_y,
@@ -967,7 +964,7 @@ int get_traced_object(VECTOR pos, VECTOR dir)
     return -1;
 }
 
-/* Si se mueve el ratón mientras se está pulsando algun botón del ratón */
+/* Si se mueve el ratón mientras se está pulsando algún botón del ratón */
 void mouse_move_but(int button, int x, int y)
 {
     static int dont_use_this_movement;
@@ -976,7 +973,7 @@ void mouse_move_but(int button, int x, int y)
     float last_z=camera.pos_z;
 
 
-    float altura_real = coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y);
+    float altura_real = altura_al_suelo(marte,camera.pos_x, camera.pos_y, camera.pos_z);
 
     if (button & SDL_BUTTON(SDL_BUTTON_RIGHT) && !(SDL_GetModState() & KMOD_SHIFT))/* Desplazamiento por la pantalla */
     {
@@ -1013,7 +1010,7 @@ void mouse_move_but(int button, int x, int y)
         mouse_static_but(button, x, y);
     }
 
-    if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<0)
+    if(altura_al_suelo(marte, camera.pos_x, camera.pos_y, camera.pos_z)<0)
     {
         camera.pos_x=last_x;
         camera.pos_y=last_y;
@@ -1022,7 +1019,23 @@ void mouse_move_but(int button, int x, int y)
     control();
 }
 
-/* Si se pulsa algun botón del ratón y el ratón está quieto */
+VECTOR get_mouse_vector(void)
+{
+	int _x, _y; // x e y son incrementos, nosotros necesitamos absolutos
+	SDL_GetMouseState(&_x,&_y);
+	float angx = (((scr_width/2.0f) - _x)*45.0f) / (scr_width/2.0f)*0.65;
+	float angy = (((scr_height/2.0f) - _y)*45.0f) / (scr_height/2.0f)*0.5;
+	VECTOR dir = v_from_ang(RAD(camera.pitch-90.0f), RAD(camera.yaw));
+	VECTOR up_axis = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
+	VECTOR side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
+	dir = vrotate_axis(dir, side_axis, RAD(angy));
+	dir = vrotate_axis(dir, up_axis, RAD(angx));
+	
+	return dir;
+}
+
+
+/* Si se pulsa algún botón del ratón y el ratón está quieto */
 void mouse_static_but(int button, int x, int y)
 {
 
@@ -1030,18 +1043,8 @@ void mouse_static_but(int button, int x, int y)
     {
         if(camera.ghost_mode!=1)
         {
-            int _x, _y; // x e y son incrementos, nosotros necesitamos absolutos
-            SDL_GetMouseState(&_x,&_y);
-            float angx = (((scr_width/2.0f) - _x)*45.0f) / (scr_width/2.0f)*0.65;
-            float angy = (((scr_height/2.0f) - _y)*45.0f) / (scr_height/2.0f)*0.5;
             VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
-            VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
-            VECTOR up_axis = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
-            VECTOR side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
-            dir = vrotate_axis(dir, side_axis, RAD(angy));
-            dir = vrotate_axis(dir, up_axis, RAD(angx));
-
-            int obj = get_traced_object(pos, dir);
+            int obj = get_traced_object(pos, get_mouse_vector());
 
             int i;
 			if(!(SDL_GetModState()&KMOD_CTRL)) // Si se presiona CONTROL no se quitan las selecciones anteriores
@@ -1167,7 +1170,7 @@ void main_update(void)
         camera.vel_z=0;
     }
 
-    if(coord_to_real_height(marte,camera.pos_z) - get_real_height(marte, camera.pos_x, camera.pos_y)<=0)
+    if(altura_al_suelo(marte, camera.pos_x, camera.pos_y, camera.pos_z)<=0)
     {
         camera.pos_x=last_x;
         camera.pos_y=last_y;

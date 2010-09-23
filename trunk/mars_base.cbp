@@ -14,6 +14,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-g" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="I:\Documents and Settings\nake\My Documents\Avanzado\develop\mars_base\" />
@@ -39,6 +40,7 @@
 		</Compiler>
 		<Linker>
 			<Add option="-mwindows" />
+			<Add option="resource.o" />
 			<Add library="glu32" />
 			<Add library="opengl32" />
 			<Add library="winmm" />
@@ -137,7 +139,7 @@
 			<code_completion />
 			<debugger />
 			<AutoVersioning>
-				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Scheme minor_max="100" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
 				<Settings autoincrement="1" date_declarations="1" do_auto_increment="1" ask_to_increment="0" language="C" svn="0" svn_directory="I:\Documents and Settings\nake\My Documents\Avanzado\develop\mars_base" header_path="mars_base_private.h" />
 				<Changes_Log show_changes_editor="1" app_title="released version %M.%m.%b of %p (r%s)" changeslog_path="ChangesLog.txt" />
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="INFO" />
