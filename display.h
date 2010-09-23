@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -34,7 +34,7 @@
 /** \file display.h
  * \brief Funciones y definiciones de control de salida por pantalla
  * Este archivo se encarga de todas las definiciones, structs, funciones, ... que son necesarias para
- * mostrar datos por pantalla. Contiene funciones de iniciaci√≥n, de mantenimiento, de control, de
+ * mostrar datos por pantalla. Contiene funciones de iniciaciÛn, de mantenimiento, de control, de
  * display, de limpieza de pantalla.
  * \author Alfonso Arbona Gimeno
 */
@@ -45,7 +45,6 @@
 #include <stdarg.h>
 #include <SDL/SDL.h>
 #include "shared.h"
-#include "heightmap.h"
 
 SDL_Surface *screen;
 const SDL_VideoInfo* scr_info;
@@ -57,15 +56,15 @@ extern int scr_flags;
 #define FPS_FRAMES 10
 float FPS;
 
-/* TEXTURAS B√ÅSICAS */
+/* TEXTURAS B¡SICAS */
 t_texture sand;
 
-// Peque√±o truco, como no hay un SDL_WINDOWED (o eso creo) pues usamos este y as√≠ flags est√° definido
+// PequeÒo truco, como no hay un SDL_WINDOWED (o eso creo) pues usamos este y asÌ flags est· definido
 #define FLAG_WINDOWED SDL_OPENGL
 void video_init(void);
 void resize_window(int width, int height);
 void display(void);
-void draw_grid(t_heightmap map, float pos_x, float pos_y);
+void draw_heightmap(void);
 void message_printf(const char *fmt, ...);
 
 #endif

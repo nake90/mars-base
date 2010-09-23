@@ -3,6 +3,9 @@ Notas de versión:
 * Control y creación de nodos en pruebas, deberían autoconectarse (en verde) los objetos con nodos definidos.
 * Puedes configurar las opciones de arranque en config.cfg
 * Aprieta <Y> mientras seleccionas un objeto para añadir una entity al objeto.
-* Puedes comentar / quejarte / dar sugerencias / reportar fallos / agradecer el proyecto en nuestro foro:
-http://www.nakerium.com/foro/
+* Puedes comentar, quejarte, dar sugerencias, reportar fallos, agradecer, colaborar
+  en el proyecto desde nuestro foro:
+    http://www.nakerium.com/foro/
 * ¡Puedes borrar objetos! Seleccionalo y pulsa 'SUPR'. Aunque actualmente tiene bastantes fallos.
+* NOTA: Hay problemas con el terreno: no se muestran bien las texturas y a veces 'salta' la altura.
+        Estoy intentando arreglarlo pero me está costando bastante.

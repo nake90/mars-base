@@ -479,7 +479,7 @@ int entities_get_names_dir(const char *dir)
             lista_entity_names[lista_entities_names] = malloc(sizeof(char) * (str_len(datos->d_name)+1));
             if(!lista_entity_names)
             {
-            	debug_printf("Error en el malloc del elemento de lista de nombres de entidades. (%i bytes)\n",sizeof(char) * (str_len(datos.name)+1));
+            	debug_printf("Error en el malloc del elemento de lista de nombres de entidades. (%i bytes)\n",sizeof(char) * (str_len(datos->d_name)+1));
             	return -11;
             }
             str_cpy(lista_entity_names[lista_entities_names],datos->d_name);

@@ -43,6 +43,9 @@
 #include <GL/glu.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#define ILUT_USE_OPENGL
+#include <IL/il.h>
+#include <IL/ilu.h>
 #include <IL/ilut.h>
 #include <math.h>
 #include "atmosferico.h"
@@ -58,10 +61,8 @@ void draw_minimap(GLuint minimap)
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, minimap);
 
-    //glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
-    //glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
-    w=1024;
-    h=799;
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
 
     glBegin(GL_QUADS);
     glTexCoord2f(1,1);
@@ -75,8 +76,8 @@ void draw_minimap(GLuint minimap)
     glEnd();
 
     float x, y;
-    x = (((camera.pos_x+marte.ini_x)/marte.scale) + marte.tam_x/2)/marte.tam_x  *w/4 +scr_width-w/4-2;
-    y = (-((camera.pos_y+marte.ini_y)/marte.scale) + marte.tam_y/2)/marte.tam_y  *h/4 +2;
+    x = (marte.tam_x-(camera.pos_x/marte.scale))/marte.tam_x  *w/4 +scr_width-w/4-2;
+    y = (camera.pos_y/marte.scale)/marte.tam_y  *h/4 +2;
 
     glDisable(GL_TEXTURE_2D);
     glColor3f(0.0f, 0.0f, 1.0f);
@@ -89,10 +90,10 @@ void draw_minimap(GLuint minimap)
     glColor4f(0.0f, 0.0f, 1.0f, 0.6f);
     glVertex2f(x,y);
     glColor4f(0.0f, 0.0f, 1.0f, 0.0f);
-    glVertex2f(x+sin(RAD(-camera.yaw-22.5))*20 +cos(RAD(-camera.yaw))*20,
-               +y-cos(RAD(camera.yaw+22.5))*20 +sin(RAD(-camera.yaw))*20);
-    glVertex2f(x+sin(RAD(-camera.yaw+22.5))*20 -cos(RAD(-camera.yaw))*20,
-               +y-cos(RAD(camera.yaw-22.5))*20 -sin(RAD(-camera.yaw))*20);
+    glVertex2f(x+sin(RAD(-camera.yaw-22.5+180))*20 +cos(RAD(-camera.yaw+180))*20,
+               +y-cos(RAD(camera.yaw+22.5+180))*20 +sin(RAD(-camera.yaw+180))*20);
+    glVertex2f(x+sin(RAD(-camera.yaw+22.5+180))*20 -cos(RAD(-camera.yaw+180))*20,
+               +y-cos(RAD(camera.yaw-22.5+180))*20 -sin(RAD(-camera.yaw+180))*20);
     glEnd();
 
     restore_gl_mode();
@@ -101,7 +102,7 @@ void draw_minimap(GLuint minimap)
 void draw_HUD(void)
 {
     /* DIALOG: {(*df), x, y, w, h, fg, bg, key, flag, d1, d2, *dp, *dp2, *dp3} */
-    DIALOG box1 = {d_box_proc, 0, 0, 430, 150 ,{0,255,0,128} ,{0,128,0,128}, 0, 0, 0, 0, NULL, NULL, NULL};
+    DIALOG box1 = {d_box_proc, 0, 0, 430, 160 ,{0,255,0,128} ,{0,128,0,128}, 0, 0, 0, 0, NULL, NULL, NULL};
     /*DIALOG lbl_test[] = {
     {d_label_proc, 20, 220, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo1!", fntArial12, NULL},
     {d_label_proc, 20, 232, 80, 12 ,{255,0,0,255} ,{0,128,0,128}, 0, 0, 0, 0, "Hola mundo2!", fntArial12, NULL},
@@ -123,16 +124,23 @@ void draw_HUD(void)
     float angx = (((scr_width/2.0f) - x)*45.0f) / (scr_width/2.0f)*0.65;
     float angy = (((scr_height/2.0f) - y)*45.0f) / (scr_height/2.0f)*0.5;
     VECTOR pos = {camera.pos_x,camera.pos_y,camera.pos_z};
-    VECTOR dir = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
-    VECTOR up_axis = v_from_ang(RAD(camera.pitch+90.0f), RAD(camera.yaw));
+    VECTOR dir = v_from_ang(RAD(camera.pitch-90.0f), RAD(camera.yaw));
+    VECTOR up_axis = v_from_ang(RAD(camera.pitch), RAD(camera.yaw));
     VECTOR side_axis = v_from_ang(0.0f, RAD(camera.yaw-90.0f));
     dir = vrotate_axis(dir, side_axis, RAD(angy));
     dir = vrotate_axis(dir, up_axis, RAD(angx));
     int obj = get_traced_object(pos, dir);
 
-    hud_printf (12, 7*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
-    hud_printf (12, 8*12, "C/V -> Ver/ocultar la cuadrícula");
-    hud_printf (12, 9*12, "B/N -> Ver/ocultar las normales");
+    hud_printf (12, 5*12, "Vector look: (%.2f, %.2f, %.2f), trace: %i",dir.x, dir.y, dir.z, obj);
+    //hud_printf (12, 6*12, "C/V -> Ver/ocultar la cuadrícula");
+    //hud_printf (12, 7*12, "B/N -> Ver/ocultar las normales");
+    
+    hud_printf (12, 7*12, lista_texto[TEXT_LIST_R_HUD + 0],altura_al_suelo(marte,camera.pos_x,camera.pos_y,camera.pos_z));
+    hud_printf (12, 11*12, TL_FPS);
+    
+    hud_printf (12, 12*12, TL_DEBUG1);
+    hud_printf (12, 13*12, TL_DEBUG2);
+    
 
     int i, cont=0;
     float tot;

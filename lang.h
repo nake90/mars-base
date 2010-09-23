@@ -3,7 +3,7 @@
     Copyright (C) 2009  Alfonso Arbona Gimeno (nake90@terra.es). All rights reserved.
 
 	MIT LICENSE
-	
+
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
 	documentation files (the "Software"), to deal in the
@@ -25,7 +25,7 @@
 	OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 	OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    
+
     If you use any part of this code you must give me (Alfonso Arbona Gimeno) credit.
     If you plan to use any part of this code on a comercial game please email me at:
 	   	   nake90@terra.es
@@ -51,7 +51,8 @@
 #define TEXT_LIST_R_DLG 115 // Inicio ID reservado para los mensajes de los dialogs
 #define TEXT_LIST_R_HUD 130 // Inicio ID reservado para los mensajes del HUD
 #define TEXT_LIST_R_USER 150 // Inicio ID no reservado (Uso solo en funciones pequeñas)
-char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y texto necesario para los dialogs. Además permite mods y traducciones ;)
+extern char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y texto necesario para los dialogs. Además permite mods y traducciones ;)
+extern char *console_text;
 /* Lugares reservados de la lista:
 0 - 9 (10) -> Internos (app_path ...)
 10 - 49 (40) -> Mensajes de error
@@ -69,6 +70,9 @@ char lista_texto[TEXT_LIST_MAX_QTY][TEXT_LIST_MAX_SIZE]; // Lista de mensajes y 
 //
 #define TL_MOTD1					lista_texto[2]
 #define TL_MOTD2					lista_texto[3]
+#define TL_FPS						lista_texto[4]
+#define TL_DEBUG1					lista_texto[5]
+#define TL_DEBUG2					lista_texto[6]
 #define TL_ERR_INIT_SDL				lista_texto[TEXT_LIST_R_ERR + 0]
 #define TL_ERR_BACKGROUND			lista_texto[TEXT_LIST_R_ERR + 1]
 #define TL_ERR_FONT					lista_texto[TEXT_LIST_R_ERR + 2]

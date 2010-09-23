@@ -64,6 +64,7 @@ void main_update(void);
 int open_spawn_dialog(void); // Retorna el id del modelo a cargar o -1
 int place_object(int id_modelo); // Ejecuta una rutina de posicionamiento del objeto, retorna 1 si se ha puesto el objeto
 
+VECTOR get_mouse_vector(void);
 int get_traced_object(VECTOR pos, VECTOR dir);
 
 extern int last_m_x,last_m_y;

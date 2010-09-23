@@ -38,6 +38,9 @@
 */
 #include <GL/glu.h>
 #include <GL/glext.h>
+#define ILUT_USE_OPENGL
+#include <IL/il.h>
+#include <IL/ilu.h>
 #include <IL/ilut.h>
 #include <stdio.h>
 #include <math.h>
@@ -808,6 +811,7 @@ void debug_reset(void)
     fprintf(file," --- DEBUG --- \n");
     fprintf(file," LOG: %s \n\n", ctime(&tim));
     fclose(file);
+    console_text = NULL;
 }
 
 /*! \fn void debug_printf(const char *fmt, ...)
@@ -819,19 +823,36 @@ void debug_printf(const char *fmt, ...)
     file=fopen("debug.log","a");
     va_list args;
     va_start(args, fmt);
-    vfprintf (file, fmt, args);
+    /*int chars =*/ vfprintf(file, fmt, args);
+    //char *buffer = malloc(sizeof(char) * (chars+1));
+    //vsprintf(buffer, fmt, args);
     va_end(args);
     fclose(file);
+	/*if(console_text != NULL)
+	{
+		console_text = realloc(console_text, sizeof(char) * (str_len(console_text) + chars + 1));
+	}
+    else
+    {
+    	console_text = malloc(sizeof(char) * (chars + 1));
+    }
+	str_append(console_text, buffer);
+	free(buffer);*/
 }
 
 
 void debug_point_3D(VECTOR coord, COLORf color, float size)
 {
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
     glPointSize(size);
     glColor4f(color.r,color.g,color.b,color.a);
     glBegin(GL_POINTS);
     glVertex3f(coord.x, coord.y, coord.z);
     glEnd();
+    glPopMatrix();
 }
 
 /* - PRINTING - */
@@ -1043,6 +1064,53 @@ void draw_fixsprite (float x, float y, float z, t_texture textura, float size)
 }
 
 
+/* MATRIX */
+void matrix_set_all33f(MATRIX33f *matrix,
+											float a, float b, float c,
+											float d, float e, float f,
+											float g, float h, float i)
+{
+	matrix->a[0]=a; matrix->a[1]=b; matrix->a[2]=c;
+	matrix->a[3]=d; matrix->a[4]=e; matrix->a[5]=f;
+	matrix->a[6]=g; matrix->a[7]=h; matrix->a[8]=i;
+}
+
+void matrix_set_all13f(MATRIX13f *matrix,float a, float d,float g)
+{
+	matrix->a[0]=a; matrix->a[1]=d; matrix->a[2]=g;
+}
+
+void matrix_mult_33fx13f(MATRIX13f *res, MATRIX33f m33f, MATRIX13f m13f)
+{
+	res->a[0] = m33f.a[0]*m13f.a[0] + m33f.a[1]*m13f.a[1] + m33f.a[2]*m13f.a[2];
+	res->a[1] = m33f.a[3]*m13f.a[0] + m33f.a[4]*m13f.a[1] + m33f.a[5]*m13f.a[2];
+	res->a[2] = m33f.a[6]*m13f.a[7] + m33f.a[8]*m13f.a[1] + m33f.a[2]*m13f.a[2];
+}
+
+char matrix_inv33f(MATRIX33f *inv, MATRIX33f matrix)
+{
+	//Z = 0(48 − 57) + 1(56 − 38) + 2(37 − 46)
+	float det = matrix.a[0]*(matrix.a[4]*matrix.a[8] - matrix.a[5]*matrix.a[7]) +
+							matrix.a[1]*(matrix.a[5]*matrix.a[6] - matrix.a[3]*matrix.a[8]) +
+							matrix.a[2]*(matrix.a[3]*matrix.a[7] - matrix.a[4]*matrix.a[6]);
+	if(det == 0)return 1;
+	det = 1/det;
+	matrix_set_all33f(inv,
+										det*(matrix.a[4]*matrix.a[8] - matrix.a[5]*matrix.a[7]),
+										det*(matrix.a[2]*matrix.a[7] - matrix.a[1]*matrix.a[8]),
+										det*(matrix.a[1]*matrix.a[5] - matrix.a[2]*matrix.a[4]),
+										
+										det*(matrix.a[5]*matrix.a[6] - matrix.a[3]*matrix.a[8]),
+										det*(matrix.a[0]*matrix.a[8] - matrix.a[2]*matrix.a[6]),
+										det*(matrix.a[2]*matrix.a[3] - matrix.a[0]*matrix.a[5]),
+										
+										det*(matrix.a[3]*matrix.a[7] - matrix.a[4]*matrix.a[6]),
+										det*(matrix.a[1]*matrix.a[6] - matrix.a[0]*matrix.a[7]),
+										det*(matrix.a[0]*matrix.a[4] - matrix.a[1]*matrix.a[3]));
+	return 0;
+}
+
+
 /* RANDOM */
 /* rand() % n da resultados uniformes de [0 - (n-1)] */
 void randomize(float seed)
@@ -1068,4 +1136,8 @@ float frand(void)
 float sfrand(void)
 {
     return ((rand() % 20001)-10000)/10000.0f;
+}
+double drand(void)
+{
+    return (rand() % 1000000001)/(double)1000000000.0;
 }
