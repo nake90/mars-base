@@ -1,0 +1,70 @@
+# Descargar binarios #
+
+Recomiendo que **no** uses los binarios, ya que prácticamente siempre, en este estado de desarrollo, estarán desactualizados y pueden tener bugs y/o que le falten cosas.
+
+<font size='4'>Si aun así quieres descargar los binarios: <b><a href='http://mars-base.googlecode.com/svn/tags'>http://mars-base.googlecode.com/svn/tags</a></b></font>
+
+Formato de las descargas: `mars_base_v<mayor>.<menor>.<actualización>.<build>_<tipo>.zip`
+Normalmente necesitarás la última versión y, a ser posible la de tipo binario.
+
+Tipos:
+  * **BIN** -> Binarios para Windows. Perfecto para el que solo quiere jugar/probar el juego. Solo tiene los archivos necesarios ya compilados para tan solo necesitar hacer click en mars-base.exe.
+  * **ALL** -> Contiene todos los archivos actuales del programa (Binarios y source). Es igual que el BIN, con el código. Se puede usar para jugar sin más, pero también para leer/editar el código o compilarlo por tu cuenta.
+  * **SRC** -> Tan solo tiene el código. Hace falta compilarlo.
+
+---
+
+
+---
+
+
+# Uso del TortoiseSVN #
+
+<font color='red'><b><a href='http://tortoisesvn.net/downloads'>Descargar TortoiseSVN</a></b> </font>
+
+
+## Descargar datos por primera vez ##
+
+Creas una carpeta vacía donde quieras tener tu copia del trabajo y la llamas como quieras.
+Haces click derecho y elijes _SVN Checkout_.
+En _URL of repository_ (Primer recuadro) escribes: `http://mars-base.googlecode.com/svn/trunk/` (Si eres parte del equipo sustituye _http_ por _https_)
+El segundo recuadro debería apuntar a la carpeta que has creado.
+Click en _OK_ y se descargarán los datos.
+
+
+## Actualizar ##
+
+Para actualizar haz click derecho sobre la carpeta donde tienes el proyecto y elije _SVN Update_.
+Espera a que se descarguen los datos que han cambiado y ya está.
+
+
+## Subir archivos ##
+
+  * Si no eres parte del equipo no podrás subir los archivos.
+  * Mejor actualizar antes de empezar a hacer cambios, pero no pasa nada si se han cambiado cosas mientras editabas el proyecto.
+
+Haz click derecho sobre la carpeta del proyecto y elije _SVN Commit..._.
+En _message_ escribe una pequeña descripción de lo que has editado.
+Comprueba que estén seleccionados todos los cambios que quieras hacer en la lista. (Puedes elegir _Select/Deselect all_)
+Haz click en OK y espera mientras se envían los datos.
+
+
+## Mover, Copiar, Borrar y Añadir archivos ##
+
+Es **muy aconsejable** que en vez de usar los comandos de Windows para mover, copiar y borrar usas los del TortoiseSVN.
+
+Para **mover o copiar**, simplemente arrastra con el botón derecho en vez de con el izquierdo y cuando salga un desplegable elije _SVN Move ..._ o _SVN Copy..._.
+
+Si quieres **borrar un archivo** haz click derecho sobre él y elije _Tortoise\_SVN -> Delete_
+
+
+Si quieres **añadir un archivo nuevo** que no estaba versionado, haz click derecho y elije _TortoiseSVN -> Add..._.
+
+Es mejor ya que así el TortoiseSVN sabe que hemos cambiado cosas, si usamos los comandos de Windows no se da cuenta de que hemos movido/borrado/añadido archivos hasta que hacemos el checkout y no los selecciona por defecto en la lista de archivos a enviar.
+
+
+## Iconos y su significado ##
+
+  * Círculo verde -> Archivo sin editar.
+  * Círculo rojo -> Archivo editado sin enviar al servidor.
+  * Signo de interrogación -> Archivo sin versionar. (Normalmente es un archivo nuevo al que aún no has hecho lo de botón derecho _TortoiseSVN -> Add_)

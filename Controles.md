@@ -1,0 +1,105 @@
+# Introduction #
+
+Esta es una lista de los controles y las posibles configuraciones que ofrece el mars-base, aunque hay que destacar que al ser actualizado casi cada día puede que esta lista no esté actualizada.
+
+
+## Movimiento ##
+
+Actualmente hay dos formas de desplazarse por el mapa, usando el ratón o usando el teclado.
+
+Para desplazarse usando el ratón hay que pulsar y mantener pulsado el botón derecho del ratón. El movimiento del ratón se transforma en el movimiento del mapa.
+Para moverse usando el teclado hay que pulsar las flechas.
+
+La velocidad de desplazamiento depende de la altura a la que se esté situado.
+
+La rotación de la cámara se hace usando las teclas _wasd_ o manteniendo el botón central del ratón.
+También se puede rotar respecto al eje frontal de la cámara usando las teclas _q_ y _e_, pero este movimiento no funciona bien actualmente.
+
+Para desplazarse arriba y abajo hay que mover la rueda del ratón arriba o abajo respectivamente.
+Para subir o bajar la cámara rápidamente se debe pulsar la tecla _shift_ junto con el botón **derecho** del ratón.
+
+
+## Crear la base ##
+
+Para añadir un módulo de la base al mapa tan solo hay que apretar la tecla _espacio_ para que se muestre el spawn menu. Ahí saldrá una lista de todos los módulos que se pueden construir, y haciendo click saldrá en el mapa un fantasma del objeto.
+
+Actualmente el fantasma no se puede mover usando el ratón, si no que saldrá justo en el centro de la pantalla, así que para seleccionar la posición hay que girar y desplazar la cámara.
+
+Para girar el objeto se han de pulsar las teclas _._ y _,_.
+
+Durante la creación del objeto se muestran los nodos disponibles de los objetos. Para conectar un objeto a otro los nodos de ambos deben de estar en el mismo lugar y las direcciones de los nodos deben de ser opuestas.
+
+Una vez el ángulo y la posición del objeto son las correctas se ha de presionar el botón izquierdo del ratón para crear el objeto real.
+Si los nodos coinciden con nodos de otros objetos estos se conectarán automáticamente.
+
+
+## Lista de comandos ##
+
+| **Tecla** | **Contexto** | **Función** |
+|:----------|:-------------|:-------------|
+| Botón izquierdo | En el mapa   | Selecciona un objeto (Por ahora selecciona el objeto situado en el centro de la pantalla) |
+| Botón derecho | En el mapa   | Desplazamiento de la cámara |
+| Botón derecho + Shift | En el mapa   | Subir / bajar la cámara rápidamente |
+| Rueda del ratón | En el mapa   | Subir / bajar la cámara |
+| Botón central del ratón | En el mapa   | Rotar la cámara |
+| Flechas   | En el mapa   | Desplazamiento por el mapa |
+| Flechas + Shift | En el mapa   | Desplazamiento rápido por el mapa |
+| WASDQE    | En el mapa   | Rotación de la cámara |
+| ESPACIO   | En el mapa   | Muestra el menú de spawn de objetos |
+| Botón izquierdo | En modo spawn del objeto | Crea el objeto donde está situado el objeto fantasma |
+| . y ,     | En modo spawn del objeto | Rota el objeto fantasma sobre el eje vertical |
+| C         | En el mapa   | Mostrar la cuadrícula (No funciona correctamente) |
+| V         | En el mapa   | Oculta la cuadrícula |
+| B         | En el mapa   | Muestra los vectores normales a las cuadrículas del terreno |
+| N         | En el mapa   | Oculta los vectores normales a las cuadrículas del terreno |
+| F10       | En el mapa   | Guarda una captura de la pantalla |
+| ESC       | Siempre      | Sale del juego |
+
+## Configuración ##
+
+### Introducción ###
+Actualmente la mayor parte del juego no permite ser configurado ya que apenas hay funciones como juego en sí, pero si hay pequeños archivos de configuración para el desarrollo del juego. Aunque cabe destacar que lo más seguro es que estos archivos sean temporales y acaben siendo reemplazados o eliminados.
+
+### Configuración de modelos ###
+En la carpeta _data/models_ hay un archivo para cada modelo .3ds donde se puede configurar distintos datos referentes al tipo de objeto. El nombre del archivo debe ser exactamente igual que el del modelo con extensión _cfg_.
+El formato del archivo de texto es muy simple, los comentarios se indican con una doble barra ('//') al inicio de la línea. El cuerpo del archivo está formado por una clave, un signo '=' y su valor, finalizado con un ';' opcional.
+
+
+Cada objeto tiene un cuadrado de colisiones asignado, en teoría estos rectángulos definen el espacio que ocupa cada objeto y no pueden solaparse con el resto de objetos. Es algo así como el recuadro verde que sale en los juegos de estrategia cuando quieres crear un edificio.
+El recuadro se usa no solo para las colisiones, también sirve para detectar si se ha seleccionado o no un objeto.
+
+Está definido por 4 valores, uno para cada distancia al lado del rectángulo desde el centro del objeto.
+
+
+La propiedad `volumen` indica el volumen de aire que hay dentro del objeto. Es decir el volumen del objeto sin contar las paredes. Este valor se usa a la hora de calcular la presión y la cantidad de aire que puede haber dentro del objeto.
+
+
+La propiedad `conexiones` indica el número de puntos de conexión (nodos) que tiene el objeto.
+Cada nodo está definido por 7 valores: Su posición local respecto del centro del objeto (x,y,z), su vector normal (dx,dy,dz) apuntando al exterior, y el tamaño de la conexión (size).
+
+El tamaño de la conexión es el tamaño del lado de la conexión en metros. Es decir, si el nodo es una puerta a un pasillo de tamaño 2x2m (2 de ancho y 2 de alto), el valor de tamaño es 2.
+
+
+### Carga de mapas ###
+Los mapas se cargan de un archivo de mapa precompilado (`.nmap`), pero si no se encuentra el archivo lo compila usando una serie de archivos de configuración.
+
+Primero lee `marineris.txt` donde espera encontrar los siguientes datos exactamente como se indica a continuación (con los valores donde están los '< >'):
+```
+North	= <Coordenadas globales del Norte del mapa (No usado creo recordar)>
+South	= <Coordenadas globales del Sur del mapa (No usado creo recordar)>
+East	= <Coordenadas globales del Este del mapa (No usado creo recordar)>
+West	= <Coordenadas globales del Oeste del mapa (No usado creo recordar)>
+Scale	= <Tamaño de las casillas en km>
+Lines	= <Filas de la imagen (height)>
+Samples	= <Columnas de la imagen (width)>
+zero_h	= <Altura considerada como cero>
+min_h	= <Valor de la altura en el punto más bajo del mapa en metros>
+max_h	= <Valor de la altura en el punto más alto del mapa en metros>
+ini_x	= <Coordenadas iniciales de la cámara (Punto (0,0,0))>
+ini_y	= <Coordenadas iniciales de la cámara (Punto (0,0,0))>
+ini_z	= <Coordenadas iniciales de la cámara (Punto (0,0,0))>
+```
+
+Una vez tiene esos datos carga la imagen `marineris.pgm` en modo texto (no binario), y lo trata como la lista de alturas de cada casilla.
+
+Durante el juego se muestra la imágen `marineris_minimap.jpg` como minimapa.
